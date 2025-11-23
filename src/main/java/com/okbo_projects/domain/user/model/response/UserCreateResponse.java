@@ -14,6 +14,7 @@ public class UserCreateResponse {
     Long id;
     String nickname;
     String email;
+    String teamName;
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
 
@@ -21,6 +22,7 @@ public class UserCreateResponse {
         this.id = user.getId();
         this.nickname = user.getNickname();
         this.email = user.getEmail();
+        this.teamName = user.getTeam().getTeamName();
         this.createdAt = user.getCreatedAt();
         this.modifiedAt = user.getModifiedAt();
     }

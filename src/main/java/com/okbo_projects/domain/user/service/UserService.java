@@ -2,6 +2,7 @@ package com.okbo_projects.domain.user.service;
 
 import com.okbo_projects.common.entity.User;
 import com.okbo_projects.common.utils.PasswordEncoder;
+import com.okbo_projects.common.utils.Team;
 import com.okbo_projects.domain.user.model.request.UserCreateRequest;
 import com.okbo_projects.domain.user.model.response.UserCreateResponse;
 import com.okbo_projects.domain.user.repository.UserRepository;
@@ -20,11 +21,14 @@ public class UserService {
         // 비밀번호 암호화
         String encodingPassword = passwordEncoder.encode(request.getPassword());
 
+        Team team = Team.valueOf(request.getFavoriteTeam());
+
         User user = new User(
                 request.getNickname(),
                 request.getEmail(),
-                encodingPassword
-                );
+                encodingPassword,
+                team
+        );
 
         userRepository.save(user);
 
