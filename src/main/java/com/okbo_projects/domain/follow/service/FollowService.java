@@ -27,4 +27,18 @@ public class FollowService {
         Follow follow = new Follow(following, follower);
         followRepository.save(follow);
     }
+
+    // Follow 관계 delete (following: 로그인한 유저 / follower: Path Variable로 입력받은 유저)
+    public void deleteFollow(Long userId, String userNickname) {
+        User following = userRepository.findById(userId)
+                // TODO : 커스텀 예외로 변경
+                .orElseThrow(() -> new IllegalStateException("NOT_FOUND_USER"));
+        User follower = userRepository.findByNickname(userNickname)
+                // TODO : 커스텀 예외로 변경
+                .orElseThrow(() -> new IllegalStateException("NOT_FOUND_USER"));
+        Follow follow = followRepository.findByFollowingAndFollower(following, follower)
+                // TODO : 커스텀 예외로 변경
+                .orElseThrow(() -> new IllegalStateException("NOT_FOUND_FOLLOW"));
+        followRepository.delete(follow);
+    }
 }

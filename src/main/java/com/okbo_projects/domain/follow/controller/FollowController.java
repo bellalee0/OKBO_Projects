@@ -22,4 +22,15 @@ public class FollowController {
         followService.createFollow(userId, userNickname);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    // Follow 관계 delete (following: 로그인한 유저 / follower: Path Variable로 입력받은 유저)
+    @DeleteMapping("/{userId}/{userNickname}")
+    public ResponseEntity<Void> deleteFollow(
+//            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @PathVariable Long userId,
+            @PathVariable String userNickname ) {
+//        followService.deleteFollow(sessionUser.getId(), userNickname);
+        followService.deleteFollow(userId, userNickname);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
