@@ -1,5 +1,6 @@
 package com.okbo_projects.domain.board.model.request;
 
+import com.okbo_projects.common.utils.Team;
 import com.okbo_projects.domain.board.model.dto.BoardDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,15 +10,11 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-//@AllArgsConstructor
+@AllArgsConstructor
 public class CreateBoardRequest {
-//    private Long id;
-//    private String title;
-//    private String team;
-//    private String content;
-//    private Long writer;
-//    private LocalDateTime createdAt;
-//    private LocalDateTime modifiedAt;
-
-
+    private Long id;
+    private String title;
+    private String team;
+    private String content;
+    private Long writer;
 }

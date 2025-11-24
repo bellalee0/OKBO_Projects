@@ -1,5 +1,6 @@
 package com.okbo_projects.common.entity;
 
+import com.okbo_projects.common.utils.Team;
 import com.okbo_projects.domain.board.model.request.UpdateBoardRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -22,16 +23,17 @@ public class Board extends BaseEntity {
     @Column(nullable = false, length = 225)
     private String content;
 
-    @Column(nullable = false, length = 30)
-    private String team;
+    @Enumerated(EnumType.STRING)
+    private Team team;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User writer;
 
-    public Board(String title, String content, User writer) {
+    public Board(String title, String content, Team team, User writer) {
         this.title = title;
         this.content = content;
+        this.team = team;
         this.writer = writer;
     }
 

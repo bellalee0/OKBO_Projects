@@ -12,4 +12,8 @@ public class SessionUser {
         this.userId = userId;
         this.userEmail = userEmail;
     }
+
+    public Object getId() {
+        return userId;
+    }
 }

@@ -2,6 +2,7 @@ package com.okbo_projects.domain.board.model.dto;
 
 
 import com.okbo_projects.common.entity.Board;
+import com.okbo_projects.common.utils.Team;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,9 +18,9 @@ public class BoardDto {
     //속성
     private Long id;
     private String title;
-    private String team;
+    private Team team;
     private String content;
-    private Long writer;
+    private String writer;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -30,7 +31,7 @@ public class BoardDto {
                 board.getTitle(),
                 board.getTeam(),
                 board.getContent(),
-                UserDto.from(board.getWriter()),
+                board.getWriter().getNickname(),
                 board.getCreatedAt(),
                 board.getModifiedAt()
         );
