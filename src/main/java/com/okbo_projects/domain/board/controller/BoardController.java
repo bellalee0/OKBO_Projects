@@ -125,4 +125,13 @@ public class BoardController {
     ) {
         return ResponseEntity.ok(boardService.getBoardFollowAllPage(page, size, sessionUser.getUserId()));
     }
+
+    // 게시글 삭제
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<Void> deleteBoard(
+            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @PathVariable Long boardId) {
+        boardService.deleteBoard(sessionUser.getUserId(), boardId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

@@ -121,4 +121,32 @@ public class BoardService {
         Page<Board> boardPage = boardRepository.findByFollowerBoard(userId, pageable);
         return boardPage.map(i -> BoardReadFollowPageResponse.from(BoardDto.from(i)));
     }
+
+    // 게시글 삭제
+    public void deleteBoard(Long userId, Long boardId) {
+        Board board = findByBoardId(boardId);
+        matchedWriter(userId, board.getWriter().getId());
+        boardRepository.delete(board);
+    }
+
+    // 회원 확인
+    private User findByUserId(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new CustomException(ErrorMessage.NOT_FOUND_USER)
+        );
+    }
+
+    // 게시물 확인
+    private Board findByBoardId(Long boardId) {
+        return boardRepository.findById(boardId).orElseThrow(
+                () -> new CustomException(ErrorMessage.NOT_FOUND_BOARD)
+        );
+    }
+
+    // 작성자 일치 확인
+    private void matchedWriter(Long userId, Long boardUserId) {
+        if(!userId.equals(boardUserId)) {
+            throw new CustomException(ErrorMessage.FORBIDDEN_ONLY_WRITER);
+        }
+    }
 }
