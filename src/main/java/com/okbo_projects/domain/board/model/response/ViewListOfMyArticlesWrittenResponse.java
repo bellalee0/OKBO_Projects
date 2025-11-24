@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class ViewListOfMyArticlesWrittenResponse {
 //    private Long id;
 //    private String title;
