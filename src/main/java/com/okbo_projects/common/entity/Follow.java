@@ -15,20 +15,16 @@ public class Follow extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "following_id", nullable = false)
-    private User following;
+    @JoinColumn(name = "from_user_id", nullable = false)
+    private User fromUser;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "follower_id", nullable = false)
-    private User follower;
+    @JoinColumn(name = "to_user_id", nullable = false)
+    private User toUser;
 
-    /**
-     * Follow 관계 생성
-     * @param following 팔로우를 거는 사람(주체)
-     * @param follower 팔로우 할 대상
-     */
-    public Follow(User following, User follower) {
-        this.following = following;
-        this.follower = follower;
+    // Follow 생성 (fromUser(주체), toUser(대상))
+    public Follow(User fromUser, User toUser) {
+        this.fromUser = fromUser;
+        this.toUser = toUser;
     }
 }
