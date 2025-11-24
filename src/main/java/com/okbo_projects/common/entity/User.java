@@ -1,5 +1,6 @@
 package com.okbo_projects.common.entity;
 
+import com.okbo_projects.common.utils.Team;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,17 +16,21 @@ public class User extends BaseEntity {
     private Long id;
 
     @Column(length = 10, nullable = false, unique = true)
-    String nickname;
+    private String nickname;
 
     @Column(nullable = false, unique = true)
-    String email;
+    private String email;
 
     @Column(nullable = false)
-    String password;
+    private String password;
 
-    public User(String nickname, String email, String password) {
+    @Enumerated(EnumType.STRING)
+    private Team team;
+
+    public User(String nickname, String email, String password, Team team) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
+        this.team = team;
     }
 }
