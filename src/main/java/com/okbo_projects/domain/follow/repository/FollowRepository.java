@@ -2,6 +2,8 @@ package com.okbo_projects.domain.follow.repository;
 
 import com.okbo_projects.common.entity.Follow;
 import com.okbo_projects.common.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -18,4 +20,7 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     // User의 Follower 수 카운트
     long countByToUser(User user);
+
+    // user가 FromUser인 경우 조회(페이지네이션 적용)
+    Page<Follow> findByFromUser(User user, Pageable pageable);
 }
