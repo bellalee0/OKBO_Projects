@@ -1,6 +1,7 @@
 package com.okbo_projects.domain.board.controller;
 
 
+import com.okbo_projects.common.entity.User;
 import com.okbo_projects.domain.board.model.request.CreateBoardRequest;
 import com.okbo_projects.domain.board.model.request.UpdateBoardRequest;
 import com.okbo_projects.domain.board.model.response.CreateBoardResponse;

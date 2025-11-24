@@ -19,7 +19,7 @@ public class BoardDto {
     private String title;
     private String team;
     private String content;
-    private Long writer;
+    private String writer;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -30,7 +30,7 @@ public class BoardDto {
                 board.getTitle(),
                 board.getTeam(),
                 board.getContent(),
-                UserDto.from(board.getWriter()),
+                board.getWriter().getNickname(),
                 board.getCreatedAt(),
                 board.getModifiedAt()
         );

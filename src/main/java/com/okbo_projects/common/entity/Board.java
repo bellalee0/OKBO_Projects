@@ -22,7 +22,7 @@ public class Board extends BaseEntity {
     @Column(nullable = false, length = 225)
     private String content;
 
-    @Column(nullable = false, length = 30) // Board 에 team_id 값을 Null이 가능하게 할지 ?
+    @Column(nullable = false, length = 30)
     private String team;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
