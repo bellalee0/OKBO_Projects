@@ -23,7 +23,13 @@ public class FollowService {
         User follower = userRepository.findByNickname(userNickname)
                 // TODO : 커스텀 예외로 변경
                 .orElseThrow(() -> new IllegalStateException("NOT_FOUND_USER"));
-        // TODO : following, follower가 같을 때, 이미 형성된 관계일 때 예외 처리
+
+        // TODO : 커스텀 예외로 변경
+        if (following.equals(follower)) { throw new IllegalStateException("SAME_USERS"); }
+        boolean checkFollowExistence = followRepository.existsByFollowingAndFollower(following, follower);
+        // TODO : 커스텀 예외로 변경
+        if (checkFollowExistence) { throw new IllegalStateException("EXIST_FOLLOW"); }
+
         Follow follow = new Follow(following, follower);
         followRepository.save(follow);
     }

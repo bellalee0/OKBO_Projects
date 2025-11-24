@@ -9,4 +9,7 @@ import java.util.Optional;
 public interface FollowRepository extends JpaRepository<Follow, Long> {
     // following, follower 2가지 기준으로 조회(Optional로 반환)
     Optional<Follow> findByFollowingAndFollower(User following, User follower);
+
+    // following, follower의 Follow 존재 여부 확인(존재 시 true 반환)
+    boolean existsByFollowingAndFollower(User following, User follower);
 }
