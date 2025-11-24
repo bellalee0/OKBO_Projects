@@ -1,7 +1,6 @@
 package com.okbo_projects.domain.board.model.response;
 
 import com.okbo_projects.domain.board.model.dto.BoardDto;
-import com.okbo_projects.domain.board.model.request.CreateBoardRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,7 +1,5 @@
 package com.okbo_projects.domain.board.controller;
 
-
-import com.okbo_projects.common.entity.User;
 import com.okbo_projects.common.model.SessionUser;
 import com.okbo_projects.domain.board.model.request.CreateBoardRequest;
 import com.okbo_projects.domain.board.model.request.UpdateBoardRequest;
@@ -9,13 +7,10 @@ import com.okbo_projects.domain.board.model.response.*;
 import com.okbo_projects.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -27,33 +22,44 @@ public class BoardController {
 
     //게시글 생성
     @PostMapping("/create")
-    public ResponseEntity<CreateBoardResponse> createBoard(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,Long writer,@RequestBody CreateBoardRequest request){
-
-        return ResponseEntity.ok(boardService.createBoard(sessionUser,writer,request));
+    public ResponseEntity<CreateBoardResponse> createBoard(
+            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            Long writer,
+            @RequestBody CreateBoardRequest request
+    ){
+        CreateBoardResponse result = boardService.createBoard(sessionUser, writer, request);
+        return ResponseEntity.ok(result);
 
     }
 
     //게시글 수정
     @PutMapping("/{id}")
-    public ResponseEntity<UpdateBoardResponse> updateBoard(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,@PathVariable Long id, @RequestBody UpdateBoardRequest request){
-        return ResponseEntity.ok(boardService.updateBoard(sessionUser,id,request));
+    public ResponseEntity<UpdateBoardResponse> updateBoard(
+            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @PathVariable Long id,
+            @RequestBody UpdateBoardRequest request
+    ){
+        UpdateBoardResponse result = boardService.updateBoard(sessionUser,id,request);
+        return ResponseEntity.ok(result);
     }
+
     //게시글 상세조회
     @GetMapping("/{id}")
-    public ResponseEntity<DetailedInquiryBoardResponse> detailedInquiryBoard(@PathVariable Long id){
-        return ResponseEntity.ok(DetailedInquiryBoardResponse.from(boardService.detailedInquiryBoard(id)));
-
+    public ResponseEntity<DetailedInquiryBoardResponse> detailedInquiryBoard(
+            @PathVariable Long id
+    ){
+        DetailedInquiryBoardResponse result = DetailedInquiryBoardResponse.from(boardService.detailedInquiryBoard(id));
+        return ResponseEntity.ok(result);
     }
+
     //내가 작성한 게시글 목록 조회
     @GetMapping("/myboard")
-    public ResponseEntity<List<ViewListOfMyArticlesWrittenResponse>> viewListOfMyArticlesWritten(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser){
-        return ResponseEntity.ok(boardService.viewListOfMyArticlesWritten(sessionUser));
+    public ResponseEntity<List<ViewListOfMyArticlesWrittenResponse>> viewListOfMyArticlesWritten(
+            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser
+    ){
+        List<ViewListOfMyArticlesWrittenResponse> result = boardService.viewListOfMyArticlesWritten(sessionUser);
+        return ResponseEntity.ok(result);
     }
-
-
-
-
-
 
     // 게시글 전체 조회
     @GetMapping
@@ -61,7 +67,8 @@ public class BoardController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        return ResponseEntity.ok(boardService.getBoardAllPage(page, size));
+        Page<BoardReadAllPageResponse> result = boardService.getBoardAllPage(page, size);
+        return ResponseEntity.ok(result);
     }
 
     // 게시글 구단별 전체 조회
@@ -71,18 +78,20 @@ public class BoardController {
             @RequestParam(defaultValue = "10") int size,
             @PathVariable String teamName
     ) {
-        return ResponseEntity.ok(boardService.getBoardTeamAllPage(page, size, teamName));
+        Page<BaordReadTeamPageResponse> result = boardService.getBoardTeamAllPage(page, size, teamName);
+        return ResponseEntity.ok(result);
     }
 
-    // 팔로워 게시글 조회
-    @GetMapping("/followers")
-    public ResponseEntity<Page<BoardReadFollowPageResponse>> getBoardFollowAllPage(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
-        return ResponseEntity.ok(boardService.getBoardFollowAllPage(page, size, sessionUser.getUserId()));
-    }
+//    // 팔로워 게시글 조회
+//    @GetMapping("/followers")
+//    public ResponseEntity<Page<BoardReadFollowPageResponse>> getBoardFollowAllPage(
+//            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int size
+//    ) {
+//        Page<BoardReadFollowPageResponse> result = boardService.getBoardFollowAllPage(page, size, sessionUser.getUserId());
+//        return ResponseEntity.ok(result);
+//    }
 
     // 게시글 삭제
     @DeleteMapping("/{boardId}")

@@ -17,7 +17,6 @@ public class BoardReadFollowPageResponse {
     private String team;
     private String writer;
 
-
     public static BoardReadFollowPageResponse from(BoardDto boardDto) {
         return new BoardReadFollowPageResponse(
                 boardDto.getId(),
