@@ -43,13 +43,13 @@ public class FollowController {
     }
 
     // Following 유저 조회 (로그인된 유저 기준)
-    // TODO : 다른 사람의 팔로잉/팔로워 리스트 조회도 필요할까?
     @GetMapping("/following")
     public ResponseEntity<Page<FollowGetFollowingListResponse>> getFollowingList(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size ) {
-        Page<FollowGetFollowingListResponse> result = followService.getFollowingList(sessionUser.getUserId(), page, size);
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(name = "userNickname", required = false) String userNickname ) {
+        Page<FollowGetFollowingListResponse> result = followService.getFollowingList(sessionUser.getUserId(), page, size, userNickname);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -58,8 +58,9 @@ public class FollowController {
     public ResponseEntity<Page<FollowGetFollowerListResponse>> getFollowerList(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size ) {
-        Page<FollowGetFollowerListResponse> result = followService.getFollowerList(sessionUser.getUserId(), page, size);
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(name = "userNickname", required = false) String userNickname ) {
+        Page<FollowGetFollowerListResponse> result = followService.getFollowerList(sessionUser.getUserId(), page, size, userNickname);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }
