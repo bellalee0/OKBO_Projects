@@ -22,8 +22,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public UserCreateResponse create(@Valid @RequestBody UserCreateRequest request) {
-        return userService.create(request);
+    public ResponseEntity<UserCreateResponse> create(@Valid @RequestBody UserCreateRequest request) {
+        UserCreateResponse response = userService.create(request);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")

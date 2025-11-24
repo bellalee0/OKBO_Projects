@@ -1,6 +1,7 @@
 package com.okbo_projects.domain.user.service;
 
 import com.okbo_projects.common.entity.User;
+import com.okbo_projects.common.exception.CustomException;
 import com.okbo_projects.common.model.SessionUser;
 import com.okbo_projects.common.utils.PasswordEncoder;
 import com.okbo_projects.common.utils.Team;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.okbo_projects.common.exception.ErrorMessage.*;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -19,18 +22,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    // 회원가입
     public UserCreateResponse create(UserCreateRequest request) {
-        // 닉네임 중복 검증
+
         if (userRepository.existsUserByNickname((request.getNickname()))) {
-            // 닉네임 중복 예외 처리 추후 수정 예정
-            throw new RuntimeException("이미 사용중인 닉네임입니다.");
+            throw new CustomException(CONFLICT_NICKNAME);
         }
-        // 이메일 중복 검증
+
         if (userRepository.existsUserByEmail(request.getEmail())) {
-            // 이메일 중복 예외 처리 추후 수정 예정
-            throw new RuntimeException("해당 이메일로 가입한 계정이 존재합니다.");
+            throw new CustomException(CONFLICT_EMAIL);
         }
-        // 비밀번호 암호화
+
         String encodingPassword = passwordEncoder.encode(request.getPassword());
 
         Team team = Team.valueOf(request.getFavoriteTeam());
@@ -45,17 +47,14 @@ public class UserService {
         userRepository.save(user);
 
         return new UserCreateResponse(user);
-
     }
 
     public SessionUser login(LoginRequest request) {
-        // 예외 처리 추후 수정 예정
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("이메일이 일치하지 않습니다."));
+                .orElseThrow(() -> new CustomException(NOT_FOUND_EMAIL));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            // 예외 처리 추후 수정 예정
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+            throw new CustomException(UNAUTHORIZED_PASSWORD);
         }
 
         return new SessionUser(user.getId(), user.getEmail());
