@@ -12,13 +12,11 @@ import com.okbo_projects.domain.user.model.request.UserPasswordUpdateRequest;
 import com.okbo_projects.domain.user.model.response.UserCreateResponse;
 import com.okbo_projects.domain.user.model.response.UserGetMyProfileResponse;
 import com.okbo_projects.domain.user.model.response.UserGetOtherProfileResponse;
-import com.okbo_projects.domain.user.repository.UserRepository;
-import jakarta.servlet.http.HttpSession;
 import com.okbo_projects.domain.user.model.response.UserNicknameUpdateResponse;
+import com.okbo_projects.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.function.EntityResponse;
 
 import static com.okbo_projects.common.exception.ErrorMessage.*;
 
@@ -26,13 +24,14 @@ import static com.okbo_projects.common.exception.ErrorMessage.*;
 @Transactional
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     // 회원가입
     public UserCreateResponse create(UserCreateRequest request) {
 
-        if (userRepository.existsUserByNickname((request.getNickname()))) {
+        if (userRepository.existsUserByNickname(request.getNickname())) {
             throw new CustomException(CONFLICT_NICKNAME);
         }
 
@@ -41,7 +40,6 @@ public class UserService {
         }
 
         String encodingPassword = passwordEncoder.encode(request.getPassword());
-
         Team team = Team.valueOf(request.getFavoriteTeam());
 
         User user = new User(
@@ -52,10 +50,10 @@ public class UserService {
         );
 
         userRepository.save(user);
-
         return new UserCreateResponse(user);
     }
 
+    // 로그인
     public SessionUser login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new CustomException(NOT_FOUND_EMAIL));
@@ -67,31 +65,31 @@ public class UserService {
         return new SessionUser(user.getId(), user.getEmail(), user.getNickname());
     }
 
+    // 내 프로필 조회
     @Transactional(readOnly = true)
     public UserGetMyProfileResponse getMyProfile(SessionUser sessionUser) {
         User user = userRepository.findById(sessionUser.getUserId())
                 .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
 
-        return new UserGetMyProfileResponse(
-                user
-        );
+        return new UserGetMyProfileResponse(user);
     }
 
+    // 다른 유저 프로필 조회
     @Transactional(readOnly = true)
     public UserGetOtherProfileResponse getOtherProfile(String userNickname) {
         User user = userRepository.findByNickname(userNickname)
                 .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
 
-        return new UserGetOtherProfileResponse(
-                user
-        );
+        return new UserGetOtherProfileResponse(user);
     }
 
     // 유저 닉네임 변경
     public UserNicknameUpdateResponse updateNickname(UserNicknameUpdateRequest request, SessionUser sessionUser) {
+
         if (userRepository.existsUserByNickname(request.getNickname())) {
             throw new CustomException(CONFLICT_NICKNAME);
         }
+
         User user = userRepository.findUserById(sessionUser.getUserId());
         user.updateNickname(request.getNickname());
         userRepository.save(user);
@@ -99,6 +97,7 @@ public class UserService {
         return new UserNicknameUpdateResponse(user);
     }
 
+    // 유저 비밀번호 변경
     public void updatePassword(UserPasswordUpdateRequest request, SessionUser sessionUser) {
         User user = userRepository.findUserById(sessionUser.getUserId());
 
@@ -108,36 +107,12 @@ public class UserService {
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             throw new CustomException(UNAUTHORIZED_PASSWORD);
         }
+
         if (currentPassword.equals(newPassword)) {
-            // 현재 비밀번호와 똑같은 걸로는 변경 불가 예외 추후 수정 예정
             throw new RuntimeException("현재 비밀번호와 동일한 비밀번호로는 변경할 수 없습니다.");
         }
+
         String encodingPassword = passwordEncoder.encode(newPassword);
         user.updatePassword(encodingPassword);
-        return new SessionUser(user.getId(), user.getEmail(), user.getNickname());
     }
-
-    @Transactional(readOnly = true)
-    public UserGetMyProfileResponse getMyProfile(SessionUser sessionUser) {
-        User user = userRepository.findById(sessionUser.getUserId())
-                .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
-
-        return new UserGetMyProfileResponse(
-                user
-        );
-    }
-
-    @Transactional(readOnly = true)
-    public UserGetOtherProfileResponse getOtherProfile(String userNickname) {
-        User user = userRepository.findByNickname(userNickname)
-                .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
-
-        return new UserGetOtherProfileResponse(
-                user
-        );
-    }
-    }
-
-
-
-
+}

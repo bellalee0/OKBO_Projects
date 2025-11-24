@@ -13,7 +13,6 @@ public class SessionUser {
         this.userId = userId;
         this.userEmail = userEmail;
         this.userNickname = userNickname;
-        this.userNickname = userNickname;
     }
 
     public Object getId() {
