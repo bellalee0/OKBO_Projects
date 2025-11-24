@@ -10,14 +10,13 @@ import com.okbo_projects.domain.user.model.request.UserCreateRequest;
 import com.okbo_projects.domain.user.model.request.UserNicknameUpdateRequest;
 import com.okbo_projects.domain.user.model.request.UserPasswordUpdateRequest;
 import com.okbo_projects.domain.user.model.response.UserCreateResponse;
+import com.okbo_projects.domain.user.model.response.UserGetMyProfileResponse;
 import com.okbo_projects.domain.user.model.response.UserGetOtherProfileResponse;
 import com.okbo_projects.domain.user.repository.UserRepository;
 import com.okbo_projects.domain.user.model.response.UserNicknameUpdateResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.function.EntityResponse;
 
 import static com.okbo_projects.common.exception.ErrorMessage.*;
 
@@ -85,11 +84,9 @@ public class UserService {
                 user
         );
     }
-}
 
     // 유저 닉네임 변경
     public UserNicknameUpdateResponse updateNickname(UserNicknameUpdateRequest request, SessionUser sessionUser) {
-
         if (userRepository.existsUserByNickname(request.getNickname())) {
             throw new CustomException(CONFLICT_NICKNAME);
         }
