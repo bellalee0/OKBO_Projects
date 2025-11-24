@@ -11,13 +11,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateBoardRequest {
-    private Long id;
-    private String title;
-    private String team;
-    private String content;
-    private Long writer;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+//    private Long id;
+//    private String title;
+//    private String team;
+//    private String content;
+//    private Long writer;
+//    private LocalDateTime createdAt;
+//    private LocalDateTime modifiedAt;
 
 
 }

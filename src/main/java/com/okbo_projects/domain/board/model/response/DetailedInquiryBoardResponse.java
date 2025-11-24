@@ -12,23 +12,23 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DetailedInquiryBoardResponse {
-    private Long id;
-    private String title;
-    private String content;
-    private String writer;
-    private LocalDateTime creatAt;
-    private LocalDateTime modifiedAt;
-
-
-    public static DetailedInquiryBoardResponse from(BoardDto dto) {
-        return new DetailedInquiryBoardResponse(
-                dto.getId(),
-                dto.getTitle(),
-                dto.getContent(),
-                dto.getTeam(),
-                dto.getWriter().getNickname()
-        );
-    }
-
+//    private Long id;
+//    private String title;
+//    private String content;
+//    private String writer;
+//    private LocalDateTime creatAt;
+//    private LocalDateTime modifiedAt;
+//
+//
+//    public static DetailedInquiryBoardResponse from(BoardDto dto) {
+//        return new DetailedInquiryBoardResponse(
+//                dto.getId(),
+//                dto.getTitle(),
+//                dto.getContent(),
+//                dto.getTeam(),
+//                dto.getWriter().getNickname()
+//        );
+//    }
+//
 
 }

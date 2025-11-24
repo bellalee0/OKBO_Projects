@@ -12,24 +12,24 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateBoardResponse {
-    private Long id;
-    private String title;
-    private String content;
-    private String team;
-    private Long writer;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
-
-    public static CreateBoardResponse from(BoardDto dto) {
-        return new CreateBoardResponse(
-                dto.getId(),
-                dto.getTitle(),
-                dto.getTeam(),
-                dto.getContent(),
-                dto.getWriter(),
-                dto.getCreatedAt(),
-                dto.getModifiedAt()
-        );
-    }
+//    private Long id;
+//    private String title;
+//    private String content;
+//    private String team;
+//    private Long writer;
+//    private LocalDateTime createdAt;
+//    private LocalDateTime modifiedAt;
+//
+//    public static CreateBoardResponse from(BoardDto dto) {
+//        return new CreateBoardResponse(
+//                dto.getId(),
+//                dto.getTitle(),
+//                dto.getTeam(),
+//                dto.getContent(),
+//                dto.getWriter(),
+//                dto.getCreatedAt(),
+//                dto.getModifiedAt()
+//        );
+//    }
 }
 

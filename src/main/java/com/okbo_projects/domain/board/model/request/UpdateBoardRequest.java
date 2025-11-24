@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateBoardRequest {
-    private String title;
-    private String content;
-    private String team;
+//    private String title;
+//    private String content;
+//    private String team;
 
 }

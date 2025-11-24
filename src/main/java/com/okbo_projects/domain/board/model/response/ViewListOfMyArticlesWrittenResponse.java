@@ -9,18 +9,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ViewListOfMyArticlesWrittenResponse {
-    private Long id;
-    private String title;
-    private String content;
-    private String team;
-
-    public static ViewListOfMyArticlesWrittenResponse from(Board board) {
-        return new ViewListOfMyArticlesWrittenResponse(
-                board.getId(),
-                board.getTitle(),
-                board.getContent(),
-                board.getTeam()
-        );
-    }
+//    private Long id;
+//    private String title;
+//    private String content;
+//    private String team;
+//
+//    public static ViewListOfMyArticlesWrittenResponse from(Board board) {
+//        return new ViewListOfMyArticlesWrittenResponse(
+//                board.getId(),
+//                board.getTitle(),
+//                board.getContent(),
+//                board.getTeam()
+//        );
+//    }
 
 }
