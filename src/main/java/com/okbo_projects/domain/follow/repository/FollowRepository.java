@@ -7,15 +7,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
-    // following, follower 2가지 기준으로 조회(Optional로 반환)
-    Optional<Follow> findByFollowingAndFollower(User following, User follower);
+    // fromUser, toUser 2가지 기준으로 조회(Optional로 반환)
+    Optional<Follow> findByFromUserAndToUser(User fromUser, User toUser);
 
-    // following, follower의 Follow 존재 여부 확인(존재 시 true 반환)
-    boolean existsByFollowingAndFollower(User following, User follower);
+    // fromUser, toUser의 Follow 존재 여부 확인(존재 시 true 반환)
+    boolean existsByFromUserAndToUser(User fromUser, User toUser);
 
     // User의 Following 수 카운트
-    long countByFollowing(User user);
+    long countByFromUser(User user);
 
     // User의 Follower 수 카운트
-    long countByFollower(User user);
+    long countByToUser(User user);
 }

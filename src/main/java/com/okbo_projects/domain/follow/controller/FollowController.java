@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class FollowController {
     private final FollowService followService;
 
-    // Follow 관계 create (following: 로그인한 유저 / follower: Path Variable로 입력받은 유저)
+    // Follow 관계 create (fromUser: 로그인한 유저 / toUser: Path Variable로 입력받은 유저)
     @PostMapping("/{userNickname}")
     public ResponseEntity<Void> createFollow(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
@@ -23,7 +23,7 @@ public class FollowController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // Follow 관계 delete (following: 로그인한 유저 / follower: Path Variable로 입력받은 유저)
+    // Follow 관계 delete (fromUser: 로그인한 유저 / toUser: Path Variable로 입력받은 유저)
     @DeleteMapping("/{userNickname}")
     public ResponseEntity<Void> deleteFollow(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
