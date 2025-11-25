@@ -67,12 +67,12 @@ public class BoardService {
 
     //내가 작성한 게시글 목록 조회
     @Transactional(readOnly = true)
-    public List<ViewListOfMyArticlesWrittenResponse> viewListOfMyArticlesWritten(SessionUser sessionUser) {
+    public Page<ViewListOfMyArticlesWrittenResponse> viewListOfMyArticlesWritten(SessionUser sessionUser,int page, int size) {
         User user = findByUserId(sessionUser.getUserId());
-        List<Board> boards = boardRepository.findByWriter(user);
-        return boards.stream()
-                .map(ViewListOfMyArticlesWrittenResponse::from)
-                .collect(Collectors.toList());
+        Page<Board> boards = boardRepository.findByWriter(user, PageRequest.of(page, size));
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<Board> boardPage = boardRepository.findByWriter(user, pageable);
+        return boardPage.map(ViewListOfMyArticlesWrittenResponse::from);
     }
 
     // 게시글 전체 조회

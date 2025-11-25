@@ -52,11 +52,13 @@ public class BoardController {
     }
 
     //내가 작성한 게시글 목록 조회
-    @GetMapping("/myboard")
-    public ResponseEntity<List<ViewListOfMyArticlesWrittenResponse>> viewListOfMyArticlesWritten(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser
+    @GetMapping("/myBoard")
+    public ResponseEntity<Page<ViewListOfMyArticlesWrittenResponse>> viewListOfMyArticlesWritten(
+            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ){
-        List<ViewListOfMyArticlesWrittenResponse> result = boardService.viewListOfMyArticlesWritten(sessionUser);
+        Page<ViewListOfMyArticlesWrittenResponse> result = boardService.viewListOfMyArticlesWritten(sessionUser,page, size);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
