@@ -3,8 +3,6 @@ package com.okbo_projects.domain.follow.repository;
 import com.okbo_projects.common.entity.Follow;
 import com.okbo_projects.common.entity.User;
 import com.okbo_projects.common.exception.CustomException;
-import com.okbo_projects.domain.follow.model.Response.FollowGetFollowerListResponse;
-import com.okbo_projects.domain.follow.model.Response.FollowGetFollowingListResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
