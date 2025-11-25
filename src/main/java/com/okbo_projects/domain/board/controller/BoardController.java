@@ -32,22 +32,22 @@ public class BoardController {
     }
 
     //게시글 수정
-    @PutMapping("/{id}")
+    @PutMapping("/{boardId}")
     public ResponseEntity<UpdateBoardResponse> updateBoard(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
-            @PathVariable Long id,
+            @PathVariable Long boardId,
             @Valid @RequestBody UpdateBoardRequest request
     ){
-        UpdateBoardResponse result = boardService.updateBoard(sessionUser,id,request);
+        UpdateBoardResponse result = boardService.updateBoard(sessionUser, boardId, request);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     //게시글 상세조회
-    @GetMapping("/{id}")
+    @GetMapping("/{boardId}")
     public ResponseEntity<DetailedInquiryBoardResponse> detailedInquiryBoard(
-            @PathVariable Long id
+            @PathVariable Long boardId
     ){
-        DetailedInquiryBoardResponse result = DetailedInquiryBoardResponse.from(boardService.detailedInquiryBoard(id));
+        DetailedInquiryBoardResponse result = DetailedInquiryBoardResponse.from(boardService.detailedInquiryBoard(boardId));
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -88,7 +88,7 @@ public class BoardController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<BoardReadFollowPageResponse> result = boardService.getBoardFollowAllPage(page, size, sessionUser.getUserId());
+        Page<BoardReadFollowPageResponse> result = boardService.getBoardFollowAllPage(page, size, sessionUser);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -96,8 +96,9 @@ public class BoardController {
     @DeleteMapping("/{boardId}")
     public ResponseEntity<Void> deleteBoard(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
-            @PathVariable Long boardId) {
-        boardService.deleteBoard(sessionUser.getUserId(), boardId);
+            @PathVariable Long boardId
+    ) {
+        boardService.deleteBoard(sessionUser, boardId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

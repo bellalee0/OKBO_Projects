@@ -49,8 +49,8 @@ public class BoardService {
     }
 
     //게시글 수정
-    public UpdateBoardResponse updateBoard(SessionUser sessionUser,Long id, UpdateBoardRequest request) {
-        Board board = findByBoardId(id);
+    public UpdateBoardResponse updateBoard(SessionUser sessionUser, Long boardId, UpdateBoardRequest request) {
+        Board board = findByBoardId(boardId);
         matchedWriter(sessionUser.getUserId(), board.getWriter().getId());
         board.update(request);
         boardRepository.save(board);
@@ -60,8 +60,8 @@ public class BoardService {
 
     //게시글 상세조회
     @Transactional(readOnly = true)
-    public BoardDto detailedInquiryBoard(Long id) {
-        Board board = findByBoardId(id);
+    public BoardDto detailedInquiryBoard(Long boardId) {
+        Board board = findByBoardId(boardId);
         return BoardDto.from(board);
     }
 
@@ -94,8 +94,8 @@ public class BoardService {
 
     // 팔로워 게시글 전체 조회
     @Transactional(readOnly = true)
-    public Page<BoardReadFollowPageResponse> getBoardFollowAllPage(int page, int size, Long userId) {
-        User user = findByUserId(userId);
+    public Page<BoardReadFollowPageResponse> getBoardFollowAllPage(int page, int size, SessionUser sessionUser) {
+        User user = findByUserId(sessionUser.getUserId());
         findByFromUser(user);
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<Board> boardPage = boardRepository.findByFollowerBoard(user.getId(), pageable);
@@ -111,9 +111,9 @@ public class BoardService {
     }
 
     // 게시글 삭제
-    public void deleteBoard(Long userId, Long boardId) {
+    public void deleteBoard(SessionUser sessionUser, Long boardId) {
         Board board = findByBoardId(boardId);
-        matchedWriter(userId, board.getWriter().getId());
+        matchedWriter(sessionUser.getUserId(), board.getWriter().getId());
         boardRepository.delete(board);
     }
 
