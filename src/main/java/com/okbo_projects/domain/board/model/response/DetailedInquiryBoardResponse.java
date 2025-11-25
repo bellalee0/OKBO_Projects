@@ -19,7 +19,6 @@ public class DetailedInquiryBoardResponse {
     private LocalDateTime creatAt;
     private LocalDateTime modifiedAt;
 
-
     public static DetailedInquiryBoardResponse from(BoardDto dto) {
         return new DetailedInquiryBoardResponse(
                 dto.getId(),
@@ -31,6 +30,4 @@ public class DetailedInquiryBoardResponse {
                 dto.getModifiedAt()
         );
     }
-
-
 }

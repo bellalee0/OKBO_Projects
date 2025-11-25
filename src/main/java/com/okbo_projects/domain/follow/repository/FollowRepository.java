@@ -26,4 +26,10 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     // user가 ToUser인 경우 조회(페이지네이션 적용)
     Page<Follow> findByToUser(User user, Pageable pageable);
+
+    // User가 FromUser인 경우 존재 여부 확인(존재 시 true 반환)
+    boolean existsByFromUser(User user);
+
+    // User가 ToUser인 경우 존재 여부 확인(존재 시 true 반환)
+    boolean existsByToUser(User user);
 }

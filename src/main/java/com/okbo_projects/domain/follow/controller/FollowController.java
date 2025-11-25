@@ -42,7 +42,7 @@ public class FollowController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    // Following 유저 조회 (로그인된 유저 기준)
+    // Following 유저 리스트 조회
     @GetMapping("/following")
     public ResponseEntity<Page<FollowGetFollowingListResponse>> getFollowingList(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
@@ -53,7 +53,7 @@ public class FollowController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    // Follower 유저 조회 (로그인된 유저 기준)
+    // Follower 유저 리스트 조회
     @GetMapping("/follower")
     public ResponseEntity<Page<FollowGetFollowerListResponse>> getFollowerList(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,

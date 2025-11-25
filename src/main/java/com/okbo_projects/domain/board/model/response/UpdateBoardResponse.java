@@ -22,5 +22,4 @@ public class UpdateBoardResponse {
                 dto.getTeam().getTeamName()
         );
     }
-
 }

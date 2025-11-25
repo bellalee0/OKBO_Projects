@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "boards")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,5 +37,7 @@ public class Board extends BaseEntity {
     }
 
     public void update(UpdateBoardRequest request) {
+        this.title = request.getTitle();
+        this.content = request.getContent();
     }
 }

@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardReadAllPageResponse {
-
     private Long id;
     private String title;
     private String team;
