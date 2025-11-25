@@ -82,7 +82,7 @@ public class BoardController {
     }
 
     // 팔로워 게시글 조회
-    @GetMapping("/followers")
+    @GetMapping("/followings")
     public ResponseEntity<Page<BoardReadFollowPageResponse>> getBoardFollowAllPage(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
             @RequestParam(defaultValue = "0") int page,
