@@ -30,6 +30,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    // 로그인
     @PostMapping("/login")
     public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest request, HttpSession session) {
         SessionUser sessionUser = userService.login(request);
@@ -38,22 +39,26 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    // 로그아웃
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpSession session) {
         session.invalidate();
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-   @GetMapping("/myPage")
-   public UserGetMyProfileResponse getMyProfile(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser) {
+    // 내 정보 조회
+    @GetMapping("/myPage")
+    public UserGetMyProfileResponse getMyProfile(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser) {
         return userService.getMyProfile(sessionUser);
     }
 
+    // 다른 유저 조회
     @GetMapping("/{nickname}")
     public UserGetOtherProfileResponse getOtherProfile(@PathVariable String nickname) {
         return userService.getOtherProfile(nickname);
     }
 
+    // 닉네임 변경
     @PutMapping("/nickname")
     public ResponseEntity<UserNicknameUpdateResponse> updateNickname(@Valid @RequestBody UserNicknameUpdateRequest request,
                                                                      @SessionAttribute(name = "loginUser") SessionUser sessionUser) {
@@ -61,6 +66,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    // 비밀번호 변경
     @PutMapping("/password")
     public ResponseEntity<Void> updatePassword(@Valid @RequestBody UserPasswordUpdateRequest request,
                                                @SessionAttribute(name = "loginUser") SessionUser sessionUser) {

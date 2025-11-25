@@ -32,11 +32,11 @@ public class UserService {
     public UserCreateResponse create(UserCreateRequest request) {
 
         if (userRepository.existsUserByNickname(request.getNickname())) {
-            throw new CustomException(CONFLICT_NICKNAME);
+            throw new CustomException(CONFLICT_USED_NICKNAME);
         }
 
         if (userRepository.existsUserByEmail(request.getEmail())) {
-            throw new CustomException(CONFLICT_EMAIL);
+            throw new CustomException(CONFLICT_USED_EMAIL);
         }
 
         String encodingPassword = passwordEncoder.encode(request.getPassword());
@@ -59,7 +59,7 @@ public class UserService {
                 .orElseThrow(() -> new CustomException(NOT_FOUND_EMAIL));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new CustomException(UNAUTHORIZED_PASSWORD);
+            throw new CustomException(UNAUTHORIZED_WRONG_PASSWORD);
         }
 
         return new SessionUser(user.getId(), user.getEmail(), user.getNickname());
@@ -87,7 +87,7 @@ public class UserService {
     public UserNicknameUpdateResponse updateNickname(UserNicknameUpdateRequest request, SessionUser sessionUser) {
 
         if (userRepository.existsUserByNickname(request.getNickname())) {
-            throw new CustomException(CONFLICT_NICKNAME);
+            throw new CustomException(CONFLICT_USED_NICKNAME);
         }
 
         User user = userRepository.findUserById(sessionUser.getUserId());
@@ -105,11 +105,11 @@ public class UserService {
         String newPassword = request.getNewPassword();
 
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            throw new CustomException(UNAUTHORIZED_PASSWORD);
+            throw new CustomException(UNAUTHORIZED_WRONG_PASSWORD);
         }
 
         if (currentPassword.equals(newPassword)) {
-            throw new RuntimeException("현재 비밀번호와 동일한 비밀번호로는 변경할 수 없습니다.");
+            throw new CustomException(BAD_REQUEST_PASSWORD_SAME_AS_CURRENT);
         }
 
         String encodingPassword = passwordEncoder.encode(newPassword);
