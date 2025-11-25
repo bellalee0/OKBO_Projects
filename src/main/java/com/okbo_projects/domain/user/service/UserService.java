@@ -118,7 +118,7 @@ public class UserService {
         User user = userRepository.findUserById(sessionUser.getUserId());
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new CustomException(UNAUTHORIZED_PASSWORD);
+            throw new CustomException(UNAUTHORIZED_WRONG_PASSWORD);
         }
 
         user.deactivate();
