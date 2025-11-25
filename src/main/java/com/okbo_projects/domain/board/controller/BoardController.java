@@ -1,7 +1,5 @@
 package com.okbo_projects.domain.board.controller;
 
-import com.okbo_projects.common.exception.CustomException;
-import com.okbo_projects.common.exception.ErrorMessage;
 import com.okbo_projects.common.model.SessionUser;
 import com.okbo_projects.domain.board.model.request.CreateBoardRequest;
 import com.okbo_projects.domain.board.model.request.UpdateBoardRequest;
@@ -29,7 +27,6 @@ public class BoardController {
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
             @Valid @RequestBody CreateBoardRequest request
     ){
-        checkedLogin(sessionUser);
         CreateBoardResponse result = boardService.createBoard(sessionUser, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
@@ -41,7 +38,6 @@ public class BoardController {
             @PathVariable Long id,
             @Valid @RequestBody UpdateBoardRequest request
     ){
-        checkedLogin(sessionUser);
         UpdateBoardResponse result = boardService.updateBoard(sessionUser,id,request);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
@@ -60,7 +56,6 @@ public class BoardController {
     public ResponseEntity<List<ViewListOfMyArticlesWrittenResponse>> viewListOfMyArticlesWritten(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser
     ){
-        checkedLogin(sessionUser);
         List<ViewListOfMyArticlesWrittenResponse> result = boardService.viewListOfMyArticlesWritten(sessionUser);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
@@ -93,7 +88,6 @@ public class BoardController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        checkedLogin(sessionUser);
         Page<BoardReadFollowPageResponse> result = boardService.getBoardFollowAllPage(page, size, sessionUser.getUserId());
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
@@ -103,15 +97,7 @@ public class BoardController {
     public ResponseEntity<Void> deleteBoard(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
             @PathVariable Long boardId) {
-        checkedLogin(sessionUser);
         boardService.deleteBoard(sessionUser.getUserId(), boardId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    // 로그인 체크
-    private void checkedLogin(SessionUser sessionUser) {
-        if(sessionUser == null) {
-            throw new CustomException(ErrorMessage.UNAUTHORIZED_LOGIN_REQUIRED);
-        }
     }
 }

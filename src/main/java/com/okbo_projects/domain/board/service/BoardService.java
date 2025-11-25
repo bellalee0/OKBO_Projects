@@ -119,16 +119,12 @@ public class BoardService {
 
     // 회원 확인
     private User findByUserId(Long userId) {
-        return userRepository.findById(userId).orElseThrow(
-                () -> new CustomException(NOT_FOUND_USER)
-        );
+        return userRepository.findUserById(userId);
     }
 
     // 게시물 확인
     private Board findByBoardId(Long boardId) {
-        return boardRepository.findById(boardId).orElseThrow(
-                () -> new CustomException(NOT_FOUND_BOARD)
-        );
+        return boardRepository.findBoardById(boardId);
     }
 
     // 작성자 일치 확인
