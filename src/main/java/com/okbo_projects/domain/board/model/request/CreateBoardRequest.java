@@ -1,12 +1,8 @@
 package com.okbo_projects.domain.board.model.request;
 
-import com.okbo_projects.common.utils.Team;
-import com.okbo_projects.domain.board.model.dto.BoardDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor

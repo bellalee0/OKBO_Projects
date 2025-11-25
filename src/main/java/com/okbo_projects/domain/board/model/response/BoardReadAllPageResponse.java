@@ -7,20 +7,20 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-//@AllArgsConstructor
+@AllArgsConstructor
 public class BoardReadAllPageResponse {
 
-//    private Long id;
-//    private String title;
-//    private String team_category;
-//    private String writer;
-//
-//    public static BoardReadAllPageResponse from(BoardDto boardDto) {
-//        return new BoardReadAllPageResponse(
-//                boardDto.getId(),
-//                boardDto.getTitle(),
-//                boardDto.getTeam(),
-//                boardDto.getWriter()
-//        );
-//    }
+    private Long id;
+    private String title;
+    private String team;
+    private String writer;
+
+    public static BoardReadAllPageResponse from(BoardDto boardDto) {
+        return new BoardReadAllPageResponse(
+                boardDto.getId(),
+                boardDto.getTitle(),
+                boardDto.getTeam().getTeamName(),
+                boardDto.getWriter()
+        );
+    }
 }

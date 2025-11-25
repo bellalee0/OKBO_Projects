@@ -1,11 +1,9 @@
 package com.okbo_projects.domain.board.model.response;
 
-import com.okbo_projects.common.utils.Team;
 import com.okbo_projects.domain.board.model.dto.BoardDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 

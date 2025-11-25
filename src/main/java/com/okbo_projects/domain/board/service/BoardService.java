@@ -3,25 +3,27 @@ package com.okbo_projects.domain.board.service;
 import com.okbo_projects.common.entity.Board;
 import com.okbo_projects.common.entity.User;
 import com.okbo_projects.common.exception.CustomException;
-import com.okbo_projects.common.model.SessionUser;
+import com.okbo_projects.common.exception.ErrorMessage;
 import com.okbo_projects.common.utils.Team;
+import com.okbo_projects.common.model.SessionUser;
 import com.okbo_projects.domain.board.model.dto.BoardDto;
 import com.okbo_projects.domain.board.model.request.CreateBoardRequest;
 import com.okbo_projects.domain.board.model.request.UpdateBoardRequest;
-import com.okbo_projects.domain.board.model.response.CreateBoardResponse;
-import com.okbo_projects.domain.board.model.response.UpdateBoardResponse;
-import com.okbo_projects.domain.board.model.response.ViewListOfMyArticlesWrittenResponse;
+import com.okbo_projects.domain.board.model.response.*;
 import com.okbo_projects.domain.board.repository.BoardRepository;
 import com.okbo_projects.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.okbo_projects.common.exception.ErrorMessage.NOT_FOUND_BOARD;
-import static com.okbo_projects.common.exception.ErrorMessage.NOT_FOUND_USER;
+import static com.okbo_projects.common.exception.ErrorMessage.*;
 
 @RequiredArgsConstructor
 @Transactional
@@ -97,4 +99,56 @@ public class BoardService {
                 .collect(Collectors.toList());//3.최종 연산단계: 결과를 리스트로 반환을 받겠다.
     }
 
+    // 게시글 전체 조회
+    @Transactional(readOnly = true)
+    public Page<BoardReadAllPageResponse> getBoardAllPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<Board> boardPage = boardRepository.findAll(pageable);
+        return boardPage.map(i -> BoardReadAllPageResponse.from(BoardDto.from(i)));
+    }
+
+    // 게시글 구단별 전체 조회
+    @Transactional(readOnly = true)
+    public Page<BaordReadTeamPageResponse> getBoardTeamAllPage(int page, int size, String teamName) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Team team = Team.valueOf(teamName);
+        Page<Board> boardPage = boardRepository.findByTeam(team, pageable);
+        return boardPage.map(i -> BaordReadTeamPageResponse.from(BoardDto.from(i)));
+    }
+
+    // 팔로워 게시글 전체 조회
+    @Transactional(readOnly = true)
+    public Page<BoardReadFollowPageResponse> getBoardFollowAllPage(int page, int size, Long userId) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<Board> boardPage = boardRepository.findByFollowerBoard(userId, pageable);
+        return boardPage.map(i -> BoardReadFollowPageResponse.from(BoardDto.from(i)));
+    }
+
+    // 게시글 삭제
+    public void deleteBoard(Long userId, Long boardId) {
+        Board board = findByBoardId(boardId);
+        matchedWriter(userId, board.getWriter().getId());
+        boardRepository.delete(board);
+    }
+
+    // 회원 확인
+    private User findByUserId(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new CustomException(ErrorMessage.NOT_FOUND_USER)
+        );
+    }
+
+    // 게시물 확인
+    private Board findByBoardId(Long boardId) {
+        return boardRepository.findById(boardId).orElseThrow(
+                () -> new CustomException(ErrorMessage.NOT_FOUND_BOARD)
+        );
+    }
+
+    // 작성자 일치 확인
+    private void matchedWriter(Long userId, Long boardUserId) {
+        if(!userId.equals(boardUserId)) {
+            throw new CustomException(ErrorMessage.FORBIDDEN_ONLY_WRITER);
+        }
+    }
 }
