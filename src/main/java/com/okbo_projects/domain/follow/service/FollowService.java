@@ -3,6 +3,7 @@ package com.okbo_projects.domain.follow.service;
 import com.okbo_projects.common.entity.Follow;
 import com.okbo_projects.common.entity.User;
 import com.okbo_projects.common.exception.CustomException;
+import com.okbo_projects.common.model.SessionUser;
 import com.okbo_projects.domain.follow.model.Response.*;
 import com.okbo_projects.domain.follow.repository.FollowRepository;
 import com.okbo_projects.domain.user.repository.UserRepository;
@@ -24,11 +25,9 @@ public class FollowService {
     private final UserRepository userRepository;
 
     // Follow 관계 create (fromUser: 로그인한 유저 / toUser: Path Variable로 입력받은 유저)
-    public void createFollow(Long userId, String userNickname) {
-        User fromUser = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
-        User toUser = userRepository.findByNickname(userNickname)
-                .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+    public void createFollow(SessionUser sessionUser, String userNickname) {
+        User fromUser = userRepository.findUserById(sessionUser.getUserId());
+        User toUser = userRepository.findUserByNickname(userNickname);
 
         if (fromUser.equals(toUser)) { throw new CustomException (BAD_REQUEST_NOT_ALLOWED_SELF_FOLLOW); }
         boolean checkFollowExistence = followRepository.existsByFromUserAndToUser(fromUser, toUser);
@@ -39,27 +38,22 @@ public class FollowService {
     }
 
     // Follow 관계 delete (fromUser: 로그인한 유저 / toUser: Path Variable로 입력받은 유저)
-    public void deleteFollow(Long userId, String userNickname) {
-        User fromUser = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
-        User toUser = userRepository.findByNickname(userNickname)
-                .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+    public void deleteFollow(SessionUser sessionUser, String userNickname) {
+        User fromUser = userRepository.findUserById(sessionUser.getUserId());
+        User toUser = userRepository.findUserByNickname(userNickname);
 
-        Follow follow = followRepository.findByFromUserAndToUser(fromUser, toUser)
-                .orElseThrow(() -> new CustomException(BAD_REQUEST_NOT_FOLLOWING_UNFOLLOW));
+        Follow follow = followRepository.findFollowByFromUserAndToUser(fromUser, toUser);
 
         followRepository.delete(follow);
     }
 
     // Following, Follower 수 count
-    public FollowCountResponse countFollow(Long userId, String userNickname) {
+    public FollowCountResponse countFollow(SessionUser sessionUser, String userNickname) {
         User user;
         if (userNickname == null) {
-            user = userRepository.findById(userId)
-                    .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+            user = userRepository.findUserById(sessionUser.getUserId());
         } else {
-            user = userRepository.findByNickname(userNickname)
-                    .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+            user = userRepository.findUserByNickname(userNickname);
         }
 
         long following = followRepository.countByFromUser(user);
@@ -68,14 +62,12 @@ public class FollowService {
     }
 
     // Following 유저 리스트 조회 (생성일 기준 내림차순 정렬)
-    public Page<FollowGetFollowingListResponse> getFollowingList(Long userId, int page, int size, String userNickname) {
+    public Page<FollowGetFollowingListResponse> getFollowingList(SessionUser sessionUser, int page, int size, String userNickname) {
         User user;
         if (userNickname == null) {
-            user = userRepository.findById(userId)
-                    .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+            user = userRepository.findUserById(sessionUser.getUserId());
         } else {
-            user = userRepository.findByNickname(userNickname)
-                    .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+            user = userRepository.findUserByNickname(userNickname);
         }
 
         boolean existsFollowingList = followRepository.existsByFromUser(user);
@@ -89,14 +81,12 @@ public class FollowService {
     }
 
     // Follower 유저 리스트 조회 (생성일 기준 내림차순 정렬)
-    public Page<FollowGetFollowerListResponse> getFollowerList(Long userId, int page, int size, String userNickname) {
+    public Page<FollowGetFollowerListResponse> getFollowerList(SessionUser sessionUser, int page, int size, String userNickname) {
         User user;
         if (userNickname == null) {
-            user = userRepository.findById(userId)
-                    .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+            user = userRepository.findUserById(sessionUser.getUserId());
         } else {
-            user = userRepository.findByNickname(userNickname)
-                    .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+            user = userRepository.findUserByNickname(userNickname);
         }
 
         boolean existsFollowerList = followRepository.existsByToUser(user);

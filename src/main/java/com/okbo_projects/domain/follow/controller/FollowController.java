@@ -20,7 +20,7 @@ public class FollowController {
     public ResponseEntity<Void> createFollow(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
             @PathVariable String userNickname ) {
-        followService.createFollow(sessionUser.getUserId(), userNickname);
+        followService.createFollow(sessionUser, userNickname);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -29,7 +29,7 @@ public class FollowController {
     public ResponseEntity<Void> deleteFollow(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
             @PathVariable String userNickname ) {
-        followService.deleteFollow(sessionUser.getUserId(), userNickname);
+        followService.deleteFollow(sessionUser, userNickname);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -38,7 +38,7 @@ public class FollowController {
     public ResponseEntity<FollowCountResponse> countFollow(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
             @RequestParam(name = "userNickname", required = false) String userNickname) {
-        FollowCountResponse result = followService.countFollow(sessionUser.getUserId(), userNickname);
+        FollowCountResponse result = followService.countFollow(sessionUser, userNickname);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -49,7 +49,7 @@ public class FollowController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(name = "userNickname", required = false) String userNickname ) {
-        Page<FollowGetFollowingListResponse> result = followService.getFollowingList(sessionUser.getUserId(), page, size, userNickname);
+        Page<FollowGetFollowingListResponse> result = followService.getFollowingList(sessionUser, page, size, userNickname);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -60,7 +60,7 @@ public class FollowController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(name = "userNickname", required = false) String userNickname ) {
-        Page<FollowGetFollowerListResponse> result = followService.getFollowerList(sessionUser.getUserId(), page, size, userNickname);
+        Page<FollowGetFollowerListResponse> result = followService.getFollowerList(sessionUser, page, size, userNickname);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }
