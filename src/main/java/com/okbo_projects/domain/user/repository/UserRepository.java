@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Email;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,13 +18,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> findByNickname (String nickname);
+    Optional<User> findByNickname(String nickname);
 
-    default User findUserById(Long id){
+    default User findUserById(Long id) {
         return findById(id).orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_USER));
     }
 
-    default User findUserByEmail(String email){
+    default User findUserByNickname(String nickname) {
+        return findByNickname(nickname).orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_USER));
+    }
+
+    default User findUserByEmail(String email) {
         return findByEmail(email).orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_USER));
     }
 }

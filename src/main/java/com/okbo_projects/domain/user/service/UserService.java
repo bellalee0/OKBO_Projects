@@ -52,8 +52,7 @@ public class UserService {
 
     // 로그인
     public SessionUser login(LoginRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new CustomException(NOT_FOUND_EMAIL));
+        User user = userRepository.findUserByEmail(request.getEmail());
 
         if (!user.isActivated()) {
             throw new CustomException(NOT_FOUND_USER);
@@ -68,8 +67,7 @@ public class UserService {
     // 내 프로필 조회
     @Transactional(readOnly = true)
     public UserGetMyProfileResponse getMyProfile(SessionUser sessionUser) {
-        User user = userRepository.findById(sessionUser.getUserId())
-                .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+        User user = userRepository.findUserById(sessionUser.getUserId());
 
         return new UserGetMyProfileResponse(user);
     }
@@ -77,8 +75,7 @@ public class UserService {
     // 다른 유저 프로필 조회
     @Transactional(readOnly = true)
     public UserGetOtherProfileResponse getOtherProfile(String userNickname) {
-        User user = userRepository.findByNickname(userNickname)
-                .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+        User user = userRepository.findUserByNickname(userNickname);
 
         if (!user.isActivated()) {
             throw new CustomException(NOT_FOUND_USER);
