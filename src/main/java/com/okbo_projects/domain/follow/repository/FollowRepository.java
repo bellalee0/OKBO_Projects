@@ -8,8 +8,6 @@ import com.okbo_projects.domain.follow.model.Response.FollowGetFollowingListResp
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -27,44 +25,16 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     boolean existsByFromUserAndToUser(User fromUser, User toUser);
 
     // User의 Following 수 카운트
-    @Query(
-            """
-                select count(*)
-                from Follow f left join User u on f.toUser.id = u.id
-                where f.fromUser.id = :userId and u.activated = true
-            """
-    )
-    long countByFromUser(@Param("userId") Long userId);
+    long countByFromUser(Long userId);
 
     // User의 Follower 수 카운트
-    @Query(
-            """
-                select count(*)
-                from Follow f left join User u on f.fromUser.id = u.id
-                where f.toUser.id = :userId and u.activated = true
-            """
-    )
-    long countByToUser(@Param("userId") Long userId);
+    long countByToUser(Long userId);
 
     // user가 FromUser인 경우 조회(페이지네이션 적용)
-    @Query(
-            """
-                select f.toUser.nickname
-                from Follow f left join User u on f.toUser.id = u.id
-                where f.fromUser.id = :userId and u.activated = true
-            """
-    )
-    Page<FollowGetFollowingListResponse> findByFromUser(@Param("userId") Long userId, Pageable pageable);
+    Page<FollowGetFollowingListResponse> findByFromUser(Long userId, Pageable pageable);
 
     // user가 ToUser인 경우 조회(페이지네이션 적용)
-    @Query(
-            """
-                select f.fromUser.nickname
-                from Follow f left join User u on f.fromUser.id = u.id
-                where f.toUser.id = :userId and u.activated = true
-            """
-    )
-    Page<FollowGetFollowerListResponse> findByToUser(@Param("userId") Long userId, Pageable pageable);
+    Page<FollowGetFollowerListResponse> findByToUser(Long userId, Pageable pageable);
 
     // User가 FromUser인 경우 존재 여부 확인(존재 시 true 반환)
     boolean existsByFromUser(User user);
