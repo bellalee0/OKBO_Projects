@@ -67,7 +67,7 @@ public class FollowService {
         return new FollowCountResponse(following, follower);
     }
 
-    // Following 유저 조회 (생성일 기준 내림차순 정렬)
+    // Following 유저 리스트 조회 (생성일 기준 내림차순 정렬)
     public Page<FollowGetFollowingListResponse> getFollowingList(Long userId, int page, int size, String userNickname) {
         User user;
         if (userNickname == null) {
@@ -78,12 +78,17 @@ public class FollowService {
                     .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
         }
 
+        boolean existsFollowingList = followRepository.existsByFromUser(user);
+        if (!existsFollowingList) {
+            throw new CustomException(NOT_FOUND_FOLLOWING);
+        }
+
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return followRepository.findByFromUser(user, pageable)
                 .map(follow -> new FollowGetFollowingListResponse(follow.getToUser().getNickname()));
     }
 
-    // Follower 유저 조회 (생성일 기준 내림차순 정렬)
+    // Follower 유저 리스트 조회 (생성일 기준 내림차순 정렬)
     public Page<FollowGetFollowerListResponse> getFollowerList(Long userId, int page, int size, String userNickname) {
         User user;
         if (userNickname == null) {
@@ -92,6 +97,11 @@ public class FollowService {
         } else {
             user = userRepository.findByNickname(userNickname)
                     .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+        }
+
+        boolean existsFollowerList = followRepository.existsByToUser(user);
+        if (!existsFollowerList) {
+            throw new CustomException(NOT_FOUND_FOLLOWER);
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());

@@ -26,11 +26,11 @@ public class UserService {
     public UserCreateResponse create(UserCreateRequest request) {
 
         if (userRepository.existsUserByNickname((request.getNickname()))) {
-            throw new CustomException(CONFLICT_NICKNAME);
+//            throw new CustomException(CONFLICT_NICKNAME);
         }
 
         if (userRepository.existsUserByEmail(request.getEmail())) {
-            throw new CustomException(CONFLICT_EMAIL);
+//            throw new CustomException(CONFLICT_EMAIL);
         }
 
         String encodingPassword = passwordEncoder.encode(request.getPassword());
@@ -54,7 +54,7 @@ public class UserService {
                 .orElseThrow(() -> new CustomException(NOT_FOUND_EMAIL));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new CustomException(UNAUTHORIZED_PASSWORD);
+//            throw new CustomException(UNAUTHORIZED_PASSWORD);
         }
 
         return new SessionUser(user.getId(), user.getEmail());
