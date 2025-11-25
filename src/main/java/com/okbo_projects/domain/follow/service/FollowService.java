@@ -45,7 +45,6 @@ public class FollowService {
         User toUser = userRepository.findByNickname(userNickname)
                 .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
 
-        if (fromUser.equals(toUser)) { throw new CustomException (BAD_REQUEST_NOT_ALLOWED_SELF_FOLLOW); }
         Follow follow = followRepository.findByFromUserAndToUser(fromUser, toUser)
                 .orElseThrow(() -> new CustomException(BAD_REQUEST_NOT_FOLLOWING_UNFOLLOW));
 
