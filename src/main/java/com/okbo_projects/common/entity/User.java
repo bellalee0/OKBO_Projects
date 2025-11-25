@@ -27,10 +27,26 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Team team;
 
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    private boolean activated;
+
     public User(String nickname, String email, String password, Team team) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.team = team;
+        this.activated = true;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updatePassword(String updatePassword) {
+        this.password = updatePassword;
+    }
+
+    public void deactivate() {
+        this.activated = false;
     }
 }
