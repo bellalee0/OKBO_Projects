@@ -56,8 +56,8 @@ public class FollowService {
             user = userRepository.findUserByNickname(userNickname);
         }
 
-        long following = followRepository.countByFromUser(user.getId());
-        long follower = followRepository.countByToUser(user.getId());
+        long following = followRepository.countByFromUser(user);
+        long follower = followRepository.countByToUser(user);
         return new FollowCountResponse(following, follower);
     }
 
@@ -76,7 +76,8 @@ public class FollowService {
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        return followRepository.findByFromUser(user.getId(), pageable);
+        return followRepository.findByFromUser(user, pageable)
+                .map(follow -> new FollowGetFollowingListResponse(follow.getToUser().getNickname()));
     }
 
     // Follower 유저 리스트 조회 (생성일 기준 내림차순 정렬)
@@ -94,6 +95,7 @@ public class FollowService {
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        return followRepository.findByToUser(user.getId(), pageable);
+        return followRepository.findByToUser(user, pageable)
+                .map(follow -> new FollowGetFollowerListResponse(follow.getFromUser().getNickname()));
     }
 }
