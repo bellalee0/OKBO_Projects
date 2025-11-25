@@ -8,16 +8,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCreateResponse {
-    private Long id;
-    private String nickname;
-    private String email;
-    private String teamName;
+public class UserGetOtherProfileResponse {
+    String nickname;
+    String teamName;
 
-    public UserCreateResponse(User user) {
-        this.id = user.getId();
+    public UserGetOtherProfileResponse(User user) {
         this.nickname = user.getNickname();
-        this.email = user.getEmail();
         this.teamName = user.getTeam().getTeamName();
     }
 }
