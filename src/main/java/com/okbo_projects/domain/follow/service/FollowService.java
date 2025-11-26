@@ -29,9 +29,10 @@ public class FollowService {
         User fromUser = userRepository.findUserById(sessionUser.getUserId());
         User toUser = userRepository.findUserByNickname(userNickname);
 
-        if (fromUser.equals(toUser)) { throw new CustomException (BAD_REQUEST_NOT_ALLOWED_SELF_FOLLOW); }
+        if (fromUser.equals(toUser)) { throw new CustomException(BAD_REQUEST_NOT_ALLOWED_SELF_FOLLOW); }
         boolean checkFollowExistence = followRepository.existsByFromUserAndToUser(fromUser, toUser);
         if (checkFollowExistence) { throw new CustomException(CONFLICT_ALREADY_FOLLOWING); }
+        if (!toUser.isActivated()) { throw new CustomException(NOT_FOUND_USER); }
 
         Follow follow = new Follow(fromUser, toUser);
         followRepository.save(follow);
