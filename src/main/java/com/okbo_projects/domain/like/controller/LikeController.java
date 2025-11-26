@@ -22,7 +22,14 @@ public class LikeController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // TODO: 게시글 좋아요 취소
+    // 게시글 좋아요 취소
+    @DeleteMapping("/boards/{boardId}")
+    public ResponseEntity<Void> deleteBoardLike(@PathVariable Long boardId,
+                                                @SessionAttribute(name = "loginUser") SessionUser sessionUser){
+        likeService.deleteBoardLike(boardId, sessionUser);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
     // TODO: 게시글 좋아요 개수
     // TODO: 댓글 좋아요 추가
     // TODO: 댓글 좋아요 취소
