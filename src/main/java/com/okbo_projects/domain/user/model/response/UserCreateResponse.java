@@ -1,6 +1,6 @@
 package com.okbo_projects.domain.user.model.response;
 
-import com.okbo_projects.common.entity.User;
+import com.okbo_projects.domain.user.model.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,10 +14,12 @@ public class UserCreateResponse {
     private String email;
     private String teamName;
 
-    public UserCreateResponse(User user) {
-        this.id = user.getId();
-        this.nickname = user.getNickname();
-        this.email = user.getEmail();
-        this.teamName = user.getTeam().getTeamName();
+    public static UserCreateResponse from(UserDto userDto) {
+        return new UserCreateResponse(
+                userDto.getId(),
+                userDto.getNickname(),
+                userDto.getEmail(),
+                userDto.getTeam().getTeamName()
+        );
     }
 }

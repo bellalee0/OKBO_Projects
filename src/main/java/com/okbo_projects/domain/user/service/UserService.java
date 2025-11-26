@@ -6,6 +6,7 @@ import com.okbo_projects.common.model.SessionUser;
 import com.okbo_projects.common.utils.PasswordEncoder;
 import com.okbo_projects.common.utils.Team;
 import com.okbo_projects.domain.follow.repository.FollowRepository;
+import com.okbo_projects.domain.user.model.dto.UserDto;
 import com.okbo_projects.domain.user.model.request.*;
 import com.okbo_projects.domain.user.model.response.UserCreateResponse;
 import com.okbo_projects.domain.user.model.response.UserGetMyProfileResponse;
@@ -49,7 +50,7 @@ public class UserService {
         );
 
         userRepository.save(user);
-        return new UserCreateResponse(user);
+        return UserCreateResponse.from(UserDto.from(user));
     }
 
     // 로그인
@@ -63,7 +64,7 @@ public class UserService {
             throw new CustomException(UNAUTHORIZED_WRONG_PASSWORD);
         }
 
-        return new SessionUser(user.getId(), user.getEmail(), user.getNickname());
+        return SessionUser.from(UserDto.from(user));
     }
 
     // 내 프로필 조회
@@ -71,7 +72,7 @@ public class UserService {
     public UserGetMyProfileResponse getMyProfile(SessionUser sessionUser) {
         User user = userRepository.findUserById(sessionUser.getUserId());
 
-        return new UserGetMyProfileResponse(user);
+        return UserGetMyProfileResponse.from(UserDto.from(user));
     }
 
     // 다른 유저 프로필 조회
@@ -83,7 +84,7 @@ public class UserService {
             throw new CustomException(NOT_FOUND_USER);
         }
 
-        return new UserGetOtherProfileResponse(user);
+        return UserGetOtherProfileResponse.from(UserDto.from(user));
     }
 
     // 유저 닉네임 변경(중복 불가)
@@ -97,7 +98,7 @@ public class UserService {
         user.updateNickname(request.getNickname());
         userRepository.save(user);
 
-        return new UserNicknameUpdateResponse(user);
+        return UserNicknameUpdateResponse.from(UserDto.from(user));
     }
 
     // 유저 비밀번호 변경(현재 비밀번호 검증 및 새 비밀번호는 현재 비밀번호와 일치 불가)

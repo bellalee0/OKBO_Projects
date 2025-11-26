@@ -1,6 +1,6 @@
 package com.okbo_projects.domain.user.model.response;
 
-import com.okbo_projects.common.entity.User;
+import com.okbo_projects.domain.user.model.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +12,10 @@ public class UserGetOtherProfileResponse {
     String nickname;
     String teamName;
 
-    public UserGetOtherProfileResponse(User user) {
-        this.nickname = user.getNickname();
-        this.teamName = user.getTeam().getTeamName();
+    public static UserGetOtherProfileResponse from(UserDto userDto) {
+        return new UserGetOtherProfileResponse(
+                userDto.getNickname(),
+                userDto.getTeam().getTeamName()
+        );
     }
 }
