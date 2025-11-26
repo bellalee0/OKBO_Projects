@@ -30,7 +30,7 @@ public class LoginCheckFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
 
         if(requestURI.contains("/boards") && request.getMethod().equals("GET")) {
-            if(requestURI.contains("/myboard") || requestURI.contains("/followers")) {
+            if(requestURI.contains("/myboard") || requestURI.contains("/followings")) {
                 HttpSession session = request.getSession(false);
                 if (session == null || session.getAttribute("loginUser") == null) {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
