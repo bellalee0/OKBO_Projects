@@ -8,15 +8,17 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BaordReadTeamPageResponse {
+public class BoardGetFollowPageResponse {
     private Long id;
     private String title;
+    private String team;
     private String writer;
 
-    public static BaordReadTeamPageResponse from(BoardDto boardDto) {
-        return new BaordReadTeamPageResponse(
+    public static BoardGetFollowPageResponse from(BoardDto boardDto) {
+        return new BoardGetFollowPageResponse(
                 boardDto.getId(),
                 boardDto.getTitle(),
+                boardDto.getTeam().getTeamName(),
                 boardDto.getWriter()
         );
     }

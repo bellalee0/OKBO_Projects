@@ -1,7 +1,7 @@
 package com.okbo_projects.common.entity;
 
 import com.okbo_projects.common.utils.Team;
-import com.okbo_projects.domain.board.model.request.UpdateBoardRequest;
+import com.okbo_projects.domain.board.model.request.BoardUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -36,7 +36,7 @@ public class Board extends BaseEntity {
         this.writer = writer;
     }
 
-    public void update(UpdateBoardRequest request) {
+    public void update(BoardUpdateRequest request) {
         this.title = request.getTitle();
         this.content = request.getContent();
     }

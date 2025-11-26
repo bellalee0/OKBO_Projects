@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ViewListOfMyArticlesWrittenResponse {
+public class BoardGetMyArticlesResponse {
     private Long id;
     private String title;
     private String content;
     private String team;
 
-    public static ViewListOfMyArticlesWrittenResponse from(Board board) {
-        return new ViewListOfMyArticlesWrittenResponse(
+    public static BoardGetMyArticlesResponse from(Board board) {
+        return new BoardGetMyArticlesResponse(
                 board.getId(),
                 board.getTitle(),
                 board.getContent(),
