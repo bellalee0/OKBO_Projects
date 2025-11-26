@@ -72,12 +72,12 @@ public class BoardController {
 
     // 게시글 구단별 전체 조회
     @GetMapping("/teams/{teamName}")
-    public ResponseEntity<Page<BoardReadTeamPageResponse>> getBoardTeamAllPage(
+    public ResponseEntity<Page<BoardGetTeamPageResponse>> getBoardTeamAllPage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @PathVariable String teamName
     ) {
-        Page<BoardReadTeamPageResponse> result = boardService.getBoardTeamAllPage(page, size, teamName);
+        Page<BoardGetTeamPageResponse> result = boardService.getBoardTeamAllPage(page, size, teamName);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 

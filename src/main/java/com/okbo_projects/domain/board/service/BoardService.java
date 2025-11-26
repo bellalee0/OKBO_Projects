@@ -81,11 +81,11 @@ public class BoardService {
 
     // 게시글 구단별 전체 조회
     @Transactional(readOnly = true)
-    public Page<BoardReadTeamPageResponse> getBoardTeamAllPage(int page, int size, String teamName) {
+    public Page<BoardGetTeamPageResponse> getBoardTeamAllPage(int page, int size, String teamName) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Team team = Team.valueOf(teamName);
         Page<Board> boardPage = boardRepository.findByTeam(team, pageable);
-        return boardPage.map(i -> BoardReadTeamPageResponse.from(BoardDto.from(i)));
+        return boardPage.map(i -> BoardGetTeamPageResponse.from(BoardDto.from(i)));
     }
 
     // 팔로워 게시글 전체 조회
