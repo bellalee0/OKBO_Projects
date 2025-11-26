@@ -38,9 +38,7 @@ public class LoginCheckFilter extends OncePerRequestFilter {
                     return;
                 }
             }
-        }
-
-        if(!compareWithWhitelist(requestURI, request.getMethod())) {
+        } else if(!compareWithWhitelist(requestURI, request.getMethod())) {
             HttpSession session = request.getSession(false);
             if (session == null || session.getAttribute("loginUser") == null) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
