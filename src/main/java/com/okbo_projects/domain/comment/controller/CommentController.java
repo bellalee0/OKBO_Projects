@@ -25,7 +25,7 @@ public class CommentController {
             @PathVariable Long commentId,
             @Valid @RequestBody CommentUpdateRequest request
             ){
-        CommentUpdateResponse result = CommentService.updateComment(sessionUser,commentId,request);
+        CommentUpdateResponse result = commentService.updateComment(sessionUser,commentId,request);
         return ResponseEntity.status(HttpStatus.OK).body(result);
 
     }
