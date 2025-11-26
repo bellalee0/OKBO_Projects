@@ -31,4 +31,9 @@ public class Like extends BaseEntity {
         this.user = user;
         this.board = board;
     }
+
+    public Like(User user, Comment comment) {
+        this.user = user;
+        this.comment = comment;
+    }
 }
