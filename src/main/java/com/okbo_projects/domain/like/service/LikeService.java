@@ -6,6 +6,7 @@ import com.okbo_projects.common.entity.User;
 import com.okbo_projects.common.exception.CustomException;
 import com.okbo_projects.common.model.SessionUser;
 import com.okbo_projects.domain.board.repository.BoardRepository;
+import com.okbo_projects.domain.like.model.response.BoardLikesCountResponse;
 import com.okbo_projects.domain.like.repository.LikeRepository;
 import com.okbo_projects.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -56,5 +57,13 @@ public class LikeService {
         }
 
         likeRepository.deleteByBoardAndUser(board, user);
+    }
+
+    // 게시글 별 좋아요 개수
+    public BoardLikesCountResponse countBoardLikes(Long boardId) {
+        Board board = boardRepository.findBoardById(boardId);
+        long count = likeRepository.countByBoard(board);
+
+        return new BoardLikesCountResponse(count);
     }
 }
