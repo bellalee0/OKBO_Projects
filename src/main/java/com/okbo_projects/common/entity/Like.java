@@ -1,9 +1,14 @@
 package com.okbo_projects.common.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @Table(name = "likes")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Like extends BaseEntity{
 
     @Id
@@ -23,4 +28,8 @@ public class Like extends BaseEntity{
 //    @JoinColumn(name = "comment_id")
 //    private Comment comment;
 
+    public Like(User user, Board board){
+        this.user = user;
+        this.board = board;
+    }
 }
