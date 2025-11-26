@@ -6,6 +6,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class FollowCountResponse {
-    public final Long following;
-    public final Long follower;
+    public Long following;
+    public Long follower;
+
+    public static FollowCountResponse from(Long following, Long follower) {
+        return new FollowCountResponse(following, follower);
+    }
 }
