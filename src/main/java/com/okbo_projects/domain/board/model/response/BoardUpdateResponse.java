@@ -5,29 +5,21 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateBoardResponse {
+public class BoardUpdateResponse {
     private Long id;
     private String title;
     private String content;
     private String team;
-    private String writer;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
 
-    public static CreateBoardResponse from(BoardDto dto) {
-        return new CreateBoardResponse(
+    public static BoardUpdateResponse from(BoardDto dto) {
+        return new BoardUpdateResponse(
                 dto.getId(),
                 dto.getTitle(),
-                dto.getTeam().getTeamName(),
                 dto.getContent(),
-                dto.getWriter(),
-                dto.getCreatedAt(),
-                dto.getModifiedAt()
+                dto.getTeam().getTeamName()
         );
     }
 }

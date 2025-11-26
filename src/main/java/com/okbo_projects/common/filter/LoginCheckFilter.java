@@ -44,6 +44,17 @@ public class LoginCheckFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestURI = request.getRequestURI();
 
+        if(requestURI.contains("/boards") && request.getMethod().equals("GET")) {
+            if(requestURI.contains("/myboard") || requestURI.contains("/followers")) {
+                HttpSession session = request.getSession(false);
+                if (session == null || session.getAttribute("loginUser") == null) {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                    log.error(requestURI + " : 비로그인 접근 시도");
+                    return;
+                }
+            }
+        }
+
         if(!compareWithWhitelist(requestURI, request.getMethod())) {
             HttpSession session = request.getSession(false);
             if (session == null || session.getAttribute("loginUser") == null) {

@@ -1,8 +1,8 @@
 package com.okbo_projects.domain.board.controller;
 
 import com.okbo_projects.common.model.SessionUser;
-import com.okbo_projects.domain.board.model.request.CreateBoardRequest;
-import com.okbo_projects.domain.board.model.request.UpdateBoardRequest;
+import com.okbo_projects.domain.board.model.request.BoardCreateRequest;
+import com.okbo_projects.domain.board.model.request.BoardUpdateRequest;
 import com.okbo_projects.domain.board.model.response.*;
 import com.okbo_projects.domain.board.service.BoardService;
 import jakarta.validation.Valid;
@@ -20,75 +20,75 @@ public class BoardController {
     private final BoardService boardService;
 
     //게시글 생성
-    @PostMapping("/create")
-    public ResponseEntity<CreateBoardResponse> createBoard(
+    @PostMapping
+    public ResponseEntity<BoardCreateResponse> createBoard(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
-            @Valid @RequestBody CreateBoardRequest request
+            @Valid @RequestBody BoardCreateRequest request
     ){
-        CreateBoardResponse result = boardService.createBoard(sessionUser, request);
+        BoardCreateResponse result = boardService.createBoard(sessionUser, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     //게시글 수정
     @PutMapping("/{boardId}")
-    public ResponseEntity<UpdateBoardResponse> updateBoard(
+    public ResponseEntity<BoardUpdateResponse> updateBoard(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
             @PathVariable Long boardId,
-            @Valid @RequestBody UpdateBoardRequest request
+            @Valid @RequestBody BoardUpdateRequest request
     ){
-        UpdateBoardResponse result = boardService.updateBoard(sessionUser, boardId, request);
+        BoardUpdateResponse result = boardService.updateBoard(sessionUser, boardId, request);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     //게시글 상세조회
-    @GetMapping("/{boardId}")
-    public ResponseEntity<DetailedInquiryBoardResponse> detailedInquiryBoard(
+    @GetMapping("/board/{boardId}")
+    public ResponseEntity<BoardDetailedInquiryResponse> detailedInquiryBoard(
             @PathVariable Long boardId
     ){
-        DetailedInquiryBoardResponse result = DetailedInquiryBoardResponse.from(boardService.detailedInquiryBoard(boardId));
+        BoardDetailedInquiryResponse result = BoardDetailedInquiryResponse.from(boardService.detailedInquiryBoard(boardId));
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     //내가 작성한 게시글 목록 조회
     @GetMapping("/myBoard")
-    public ResponseEntity<Page<ViewListOfMyArticlesWrittenResponse>> viewListOfMyArticlesWritten(
+    public ResponseEntity<Page<BoardGetMyArticlesResponse>> viewListOfMyArticlesWritten(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ){
-        Page<ViewListOfMyArticlesWrittenResponse> result = boardService.viewListOfMyArticlesWritten(sessionUser,page, size);
+        Page<BoardGetMyArticlesResponse> result = boardService.viewListOfMyArticlesWritten(sessionUser,page, size);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     // 게시글 전체 조회
     @GetMapping
-    public ResponseEntity<Page<BoardReadAllPageResponse>> getBoardAllPage(
+    public ResponseEntity<Page<BoardGetAllPageResponse>> getBoardAllPage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<BoardReadAllPageResponse> result = boardService.getBoardAllPage(page, size);
+        Page<BoardGetAllPageResponse> result = boardService.getBoardAllPage(page, size);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     // 게시글 구단별 전체 조회
     @GetMapping("/teams/{teamName}")
-    public ResponseEntity<Page<BaordReadTeamPageResponse>> getBoardTeamAllPage(
+    public ResponseEntity<Page<BoardGetTeamPageResponse>> getBoardTeamAllPage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @PathVariable String teamName
     ) {
-        Page<BaordReadTeamPageResponse> result = boardService.getBoardTeamAllPage(page, size, teamName);
+        Page<BoardGetTeamPageResponse> result = boardService.getBoardTeamAllPage(page, size, teamName);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     // 팔로워 게시글 조회
     @GetMapping("/followings")
-    public ResponseEntity<Page<BoardReadFollowPageResponse>> getBoardFollowAllPage(
+    public ResponseEntity<Page<BoardGetFollowPageResponse>> getBoardFollowAllPage(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<BoardReadFollowPageResponse> result = boardService.getBoardFollowAllPage(page, size, sessionUser);
+        Page<BoardGetFollowPageResponse> result = boardService.getBoardFollowAllPage(page, size, sessionUser);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 

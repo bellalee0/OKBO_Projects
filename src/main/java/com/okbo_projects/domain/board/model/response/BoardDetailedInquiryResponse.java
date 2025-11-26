@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DetailedInquiryBoardResponse {
+public class BoardDetailedInquiryResponse {
     private Long id;
     private String title;
     private String content;
@@ -19,8 +19,8 @@ public class DetailedInquiryBoardResponse {
     private LocalDateTime creatAt;
     private LocalDateTime modifiedAt;
 
-    public static DetailedInquiryBoardResponse from(BoardDto dto) {
-        return new DetailedInquiryBoardResponse(
+    public static BoardDetailedInquiryResponse from(BoardDto dto) {
+        return new BoardDetailedInquiryResponse(
                 dto.getId(),
                 dto.getTitle(),
                 dto.getContent(),
