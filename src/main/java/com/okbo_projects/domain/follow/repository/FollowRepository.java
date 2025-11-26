@@ -23,10 +23,10 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     boolean existsByFromUserAndToUser(User fromUser, User toUser);
 
     // User의 Following 수 카운트
-    long countByFromUser(User user);
+    Long countByFromUser(User user);
 
     // User의 Follower 수 카운트
-    long countByToUser(User user);
+    Long countByToUser(User user);
 
     // user가 FromUser인 경우 조회(페이지네이션 적용)
     Page<Follow> findByFromUser(User user, Pageable pageable);

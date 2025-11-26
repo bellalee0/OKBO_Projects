@@ -4,7 +4,8 @@ import com.okbo_projects.common.entity.Follow;
 import com.okbo_projects.common.entity.User;
 import com.okbo_projects.common.exception.CustomException;
 import com.okbo_projects.common.model.SessionUser;
-import com.okbo_projects.domain.follow.model.Response.*;
+import com.okbo_projects.domain.follow.model.dto.FollowDto;
+import com.okbo_projects.domain.follow.model.response.*;
 import com.okbo_projects.domain.follow.repository.FollowRepository;
 import com.okbo_projects.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -57,9 +58,9 @@ public class FollowService {
             user = userRepository.findUserByNickname(userNickname);
         }
 
-        long following = followRepository.countByFromUser(user);
-        long follower = followRepository.countByToUser(user);
-        return new FollowCountResponse(following, follower);
+        Long following = followRepository.countByFromUser(user);
+        Long follower = followRepository.countByToUser(user);
+        return FollowCountResponse.from(following, follower);
     }
 
     // Following 유저 리스트 조회 (생성일 기준 내림차순 정렬)
@@ -78,7 +79,7 @@ public class FollowService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return followRepository.findByFromUser(user, pageable)
-                .map(follow -> new FollowGetFollowingListResponse(follow.getToUser().getNickname()));
+                .map(follow -> FollowGetFollowingListResponse.from(FollowDto.from(follow)));
     }
 
     // Follower 유저 리스트 조회 (생성일 기준 내림차순 정렬)
@@ -97,6 +98,6 @@ public class FollowService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return followRepository.findByToUser(user, pageable)
-                .map(follow -> new FollowGetFollowerListResponse(follow.getFromUser().getNickname()));
+                .map(follow -> FollowGetFollowerListResponse.from(FollowDto.from(follow)));
     }
 }
