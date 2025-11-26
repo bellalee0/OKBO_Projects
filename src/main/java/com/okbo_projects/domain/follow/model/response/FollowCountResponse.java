@@ -1,4 +1,4 @@
-package com.okbo_projects.domain.follow.model.Response;
+package com.okbo_projects.domain.follow.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

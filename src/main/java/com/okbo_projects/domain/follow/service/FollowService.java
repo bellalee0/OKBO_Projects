@@ -4,7 +4,7 @@ import com.okbo_projects.common.entity.Follow;
 import com.okbo_projects.common.entity.User;
 import com.okbo_projects.common.exception.CustomException;
 import com.okbo_projects.common.model.SessionUser;
-import com.okbo_projects.domain.follow.model.Response.*;
+import com.okbo_projects.domain.follow.model.response.*;
 import com.okbo_projects.domain.follow.repository.FollowRepository;
 import com.okbo_projects.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
