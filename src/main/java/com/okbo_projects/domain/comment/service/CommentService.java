@@ -7,6 +7,7 @@ import com.okbo_projects.common.exception.CustomException;
 import com.okbo_projects.common.model.SessionUser;
 import com.okbo_projects.domain.board.repository.BoardRepository;
 import com.okbo_projects.domain.comment.model.request.CommentUpdateRequest;
+import com.okbo_projects.domain.comment.model.response.CommentGetAllResponse;
 import com.okbo_projects.domain.comment.model.response.CommentUpdateResponse;
 import com.okbo_projects.domain.comment.model.dto.CommentDto;
 import com.okbo_projects.domain.comment.model.request.CommentCreateRequest;
@@ -18,6 +19,9 @@ import com.okbo_projects.domain.comment.repository.CommentRepository;
 import com.okbo_projects.domain.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +50,14 @@ public class CommentService {
         return CommentCreateResponse.from(commentDto);
     }
 
+    // 댓글 전체 조회
+    @Transactional(readOnly = true)
+    public Slice<CommentGetAllResponse> getAllComment(Long boardId, Pageable pageable) {
+        Board board = findByBoardId(boardId);
+        Page<Comment> commentPage = commentRepository.findByBoard_Id(board.getId(), pageable);
+        return commentPage.map(i -> CommentGetAllResponse.from(CommentDto.from(i)));
+    }
+
     //댓글 수정
     public CommentUpdateResponse updateComment(SessionUser sessionUser, Long commentId, CommentUpdateRequest request) {
         Comment comment = findByCommentId(commentId);
@@ -61,10 +73,7 @@ public class CommentService {
     //댓글 삭제
     public void deleteComment(SessionUser sessionUser, Long commentId) {
         Comment comment = findByCommentId(commentId);
-        Long userId = sessionUser.getUserId();
-        if (!comment.getWriter().getId().equals(userId)) {
-            throw new CustomException(FORBIDDEN_ONLY_WRITER);
-        }
+        matchedWriter(sessionUser.getUserId(), comment.getWriter().getId());
         commentRepository.delete(comment);
     }
 
@@ -72,4 +81,20 @@ public class CommentService {
         return commentRepository.findCommentById(commentId);
     }
 
+    // 회원 확인
+    private User findByUserId(Long userId) {
+        return userRepository.findUserById(userId);
+    }
+
+    // 게시물 확인
+    private Board findByBoardId(Long boardId) {
+        return boardRepository.findBoardById(boardId);
+    }
+
+    // 작성자 일치 확인
+    private void matchedWriter(Long userId, Long CommentUserId) {
+        if(!userId.equals(CommentUserId)) {
+            throw new CustomException(FORBIDDEN_ONLY_WRITER);
+        }
+    }
 }
