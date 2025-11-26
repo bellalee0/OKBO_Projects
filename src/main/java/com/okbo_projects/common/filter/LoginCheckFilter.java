@@ -58,9 +58,9 @@ public class LoginCheckFilter extends OncePerRequestFilter {
         if(!compareWithWhitelist(requestURI, request.getMethod())) {
             HttpSession session = request.getSession(false);
             if (session == null || session.getAttribute("loginUser") == null) {
-                handleCustomException(response, new CustomException(UNAUTHORIZED_LOGIN_REQUIRED));
-                // TODO : Enum 값 불러오기
-                log.error("CustomException 발생 : 로그인이 필요한 서비스 입니다.");
+                CustomException unauthorizedException = new CustomException(UNAUTHORIZED_LOGIN_REQUIRED);
+                handleCustomException(response, unauthorizedException);
+                log.error("CustomException 발생 : " + unauthorizedException.getErrorMessage().getMessage());
                 return;
             }
         }
