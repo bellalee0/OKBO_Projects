@@ -37,6 +37,8 @@ public class LikeService {
             throw new RuntimeException("이미 좋아요한 게시글입니다.");
         }
 
+        board.addLikes();
+
         Like like = new Like(
                 user,
                 board
@@ -56,6 +58,8 @@ public class LikeService {
         if (!checkLikeExistence) {
             throw new RuntimeException("좋아요를 누르지 않은 게시글입니다.");
         }
+
+        board.minusLikes();
 
         likeRepository.deleteByBoardAndUser(board, user);
     }
@@ -104,6 +108,7 @@ public class LikeService {
         likeRepository.deleteByCommentAndUser(comment, user);
     }
 
+    // 댓글 별 좋아요 개수
     public CommentLikesCountResponse countCommentLikes(Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow();
         Long count = likeRepository.countByComment(comment);
