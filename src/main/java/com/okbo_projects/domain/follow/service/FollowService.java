@@ -57,8 +57,8 @@ public class FollowService {
             user = userRepository.findUserByNickname(userNickname);
         }
 
-        long following = followRepository.countByFromUser(user);
-        long follower = followRepository.countByToUser(user);
+        Long following = followRepository.countByFromUser(user);
+        Long follower = followRepository.countByToUser(user);
         return new FollowCountResponse(following, follower);
     }
 
