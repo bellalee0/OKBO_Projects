@@ -15,17 +15,19 @@ public class BoardGetFollowPageResponse {
     private String title;
     private String team;
     private String writer;
-     private Long likes;
+    private Long comments;
+    private Long likes;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public static BoardGetFollowPageResponse from(BoardDto boardDto) {
+    public static BoardGetFollowPageResponse from(BoardDto boardDto, Long comments, Long likes) {
         return new BoardGetFollowPageResponse(
                 boardDto.getId(),
                 boardDto.getTitle(),
                 boardDto.getTeam().getTeamName(),
                 boardDto.getWriter(),
-                5L, //TODO : likes 구현 후, 게시글별 좋아요 수 가져오도록 수정
+                comments,
+                likes,
                 boardDto.getCreatedAt(),
                 boardDto.getModifiedAt()
         );

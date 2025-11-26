@@ -10,7 +10,9 @@ import com.okbo_projects.domain.board.model.request.BoardCreateRequest;
 import com.okbo_projects.domain.board.model.request.BoardUpdateRequest;
 import com.okbo_projects.domain.board.model.response.*;
 import com.okbo_projects.domain.board.repository.BoardRepository;
+import com.okbo_projects.domain.comment.repository.CommentRepository;
 import com.okbo_projects.domain.follow.repository.FollowRepository;
+import com.okbo_projects.domain.like.repository.LikeRepository;
 import com.okbo_projects.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +31,8 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
+    private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
 
     //게시글 생성
     public BoardCreateResponse createBoard(SessionUser sessionUser, BoardCreateRequest request) {
@@ -67,14 +71,14 @@ public class BoardService {
     public Page<BoardGetMyArticlesResponse> viewListOfMyArticlesWritten(SessionUser sessionUser, Pageable pageable) {
         User user = findByUserId(sessionUser.getUserId());
         Page<Board> boardPage = boardRepository.findByWriter(user, pageable);
-        return boardPage.map(BoardGetMyArticlesResponse::from);
+        return boardPage.map(board -> BoardGetMyArticlesResponse.from(BoardDto.from(board), commentRepository.countByBoard(board), likeRepository.countByBoard(board)));
     }
 
     // 게시글 전체 조회
     @Transactional(readOnly = true)
     public Page<BoardGetAllPageResponse> getBoardAllPage(Pageable pageable) {
         Page<Board> boardPage = boardRepository.findAll(pageable);
-        return boardPage.map(i -> BoardGetAllPageResponse.from(BoardDto.from(i)));
+        return boardPage.map(board -> BoardGetAllPageResponse.from(BoardDto.from(board), commentRepository.countByBoard(board), likeRepository.countByBoard(board)));
     }
 
     // 게시글 구단별 전체 조회
@@ -82,7 +86,7 @@ public class BoardService {
     public Page<BoardGetTeamPageResponse> getBoardTeamAllPage(Pageable pageable, String teamName) {
         Team team = Team.valueOf(teamName);
         Page<Board> boardPage = boardRepository.findByTeam(team, pageable);
-        return boardPage.map(i -> BoardGetTeamPageResponse.from(BoardDto.from(i)));
+        return boardPage.map(board -> BoardGetTeamPageResponse.from(BoardDto.from(board), commentRepository.countByBoard(board), likeRepository.countByBoard(board)));
     }
 
     // 팔로워 게시글 전체 조회
@@ -91,7 +95,7 @@ public class BoardService {
         User user = findByUserId(sessionUser.getUserId());
         findByFromUser(user);
         Page<Board> boardPage = boardRepository.findByFollowerBoard(user.getId(), pageable);
-        return boardPage.map(i -> BoardGetFollowPageResponse.from(BoardDto.from(i)));
+        return boardPage.map(board -> BoardGetFollowPageResponse.from(BoardDto.from(board), commentRepository.countByBoard(board), likeRepository.countByBoard(board)));
     }
 
     // 팔로워 확인
