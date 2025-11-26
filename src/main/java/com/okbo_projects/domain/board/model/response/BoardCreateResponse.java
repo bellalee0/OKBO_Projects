@@ -23,8 +23,8 @@ public class BoardCreateResponse {
         return new BoardCreateResponse(
                 dto.getId(),
                 dto.getTitle(),
-                dto.getTeam().getTeamName(),
                 dto.getContent(),
+                dto.getTeam().getTeamName(),
                 dto.getWriter(),
                 dto.getCreatedAt(),
                 dto.getModifiedAt()
