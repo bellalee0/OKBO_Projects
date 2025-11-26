@@ -10,5 +10,5 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
 
     boolean existsByBoardAndUser(Board board, User user);
 
-    long countByBoard(Board board);
+    Long countByBoard(Board board);
 }

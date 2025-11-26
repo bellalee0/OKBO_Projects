@@ -59,7 +59,7 @@ public class LikeService {
     // 게시글 별 좋아요 개수
     public BoardLikesCountResponse countBoardLikes(Long boardId) {
         Board board = boardRepository.findBoardById(boardId);
-        long count = likeRepository.countByBoard(board);
+        Long count = likeRepository.countByBoard(board);
 
         return new BoardLikesCountResponse(count);
     }

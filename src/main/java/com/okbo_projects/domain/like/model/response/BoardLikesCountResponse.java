@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class BoardLikesCountResponse {
-    public final long boardLikes;
+    public final Long boardLikes;
 }
