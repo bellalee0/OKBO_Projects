@@ -48,7 +48,7 @@ public class BoardController {
     public ResponseEntity<BoardDetailedInquiryResponse> detailedInquiryBoard(
             @PathVariable Long boardId
     ){
-        BoardDetailedInquiryResponse result = BoardDetailedInquiryResponse.from(boardService.detailedInquiryBoard(boardId));
+        BoardDetailedInquiryResponse result = boardService.detailedInquiryBoard(boardId);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 

@@ -19,6 +19,8 @@ public class BoardDto {
     private Team team;
     private String content;
     private String writer;
+    private Long comments;
+    private Long likes;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -30,6 +32,8 @@ public class BoardDto {
                 board.getTeam(),
                 board.getContent(),
                 board.getWriter().getNickname(),
+                board.getComments(),
+                board.getLikes(),
                 board.getCreatedAt(),
                 board.getModifiedAt()
         );

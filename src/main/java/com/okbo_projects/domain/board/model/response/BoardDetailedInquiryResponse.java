@@ -16,6 +16,8 @@ public class BoardDetailedInquiryResponse {
     private String content;
     private String writer;
     private String team;
+    private Long comments;
+    private Long likes;
     private LocalDateTime creatAt;
     private LocalDateTime modifiedAt;
 
@@ -26,6 +28,8 @@ public class BoardDetailedInquiryResponse {
                 dto.getContent(),
                 dto.getWriter(),
                 dto.getTeam().getTeamName(),
+                dto.getComments(),
+                dto.getLikes(),
                 dto.getCreatedAt(),
                 dto.getModifiedAt()
         );
