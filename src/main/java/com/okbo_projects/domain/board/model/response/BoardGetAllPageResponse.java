@@ -20,14 +20,14 @@ public class BoardGetAllPageResponse {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public static BoardGetAllPageResponse from(BoardDto boardDto, Long comments, Long likes) {
+    public static BoardGetAllPageResponse from(BoardDto boardDto) {
         return new BoardGetAllPageResponse(
                 boardDto.getId(),
                 boardDto.getTitle(),
                 boardDto.getTeam().getTeamName(),
                 boardDto.getWriter(),
-                comments,
-                likes,
+                boardDto.getComments(),
+                boardDto.getLikes(),
                 boardDto.getCreatedAt(),
                 boardDto.getModifiedAt()
         );

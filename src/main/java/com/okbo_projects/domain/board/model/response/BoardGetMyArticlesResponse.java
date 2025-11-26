@@ -21,14 +21,14 @@ public class BoardGetMyArticlesResponse {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public static BoardGetMyArticlesResponse from(BoardDto boardDto, Long comments, Long likes) {
+    public static BoardGetMyArticlesResponse from(BoardDto boardDto) {
         return new BoardGetMyArticlesResponse(
                 boardDto.getId(),
                 boardDto.getTitle(),
                 boardDto.getContent(),
                 boardDto.getTeam().getTeamName(),
-                comments,
-                likes,
+                boardDto.getComments(),
+                boardDto.getLikes(),
                 boardDto.getCreatedAt(),
                 boardDto.getModifiedAt()
         );

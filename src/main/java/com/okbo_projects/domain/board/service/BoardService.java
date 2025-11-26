@@ -62,7 +62,7 @@ public class BoardService {
     public BoardDetailedInquiryResponse detailedInquiryBoard(Long boardId) {
         Board board = findByBoardId(boardId);
         // TODO : 댓글 추가(댓글 CRUD 구현 이후, 댓글 CRUD 중 게시글별 댓글 조회 API 참고)
-        return BoardDetailedInquiryResponse.from(BoardDto.from(board), likeRepository.countByBoard(board));
+        return BoardDetailedInquiryResponse.from(BoardDto.from(board));
     }
 
     //내가 작성한 게시글 목록 조회
@@ -70,14 +70,14 @@ public class BoardService {
     public Page<BoardGetMyArticlesResponse> viewListOfMyArticlesWritten(SessionUser sessionUser, Pageable pageable) {
         User user = findByUserId(sessionUser.getUserId());
         Page<Board> boardPage = boardRepository.findByWriter(user, pageable);
-        return boardPage.map(board -> BoardGetMyArticlesResponse.from(BoardDto.from(board), commentRepository.countByBoard(board), likeRepository.countByBoard(board)));
+        return boardPage.map(board -> BoardGetMyArticlesResponse.from(BoardDto.from(board)));
     }
 
     // 게시글 전체 조회
     @Transactional(readOnly = true)
     public Page<BoardGetAllPageResponse> getBoardAllPage(Pageable pageable) {
         Page<Board> boardPage = boardRepository.findAll(pageable);
-        return boardPage.map(board -> BoardGetAllPageResponse.from(BoardDto.from(board), commentRepository.countByBoard(board), likeRepository.countByBoard(board)));
+        return boardPage.map(board -> BoardGetAllPageResponse.from(BoardDto.from(board)));
     }
 
     // 게시글 구단별 전체 조회
@@ -85,7 +85,7 @@ public class BoardService {
     public Page<BoardGetTeamPageResponse> getBoardTeamAllPage(Pageable pageable, String teamName) {
         Team team = Team.valueOf(teamName);
         Page<Board> boardPage = boardRepository.findByTeam(team, pageable);
-        return boardPage.map(board -> BoardGetTeamPageResponse.from(BoardDto.from(board), commentRepository.countByBoard(board), likeRepository.countByBoard(board)));
+        return boardPage.map(board -> BoardGetTeamPageResponse.from(BoardDto.from(board)));
     }
 
     // 팔로워 게시글 전체 조회
@@ -94,7 +94,7 @@ public class BoardService {
         User user = findByUserId(sessionUser.getUserId());
         findByFromUser(user);
         Page<Board> boardPage = boardRepository.findByFollowerBoard(user.getId(), pageable);
-        return boardPage.map(board -> BoardGetFollowPageResponse.from(BoardDto.from(board), commentRepository.countByBoard(board), likeRepository.countByBoard(board)));
+        return boardPage.map(board -> BoardGetFollowPageResponse.from(BoardDto.from(board)));
     }
 
     // 팔로워 확인
