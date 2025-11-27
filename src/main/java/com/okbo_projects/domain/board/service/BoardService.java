@@ -20,6 +20,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import static com.okbo_projects.common.exception.ErrorMessage.*;
 
 @RequiredArgsConstructor
@@ -67,24 +70,72 @@ public class BoardService {
 
     //내가 작성한 게시글 목록 조회
     @Transactional(readOnly = true)
-    public Page<BoardGetMyArticlesResponse> viewListOfMyArticlesWritten(SessionUser sessionUser, Pageable pageable) {
+    public Page<BoardGetMyArticlesResponse> viewListOfMyArticlesWritten(SessionUser sessionUser, String title, LocalDate startDate, LocalDate endDate, Pageable pageable) {
         User user = findByUserId(sessionUser.getUserId());
-        Page<Board> boardPage = boardRepository.findByWriter(user, pageable);
+
+        boolean searchCondition = (title != null && !title.isBlank()) ||
+                (startDate != null) ||
+                (endDate != null);
+
+        Page<Board> boardPage;
+
+        if (searchCondition) {
+            boardPage = boardRepository.searchMyBoards(user.getId(),title , startDate, endDate, pageable);
+        } else {
+            boardPage = boardRepository.findByWriter(user, pageable);
+        }
+
         return boardPage.map(board -> BoardGetMyArticlesResponse.from(BoardDto.from(board)));
+
+
     }
 
     // 게시글 전체 조회
     @Transactional(readOnly = true)
-    public Page<BoardGetAllPageResponse> getBoardAllPage(Pageable pageable) {
-        Page<Board> boardPage = boardRepository.findAll(pageable);
+    public Page<BoardGetAllPageResponse> getBoardAllPage(
+            String title,
+            String writer,
+            LocalDate startDate,
+            LocalDate endDate,
+            Pageable pageable
+    ) {
+        boolean searchCondition = (title != null && !title.isBlank()) ||
+                        (writer != null && !writer.isBlank()) ||
+                        (startDate != null) ||
+                        (endDate != null);
+
+        Page<Board> boardPage;
+        if (searchCondition){
+            boardPage = boardRepository.searchAllBoards(title, writer, startDate, endDate, pageable);
+        } else {
+            boardPage = boardRepository.findAll(pageable);
+        }
         return boardPage.map(board -> BoardGetAllPageResponse.from(BoardDto.from(board)));
     }
 
     // 게시글 구단별 전체 조회
     @Transactional(readOnly = true)
-    public Page<BoardGetTeamPageResponse> getBoardTeamAllPage(Pageable pageable, String teamName) {
+    public Page<BoardGetTeamPageResponse> getBoardTeamAllPage(
+            String teamName,
+            String title,
+            String writer,
+            LocalDate startDate,
+            LocalDate endDate,
+            Pageable pageable) {
         Team team = Team.valueOf(teamName);
-        Page<Board> boardPage = boardRepository.findByTeam(team, pageable);
+
+        boolean searchCondition = (title != null && !title.isBlank()) ||
+                (writer != null && !writer.isBlank()) ||
+                (startDate != null) ||
+                (endDate != null);
+
+        Page<Board> boardPage;
+
+        if (searchCondition) {
+            boardPage = boardRepository.searchTeamBoards(team, title, writer, startDate, endDate, pageable);
+        } else {
+            boardPage = boardRepository.findByTeam(team, pageable);
+        }
         return boardPage.map(board -> BoardGetTeamPageResponse.from(BoardDto.from(board)));
     }
 
