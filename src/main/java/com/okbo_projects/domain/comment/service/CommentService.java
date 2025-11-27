@@ -12,20 +12,14 @@ import com.okbo_projects.domain.comment.model.response.CommentUpdateResponse;
 import com.okbo_projects.domain.comment.model.dto.CommentDto;
 import com.okbo_projects.domain.comment.model.request.CommentCreateRequest;
 import com.okbo_projects.domain.comment.model.response.CommentCreateResponse;
-import com.okbo_projects.domain.comment.model.dto.CommentDto;
-import com.okbo_projects.domain.comment.model.request.CommentUpdateRequest;
-import com.okbo_projects.domain.comment.model.response.CommentUpdateResponse;
 import com.okbo_projects.domain.comment.repository.CommentRepository;
 import com.okbo_projects.domain.user.repository.UserRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.okbo_projects.common.exception.ErrorMessage.FORBIDDEN_ONLY_WRITER;
 
 import static com.okbo_projects.common.exception.ErrorMessage.FORBIDDEN_ONLY_WRITER;
 
@@ -61,10 +55,7 @@ public class CommentService {
     //댓글 수정
     public CommentUpdateResponse updateComment(SessionUser sessionUser, Long commentId, CommentUpdateRequest request) {
         Comment comment = findByCommentId(commentId);
-        Long userId = sessionUser.getUserId();
-        if (!comment.getWriter().getId().equals(userId)) {
-            throw new CustomException(FORBIDDEN_ONLY_WRITER);
-        }
+        matchedWriter(sessionUser.getUserId(), comment.getWriter().getId());
         comment.update(request);
         commentRepository.save(comment);
         return CommentUpdateResponse.from(comment.toDto());

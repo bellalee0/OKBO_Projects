@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 @Getter
 @Entity
@@ -40,4 +41,7 @@ public class Board extends BaseEntity {
         this.title = request.getTitle();
         this.content = request.getContent();
     }
+
+    @Formula("(SELECT COUNT(*) FROM comments c WHERE c.board_id = id)")
+    private int commentCount;
 }

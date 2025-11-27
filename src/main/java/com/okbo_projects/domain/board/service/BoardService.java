@@ -10,6 +10,7 @@ import com.okbo_projects.domain.board.model.request.BoardCreateRequest;
 import com.okbo_projects.domain.board.model.request.BoardUpdateRequest;
 import com.okbo_projects.domain.board.model.response.*;
 import com.okbo_projects.domain.board.repository.BoardRepository;
+import com.okbo_projects.domain.comment.repository.CommentRepository;
 import com.okbo_projects.domain.follow.repository.FollowRepository;
 import com.okbo_projects.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
