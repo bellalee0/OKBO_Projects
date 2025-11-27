@@ -4,6 +4,7 @@ import com.okbo_projects.common.entity.Board;
 import com.okbo_projects.common.entity.Comment;
 import com.okbo_projects.common.entity.Like;
 import com.okbo_projects.common.entity.User;
+import com.okbo_projects.common.exception.CustomException;
 import com.okbo_projects.common.model.SessionUser;
 import com.okbo_projects.domain.board.repository.BoardRepository;
 import com.okbo_projects.domain.comment.repository.CommentRepository;
@@ -14,6 +15,8 @@ import com.okbo_projects.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.okbo_projects.common.exception.ErrorMessage.*;
 
 @Service
 @Transactional
@@ -31,10 +34,8 @@ public class LikeService {
         User user = userRepository.findUserById(sessionUser.getUserId());
 
         boolean checkLikeExistence = likeRepository.existsByBoardAndUser(board, user);
-        // 예외 처리 추후 수정 예정
-        // 한 게시글에 좋아요 여러번 하려는 경우
         if (checkLikeExistence) {
-            throw new RuntimeException("이미 좋아요한 게시글입니다.");
+            throw new CustomException(CONFLICT_ALREADY_BOARD_LIKE);
         }
 
         board.addLikes();
@@ -53,10 +54,8 @@ public class LikeService {
         User user = userRepository.findUserById(sessionUser.getUserId());
 
         boolean checkLikeExistence = likeRepository.existsByBoardAndUser(board, user);
-        // 예외 처리 추후 수정 예정
-        // 좋아요 안했는데 취소하는 경우
         if (!checkLikeExistence) {
-            throw new RuntimeException("좋아요를 누르지 않은 게시글입니다.");
+            throw new CustomException(BAD_REQUEST_NOT_LIKE_UNLIKE_ON_BOARD);
         }
 
         board.minusLikes();
@@ -79,10 +78,8 @@ public class LikeService {
         User user = userRepository.findUserById(sessionUser.getUserId());
 
         boolean checkLikeExistence = likeRepository.existsByCommentAndUser(comment, user);
-        // 예외 처리 추후 수정 예정
-        // 한 게시글에 좋아요 여러번 하려는 경우
         if (checkLikeExistence) {
-            throw new RuntimeException("이미 좋아요한 댓글입니다.");
+            throw new CustomException(CONFLICT_ALREADY_COMMENT_LIKE);
         }
 
         Like like = new Like(
@@ -99,10 +96,8 @@ public class LikeService {
         User user = userRepository.findUserById(sessionUser.getUserId());
 
         boolean checkLikeExistence = likeRepository.existsByCommentAndUser(comment, user);
-        // 예외 처리 추후 수정 예정
-        // 좋아요 안했는데 취소하는 경우
         if (!checkLikeExistence) {
-            throw new RuntimeException("좋아요를 누르지 않은 댓글입니다.");
+            throw new CustomException(BAD_REQUEST_NOT_LIKE_UNLIKE_ON_COMMENT);
         }
 
         likeRepository.deleteByCommentAndUser(comment, user);
