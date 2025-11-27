@@ -6,12 +6,12 @@ import com.okbo_projects.common.entity.User;
 import com.okbo_projects.common.exception.CustomException;
 import com.okbo_projects.common.model.SessionUser;
 import com.okbo_projects.domain.board.repository.BoardRepository;
-import com.okbo_projects.domain.comment.model.request.CommentUpdateRequest;
-import com.okbo_projects.domain.comment.model.response.CommentGetAllResponse;
-import com.okbo_projects.domain.comment.model.response.CommentUpdateResponse;
 import com.okbo_projects.domain.comment.model.dto.CommentDto;
 import com.okbo_projects.domain.comment.model.request.CommentCreateRequest;
+import com.okbo_projects.domain.comment.model.request.CommentUpdateRequest;
 import com.okbo_projects.domain.comment.model.response.CommentCreateResponse;
+import com.okbo_projects.domain.comment.model.response.CommentGetAllResponse;
+import com.okbo_projects.domain.comment.model.response.CommentUpdateResponse;
 import com.okbo_projects.domain.comment.repository.CommentRepository;
 import com.okbo_projects.domain.like.repository.LikeRepository;
 import com.okbo_projects.domain.user.repository.UserRepository;
@@ -62,7 +62,7 @@ public class CommentService {
         matchedWriter(sessionUser.getUserId(), comment.getWriter().getId());
         comment.update(request);
         commentRepository.save(comment);
-        return CommentUpdateResponse.from(comment.toDto());
+        return CommentUpdateResponse.from(CommentDto.from(comment));
     }
 
     //댓글 삭제
@@ -92,7 +92,7 @@ public class CommentService {
 
     // 작성자 일치 확인
     private void matchedWriter(Long userId, Long CommentUserId) {
-        if(!userId.equals(CommentUserId)) {
+        if (!userId.equals(CommentUserId)) {
             throw new CustomException(FORBIDDEN_ONLY_WRITER);
         }
     }
