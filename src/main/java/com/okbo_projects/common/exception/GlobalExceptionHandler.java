@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
 
-        log.error("MethodArgumentNotValidException 발생 {} : ", ex.getMessage());
+        log.error("MethodArgumentNotValidException 발생 : {} ", ex.getMessage());
 
         String message = Objects.requireNonNull(ex.getBindingResult().getFieldError()).getDefaultMessage();
 
@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = CustomException.class)
     public ResponseEntity<ErrorResponse> handlerCustomException(CustomException ex) {
-        log.error("CustomException 발생 {} : ", ex.getMessage());
+        log.error("CustomException 발생 : {} ", ex.getMessage());
 
         return ResponseEntity.status(ex.getErrorMessage().getStatus()).body(new ErrorResponse(ex.getErrorMessage()));
     }
