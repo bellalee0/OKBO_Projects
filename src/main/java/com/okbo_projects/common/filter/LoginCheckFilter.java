@@ -2,12 +2,13 @@ package com.okbo_projects.common.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.okbo_projects.common.exception.CustomException;
+import com.okbo_projects.common.model.SessionUser;
 import com.okbo_projects.common.model.response.ErrorResponse;
+import com.okbo_projects.common.utils.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -27,6 +28,8 @@ import static com.okbo_projects.common.exception.ErrorMessage.UNAUTHORIZED_LOGIN
 @RequiredArgsConstructor
 public class LoginCheckFilter extends OncePerRequestFilter {
 
+    private final JwtUtils jwtUtils;
+
     private static final Map<String, String> whitelist = new HashMap<>();
     static {
         whitelist.put("/users", "POST"); // 회원가입
@@ -34,8 +37,8 @@ public class LoginCheckFilter extends OncePerRequestFilter {
         whitelist.put("/boards/board/*", "GET"); // 단건 게시글 상세 조회
         whitelist.put("/boards", "GET"); // 게시글 전체 조회
         whitelist.put("/boards/teams/*", "GET"); // 구단별 게시글 조회
-        whitelist.put("/commemts/boards/*", "GET"); // 게시글별 댓글 조회
-        whitelist.put("/commemts/comments-count/boards/*", "GET"); // 게시글별 댓글 수 count
+        whitelist.put("/comments/boards/*", "GET"); // 게시글별 댓글 조회
+        whitelist.put("/comments/comments-count/boards/*", "GET"); // 게시글별 댓글 수 count
         whitelist.put("/likes/like-count/boards/*", "GET"); // 게시글 좋아요 count
         whitelist.put("/likes/like-count/comments/*", "GET"); // 댓글 좋아요 count
     }
@@ -43,28 +46,29 @@ public class LoginCheckFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestURI = request.getRequestURI();
+        CustomException unauthorizedException = new CustomException(UNAUTHORIZED_LOGIN_REQUIRED);
 
-        if(requestURI.contains("/boards") && request.getMethod().equals("GET")) {
-            if(requestURI.contains("/myboard") || requestURI.contains("/followers")) {
-                HttpSession session = request.getSession(false);
-                if (session == null || session.getAttribute("loginUser") == null) {
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-                    log.error(requestURI + " : 비로그인 접근 시도");
-                    return;
-                }
-            }
-        }
-
-        if(!compareWithWhitelist(requestURI, request.getMethod())) {
-            HttpSession session = request.getSession(false);
-            if (session == null || session.getAttribute("loginUser") == null) {
-                CustomException unauthorizedException = new CustomException(UNAUTHORIZED_LOGIN_REQUIRED);
+        if (compareWithWhitelist(requestURI, request.getMethod())) {
+            filterChain.doFilter(request, response);
+        } else {
+            String authorizationHeader = request.getHeader("Authorization");
+            if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
                 handleCustomException(response, unauthorizedException);
                 log.error("CustomException 발생 : " + unauthorizedException.getErrorMessage().getMessage());
                 return;
             }
+
+            String jwt = authorizationHeader.substring(7);
+            if (!jwtUtils.validateToken(jwt)) {
+                handleCustomException(response, unauthorizedException);
+                log.error("CustomException 발생 : " + unauthorizedException.getErrorMessage().getMessage());
+                return;
+            }
+
+            request.setAttribute("loginUser", new SessionUser(jwtUtils.getUserId(jwt)));
+            filterChain.doFilter(request, response);
         }
-        filterChain.doFilter(request, response);
+
     }
 
     // whitelist와 URI 대조
