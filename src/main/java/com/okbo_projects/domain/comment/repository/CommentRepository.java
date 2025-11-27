@@ -10,9 +10,9 @@ import static com.okbo_projects.common.exception.ErrorMessage.NOT_FOUND_COMMENT;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
+    Page<Comment> findByBoardId(Long boardId, Pageable pageable);
+
     default Comment findCommentById(Long commentId) {
         return findById(commentId).orElseThrow(() -> new CustomException(NOT_FOUND_COMMENT));
     }
-
-    Page<Comment> findByBoard_Id(Long boardId, Pageable pageable);
 }

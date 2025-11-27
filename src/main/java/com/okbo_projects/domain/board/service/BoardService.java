@@ -84,7 +84,7 @@ public class BoardService {
 
         Board board = findByBoardId(boardId);
 
-        Page<Comment> comments = commentRepository.findByBoard_Id(board.getId(), pageable);
+        Page<Comment> comments = commentRepository.findByBoardId(board.getId(), pageable);
 
         Slice<CommentGetAllResponse> commentList = comments.map(i -> CommentGetAllResponse.from(CommentDto.from(i)));
 

@@ -12,12 +12,6 @@ import java.util.Optional;
 import static com.okbo_projects.common.exception.ErrorMessage.BAD_REQUEST_NOT_FOLLOWING_UNFOLLOW;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
-    // fromUser, toUser 2가지 기준으로 조회(Optional로 반환)
-    Optional<Follow> findByFromUserAndToUser(User fromUser, User toUser);
-    default Follow findFollowByFromUserAndToUser(User fromUser, User toUser) {
-        return findByFromUserAndToUser(fromUser, toUser)
-                .orElseThrow(() -> new CustomException(BAD_REQUEST_NOT_FOLLOWING_UNFOLLOW));
-    }
 
     // fromUser, toUser의 Follow 존재 여부 확인(존재 시 true 반환)
     boolean existsByFromUserAndToUser(User fromUser, User toUser);
@@ -45,4 +39,11 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     // 회원 탈퇴 시 모든 fromUser 삭제
     void deleteAllByToUser(User toUser);
+
+    // fromUser, toUser 2가지 기준으로 조회(Optional로 반환)
+    Optional<Follow> findByFromUserAndToUser(User fromUser, User toUser);
+    default Follow findFollowByFromUserAndToUser(User fromUser, User toUser) {
+        return findByFromUserAndToUser(fromUser, toUser)
+                .orElseThrow(() -> new CustomException(BAD_REQUEST_NOT_FOLLOWING_UNFOLLOW));
+    }
 }

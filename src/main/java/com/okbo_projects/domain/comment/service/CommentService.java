@@ -62,7 +62,7 @@ public class CommentService {
 
         Board board = findByBoardId(boardId);
 
-        Page<Comment> commentPage = commentRepository.findByBoard_Id(board.getId(), pageable);
+        Page<Comment> commentPage = commentRepository.findByBoardId(board.getId(), pageable);
 
         return commentPage.map(i -> CommentGetAllResponse.from(CommentDto.from(i)));
     }
