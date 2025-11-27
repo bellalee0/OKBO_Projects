@@ -40,4 +40,24 @@ public class JwtUtils {
                 .signWith(this.key, Jwts.SIG.HS256)
                 .compact();
     }
+
+    // 토큰 안의 유저ID만 가져오기
+    public Long getUserId(String jwt) {
+        return parser.parseSignedClaims(jwt).getPayload().get("userId", Long.class);
+    }
+
+    // 토큰의 유효성 확인
+    public boolean validateToken(String jwt) {
+        if (jwt == null || jwt.isBlank()) {
+            return false;
+        }
+
+        try {
+            parser.parseSignedClaims(jwt);
+            return true;
+        } catch (Exception e) {
+            log.error("잘못된 JWT 토큰 입니다.", e);
+            return false;
+        }
+    }
 }
