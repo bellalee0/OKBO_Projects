@@ -8,17 +8,15 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentCreateResponse {
+public class CommentGetAllResponse {
 
-    private long commentId;
-    private long boardId;
+    private Long commentId;
     private String comments;
     private String writer;
 
-    public static CommentCreateResponse from(CommentDto commentDto) {
-        return new CommentCreateResponse(
+    public static CommentGetAllResponse from(CommentDto commentDto) {
+        return new CommentGetAllResponse(
                 commentDto.getId(),
-                commentDto.getBoardId(),
                 commentDto.getComments(),
                 commentDto.getWriter()
         );

@@ -58,4 +58,5 @@ public class Board extends BaseEntity {
     public void minusLikes() {
         this.likes--;
     }
+
 }
