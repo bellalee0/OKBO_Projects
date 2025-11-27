@@ -1,7 +1,7 @@
 package com.okbo_projects.domain.follow.controller;
 
 import com.okbo_projects.common.model.SessionUser;
-import com.okbo_projects.domain.follow.model.Response.*;
+import com.okbo_projects.domain.follow.model.response.*;
 import com.okbo_projects.domain.follow.service.FollowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

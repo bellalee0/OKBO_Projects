@@ -20,6 +20,8 @@ public class BoardDto {
     private String content;
     private String writer;
     private int commentCount;
+    private Long comments;
+    private Long likes;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -32,6 +34,8 @@ public class BoardDto {
                 board.getContent(),
                 board.getWriter().getNickname(),
                 board.getCommentCount(),
+                board.getComments(),
+                board.getLikes(),
                 board.getCreatedAt(),
                 board.getModifiedAt()
         );

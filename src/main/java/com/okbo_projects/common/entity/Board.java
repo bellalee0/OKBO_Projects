@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Formula;
 
 @Getter
 @Entity
@@ -30,16 +29,34 @@ public class Board extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User writer;
 
+    private Long comments;
+    private Long likes;
+
     public Board(String title, String content, Team team, User writer) {
         this.title = title;
         this.content = content;
         this.team = team;
         this.writer = writer;
+        this.comments = 0L;
+        this.likes = 0L;
     }
 
     public void update(BoardUpdateRequest request) {
         this.title = request.getTitle();
         this.content = request.getContent();
+    }
+
+    public void addComments() {
+        this.comments++;
+    }
+    public void addLikes() {
+        this.likes++;
+    }
+    public void minusComments() {
+        this.comments--;
+    }
+    public void minusLikes() {
+        this.likes--;
     }
 
     @Formula("(SELECT COUNT(*) FROM comments c WHERE c.board_id = id)")

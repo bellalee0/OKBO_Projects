@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,12 +14,20 @@ public class BoardGetTeamPageResponse {
     private Long id;
     private String title;
     private String writer;
+    private Long comments;
+    private Long likes;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
 
     public static BoardGetTeamPageResponse from(BoardDto boardDto) {
         return new BoardGetTeamPageResponse(
                 boardDto.getId(),
                 boardDto.getTitle(),
-                boardDto.getWriter()
+                boardDto.getWriter(),
+                boardDto.getComments(),
+                boardDto.getLikes(),
+                boardDto.getCreatedAt(),
+                boardDto.getModifiedAt()
         );
     }
 }
