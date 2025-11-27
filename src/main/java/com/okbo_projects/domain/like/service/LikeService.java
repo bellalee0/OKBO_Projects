@@ -22,6 +22,7 @@ import static com.okbo_projects.common.exception.ErrorMessage.*;
 @Transactional
 @RequiredArgsConstructor
 public class LikeService {
+
     private final LikeRepository likeRepository;
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
@@ -50,6 +51,7 @@ public class LikeService {
 
     // 게시글 좋아요 취소
     public void deleteBoardLike(Long boardId, SessionUser sessionUser) {
+
         Board board = boardRepository.findBoardById(boardId);
         User user = userRepository.findUserById(sessionUser.getUserId());
 
@@ -65,6 +67,7 @@ public class LikeService {
 
     // 게시글 별 좋아요 개수
     public BoardLikesCountResponse countBoardLikes(Long boardId) {
+
         Board board = boardRepository.findBoardById(boardId);
         Long count = likeRepository.countByBoard(board);
 
@@ -92,6 +95,7 @@ public class LikeService {
 
     // 댓글 좋아요 삭제
     public void deleteCommentLike(Long commentId, SessionUser sessionUser) {
+
         Comment comment = commentRepository.findById(commentId).orElseThrow();
         User user = userRepository.findUserById(sessionUser.getUserId());
 
@@ -105,6 +109,7 @@ public class LikeService {
 
     // 댓글 별 좋아요 개수
     public CommentLikesCountResponse countCommentLikes(Long commentId) {
+
         Comment comment = commentRepository.findById(commentId).orElseThrow();
         Long count = likeRepository.countByComment(comment);
 

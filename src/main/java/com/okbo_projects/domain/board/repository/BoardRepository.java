@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import static com.okbo_projects.common.exception.ErrorMessage.NOT_FOUND_BOARD;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
+
     Page<Board> findByWriter(User user, Pageable pageable);
 
     Page<Board> findByTeam(Team team, Pageable pageable);

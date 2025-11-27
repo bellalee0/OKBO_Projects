@@ -6,5 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class CommentLikesCountResponse {
+
     public final long commentLikes;
 }

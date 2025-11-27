@@ -7,6 +7,7 @@ import com.okbo_projects.common.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
+
     // 게시글 좋아요 삭제
     void deleteByBoardAndUser(Board board, User user);
 

@@ -19,7 +19,8 @@ public class LikeController {
     @PostMapping("/boards/{boardId}")
     public ResponseEntity<Void> addBoardLike(
             @PathVariable Long boardId,
-            @RequestAttribute(name = "loginUser") SessionUser sessionUser) {
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser
+    ) {
         likeService.addBoardLike(boardId, sessionUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -29,7 +30,8 @@ public class LikeController {
     @DeleteMapping("/boards/{boardId}")
     public ResponseEntity<Void> deleteBoardLike(
             @PathVariable Long boardId,
-            @RequestAttribute(name = "loginUser") SessionUser sessionUser) {
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser
+    ) {
         likeService.deleteBoardLike(boardId, sessionUser);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -38,6 +40,7 @@ public class LikeController {
     // 게시글 좋아요 개수
     @GetMapping("/boards/{boardId}")
     public ResponseEntity<BoardLikesCountResponse> countBoardLikes(@PathVariable Long boardId) {
+
         BoardLikesCountResponse response = likeService.countBoardLikes(boardId);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -47,7 +50,8 @@ public class LikeController {
     @PostMapping("/comments/{commentId}")
     public ResponseEntity<Void> addCommentLike(
             @PathVariable Long commentId,
-            @RequestAttribute(name = "loginUser") SessionUser sessionUser) {
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser
+    ) {
         likeService.addCommentLike(commentId, sessionUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -57,7 +61,8 @@ public class LikeController {
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<Void> deleteCommentLike(
             @PathVariable Long commentId,
-            @RequestAttribute(name = "loginUser") SessionUser sessionUser) {
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser
+    ) {
         likeService.deleteCommentLike(commentId, sessionUser);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -66,6 +71,7 @@ public class LikeController {
     // 댓글 좋아요 개수
     @GetMapping("/comments/{commentId}")
     public ResponseEntity<CommentLikesCountResponse> countCommentLikes(@PathVariable Long commentId) {
+
         CommentLikesCountResponse response = likeService.countCommentLikes(commentId);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);

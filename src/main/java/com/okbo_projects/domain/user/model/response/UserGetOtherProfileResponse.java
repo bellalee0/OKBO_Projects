@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserGetOtherProfileResponse {
-    String nickname;
-    String teamName;
+
+    private String nickname;
+    private String teamName;
 
     public static UserGetOtherProfileResponse from(UserDto userDto) {
         return new UserGetOtherProfileResponse(

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FollowDto {
+
     private Long id;
     private User fromUser;
     private User toUser;

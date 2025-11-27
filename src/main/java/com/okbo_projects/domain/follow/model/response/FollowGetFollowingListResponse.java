@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class FollowGetFollowingListResponse {
+
     private String nickname;
 
     public static FollowGetFollowingListResponse from(FollowDto followDto) {

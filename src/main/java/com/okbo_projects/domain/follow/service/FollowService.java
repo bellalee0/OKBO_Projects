@@ -24,25 +24,37 @@ import static com.okbo_projects.common.exception.ErrorMessage.*;
 @Transactional
 @Service
 public class FollowService {
+
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
 
     // Follow 관계 create (fromUser: 로그인한 유저 / toUser: Path Variable로 입력받은 유저)
     public void createFollow(SessionUser sessionUser, String userNickname) {
+
         User fromUser = userRepository.findUserById(sessionUser.getUserId());
         User toUser = userRepository.findUserByNickname(userNickname);
 
-        if (fromUser.equals(toUser)) { throw new CustomException(BAD_REQUEST_NOT_ALLOWED_SELF_FOLLOW); }
+        if (fromUser.equals(toUser)) {
+            throw new CustomException(BAD_REQUEST_NOT_ALLOWED_SELF_FOLLOW);
+        }
+
         boolean checkFollowExistence = followRepository.existsByFromUserAndToUser(fromUser, toUser);
-        if (checkFollowExistence) { throw new CustomException(CONFLICT_ALREADY_FOLLOWING); }
-        if (toUser.isDeleted()) { throw new CustomException(NOT_FOUND_USER); }
+        if (checkFollowExistence) {
+            throw new CustomException(CONFLICT_ALREADY_FOLLOWING);
+        }
+
+        if (toUser.isDeleted()) {
+            throw new CustomException(NOT_FOUND_USER);
+        }
 
         Follow follow = new Follow(fromUser, toUser);
+
         followRepository.save(follow);
     }
 
     // Follow 관계 delete (fromUser: 로그인한 유저 / toUser: Path Variable로 입력받은 유저)
     public void deleteFollow(SessionUser sessionUser, String userNickname) {
+
         User fromUser = userRepository.findUserById(sessionUser.getUserId());
         User toUser = userRepository.findUserByNickname(userNickname);
 
@@ -53,7 +65,9 @@ public class FollowService {
 
     // Following, Follower 수 count
     public FollowCountResponse countFollow(SessionUser sessionUser, String userNickname) {
+
         User user;
+
         if (userNickname == null) {
             user = userRepository.findUserById(sessionUser.getUserId());
         } else {
@@ -62,12 +76,15 @@ public class FollowService {
 
         Long following = followRepository.countByFromUser(user);
         Long follower = followRepository.countByToUser(user);
+
         return FollowCountResponse.from(following, follower);
     }
 
     // Following 유저 리스트 조회 (생성일 기준 내림차순 정렬)
     public Page<FollowGetFollowingListResponse> getFollowingList(SessionUser sessionUser, int page, int size, String userNickname) {
+
         User user;
+
         if (userNickname == null) {
             user = userRepository.findUserById(sessionUser.getUserId());
         } else {
@@ -80,13 +97,16 @@ public class FollowService {
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
         return followRepository.findByFromUser(user, pageable)
                 .map(follow -> FollowGetFollowingListResponse.from(FollowDto.from(follow)));
     }
 
     // Follower 유저 리스트 조회 (생성일 기준 내림차순 정렬)
     public Page<FollowGetFollowerListResponse> getFollowerList(SessionUser sessionUser, int page, int size, String userNickname) {
+
         User user;
+
         if (userNickname == null) {
             user = userRepository.findUserById(sessionUser.getUserId());
         } else {
@@ -99,6 +119,7 @@ public class FollowService {
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
         return followRepository.findByToUser(user, pageable)
                 .map(follow -> FollowGetFollowerListResponse.from(FollowDto.from(follow)));
     }

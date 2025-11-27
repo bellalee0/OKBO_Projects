@@ -1,6 +1,5 @@
 package com.okbo_projects.domain.board.model.response;
 
-import com.okbo_projects.common.entity.Board;
 import com.okbo_projects.domain.board.model.dto.BoardDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,6 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardGetMyArticlesResponse {
+
     private Long id;
     private String title;
     private String content;

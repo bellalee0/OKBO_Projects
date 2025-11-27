@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BoardDto {
 
-    //속성
     private Long id;
     private String title;
     private Team team;
@@ -24,7 +23,6 @@ public class BoardDto {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    //기능
     public static BoardDto from(Board board) {
         return new BoardDto(
                 board.getId(),

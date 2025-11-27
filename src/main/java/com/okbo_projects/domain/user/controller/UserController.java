@@ -22,14 +22,18 @@ public class UserController {
     // 유저 생성 (회원가입)
     @PostMapping
     public ResponseEntity<UserCreateResponse> create(@Valid @RequestBody UserCreateRequest request) {
+
         UserCreateResponse response = userService.create(request);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // 로그인
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequest request) {
+
         String createdToken = userService.login(request);
+
         return ResponseEntity.status(HttpStatus.OK).body(createdToken);
     }
 
@@ -42,14 +46,18 @@ public class UserController {
     // 내 정보 조회
     @GetMapping("/myPage")
     public ResponseEntity<UserGetMyProfileResponse> getMyProfile(@RequestAttribute(name = "loginUser") SessionUser sessionUser) {
+
         UserGetMyProfileResponse response = userService.getMyProfile(sessionUser);
+
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 다른 유저 조회
     @GetMapping("/{nickname}")
     public ResponseEntity<UserGetOtherProfileResponse> getOtherProfile(@PathVariable String nickname) {
+
         UserGetOtherProfileResponse response = userService.getOtherProfile(nickname);
+
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -57,8 +65,10 @@ public class UserController {
     @PutMapping("/nickname")
     public ResponseEntity<UserNicknameUpdateResponse> updateNickname(
             @Valid @RequestBody UserNicknameUpdateRequest request,
-            @RequestAttribute(name = "loginUser") SessionUser sessionUser) {
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser
+    ) {
         UserNicknameUpdateResponse response = userService.updateNickname(request, sessionUser);
+
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -66,8 +76,10 @@ public class UserController {
     @PutMapping("/password")
     public ResponseEntity<Void> updatePassword(
             @Valid @RequestBody UserPasswordUpdateRequest request,
-            @RequestAttribute(name = "loginUser") SessionUser sessionUser) {
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser
+    ) {
         userService.updatePassword(request, sessionUser);
+
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -75,8 +87,10 @@ public class UserController {
     @DeleteMapping
     public ResponseEntity<Void> delete(
             @Valid @RequestBody UserDeleteRequest request,
-            @RequestAttribute(name = "loginUser") SessionUser sessionUser) {
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser
+    ) {
         userService.delete(request, sessionUser);
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserGetMyProfileResponse {
-    Long id;
-    String nickname;
-    String email;
-    String teamName;
+
+    private Long id;
+    private String nickname;
+    private String email;
+    private String teamName;
 
     public static UserGetMyProfileResponse from(UserDto userDto) {
-
         return new UserGetMyProfileResponse(
                 userDto.getId(),
                 userDto.getNickname(),

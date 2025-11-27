@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CommentDto {
 
-    //속성
     private Long id;
     private String comments;
     private String writer;
@@ -20,7 +19,6 @@ public class CommentDto {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    //기능
     public static CommentDto from(Comment comment) {
         return new CommentDto(
                 comment.getId(),

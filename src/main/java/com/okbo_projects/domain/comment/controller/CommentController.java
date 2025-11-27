@@ -2,8 +2,8 @@ package com.okbo_projects.domain.comment.controller;
 
 import com.okbo_projects.common.model.SessionUser;
 import com.okbo_projects.domain.comment.model.request.CommentCreateRequest;
-import com.okbo_projects.domain.comment.model.response.CommentCreateResponse;
 import com.okbo_projects.domain.comment.model.request.CommentUpdateRequest;
+import com.okbo_projects.domain.comment.model.response.CommentCreateResponse;
 import com.okbo_projects.domain.comment.model.response.CommentGetAllResponse;
 import com.okbo_projects.domain.comment.model.response.CommentUpdateResponse;
 import com.okbo_projects.domain.comment.service.CommentService;
@@ -32,6 +32,7 @@ public class CommentController {
             @PathVariable Long boardId
     ){
         CommentCreateResponse result = commentService.createComment(boardId, sessionUser, request);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
@@ -43,7 +44,9 @@ public class CommentController {
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
         Slice<CommentGetAllResponse> result = commentService.getAllComment(boardId, pageable);
+
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -55,8 +58,8 @@ public class CommentController {
             @Valid @RequestBody CommentUpdateRequest request
     ){
         CommentUpdateResponse result = commentService.updateComment(sessionUser,commentId,request);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
 
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     //댓글 삭제
@@ -66,6 +69,7 @@ public class CommentController {
             @PathVariable Long commentId
     ){
         commentService.deleteComment(sessionUser,commentId);
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

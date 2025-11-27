@@ -42,6 +42,7 @@ public class UserService {
         }
 
         String encodingPassword = passwordEncoder.encode(request.getPassword());
+
         Team team = Team.valueOf(request.getFavoriteTeam());
 
         User user = new User(
@@ -52,16 +53,19 @@ public class UserService {
         );
 
         userRepository.save(user);
+
         return UserCreateResponse.from(UserDto.from(user));
     }
 
     // 로그인
     public String login(LoginRequest request) {
+
         User user = userRepository.findUserByEmail(request.getEmail());
 
         if (user.isDeleted()) {
             throw new CustomException(NOT_FOUND_USER);
         }
+
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomException(UNAUTHORIZED_WRONG_PASSWORD);
         }
@@ -72,6 +76,7 @@ public class UserService {
     // 내 프로필 조회
     @Transactional(readOnly = true)
     public UserGetMyProfileResponse getMyProfile(SessionUser sessionUser) {
+
         User user = userRepository.findUserById(sessionUser.getUserId());
 
         return UserGetMyProfileResponse.from(UserDto.from(user));
@@ -80,6 +85,7 @@ public class UserService {
     // 다른 유저 프로필 조회
     @Transactional(readOnly = true)
     public UserGetOtherProfileResponse getOtherProfile(String userNickname) {
+
         User user = userRepository.findUserByNickname(userNickname);
 
         if (user.isDeleted()) {
@@ -105,6 +111,7 @@ public class UserService {
 
     // 유저 비밀번호 변경(현재 비밀번호 검증 및 새 비밀번호는 현재 비밀번호와 일치 불가)
     public void updatePassword(UserPasswordUpdateRequest request, SessionUser sessionUser) {
+
         User user = userRepository.findUserById(sessionUser.getUserId());
 
         String currentPassword = request.getCurrentPassword();
@@ -119,11 +126,14 @@ public class UserService {
         }
 
         String encodingPassword = passwordEncoder.encode(newPassword);
+
         user.updatePassword(encodingPassword);
+        userRepository.save(user);
     }
 
     // 유저 삭제(회원 탈퇴, 팔로워&팔로잉 목록 삭제)
     public void delete(UserDeleteRequest request, SessionUser sessionUser) {
+
         User user = userRepository.findUserById(sessionUser.getUserId());
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {

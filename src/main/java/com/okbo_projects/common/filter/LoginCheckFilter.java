@@ -28,9 +28,8 @@ import static com.okbo_projects.common.exception.ErrorMessage.UNAUTHORIZED_LOGIN
 @RequiredArgsConstructor
 public class LoginCheckFilter extends OncePerRequestFilter {
 
-    private final JwtUtils jwtUtils;
-
     private static final Map<String, String> whitelist = new HashMap<>();
+
     static {
         whitelist.put("/users", "POST"); // 회원가입
         whitelist.put("/users/login", "POST"); // 로그인
@@ -43,37 +42,45 @@ public class LoginCheckFilter extends OncePerRequestFilter {
         whitelist.put("/likes/like-count/comments/*", "GET"); // 댓글 좋아요 count
     }
 
+    private final JwtUtils jwtUtils;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
         String requestURI = request.getRequestURI();
         CustomException unauthorizedException = new CustomException(UNAUTHORIZED_LOGIN_REQUIRED);
 
         if (compareWithWhitelist(requestURI, request.getMethod())) {
             filterChain.doFilter(request, response);
-        } else {
-            String authorizationHeader = request.getHeader("Authorization");
-            if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-                handleCustomException(response, unauthorizedException);
-                log.error("CustomException 발생 : " + unauthorizedException.getErrorMessage().getMessage());
-                return;
-            }
-
-            String jwt = authorizationHeader.substring(7);
-            if (!jwtUtils.validateToken(jwt)) {
-                handleCustomException(response, unauthorizedException);
-                log.error("CustomException 발생 : " + unauthorizedException.getErrorMessage().getMessage());
-                return;
-            }
-
-            request.setAttribute("loginUser", new SessionUser(jwtUtils.getUserId(jwt)));
-            filterChain.doFilter(request, response);
+            return;
         }
 
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            handleCustomException(response, unauthorizedException);
+            log.error("CustomException 발생 : " + unauthorizedException.getErrorMessage().getMessage());
+            return;
+        }
+
+        String jwt = authorizationHeader.substring(7);
+
+        if (!jwtUtils.validateToken(jwt)) {
+            handleCustomException(response, unauthorizedException);
+            log.error("CustomException 발생 : " + unauthorizedException.getErrorMessage().getMessage());
+            return;
+        }
+
+        request.setAttribute("loginUser", new SessionUser(jwtUtils.getUserId(jwt)));
+
+        filterChain.doFilter(request, response);
     }
 
     // whitelist와 URI 대조
     private boolean compareWithWhitelist(String requestURI, String requestMethod) {
+
         for (Map.Entry<String, String> listedURI : whitelist.entrySet()) {
+
             String allowedUri = listedURI.getKey();
             String allowedMethod = listedURI.getValue();
 
@@ -90,15 +97,20 @@ public class LoginCheckFilter extends OncePerRequestFilter {
 
     // Filter 내부에서 발생하는 CustomException 처리
     private void handleCustomException(HttpServletResponse response, CustomException e) throws IOException {
+
         response.setStatus(e.getErrorMessage().getStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
+
         ErrorResponse errorResponse = new ErrorResponse(e.getErrorMessage());
-        writeErrorResponse(response,errorResponse);
+        writeErrorResponse(response, errorResponse);
     }
+
     private void writeErrorResponse(HttpServletResponse response, ErrorResponse body) throws IOException {
+
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(body);
+
         try (PrintWriter writer = response.getWriter()) {
             writer.write(json);
             writer.flush();

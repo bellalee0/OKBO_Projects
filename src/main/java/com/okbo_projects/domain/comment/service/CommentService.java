@@ -28,6 +28,7 @@ import static com.okbo_projects.common.exception.ErrorMessage.FORBIDDEN_ONLY_WRI
 @Transactional
 @RequiredArgsConstructor
 public class CommentService {
+
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
@@ -35,43 +36,64 @@ public class CommentService {
 
     // 댓글 생성
     public CommentCreateResponse createComment(Long boardId, SessionUser sessionUser, CommentCreateRequest request) {
+
         Board board = findByBoardId(boardId);
+
         User user = findByUserId(sessionUser.getUserId());
+
         Comment comment = new Comment(
                 request.getComments(),
                 user,
                 board
         );
+
         commentRepository.save(comment);
+
         board.addComments();
+
         CommentDto commentDto = CommentDto.from(comment);
+
         return CommentCreateResponse.from(commentDto);
     }
 
     // 댓글 전체 조회
     @Transactional(readOnly = true)
     public Slice<CommentGetAllResponse> getAllComment(Long boardId, Pageable pageable) {
+
         Board board = findByBoardId(boardId);
+
         Page<Comment> commentPage = commentRepository.findByBoard_Id(board.getId(), pageable);
+
         return commentPage.map(i -> CommentGetAllResponse.from(CommentDto.from(i)));
     }
 
     //댓글 수정
     public CommentUpdateResponse updateComment(SessionUser sessionUser, Long commentId, CommentUpdateRequest request) {
+
         Comment comment = findByCommentId(commentId);
+
         matchedWriter(sessionUser.getUserId(), comment.getWriter().getId());
+
         comment.update(request);
+
         commentRepository.save(comment);
+
         return CommentUpdateResponse.from(CommentDto.from(comment));
     }
 
     //댓글 삭제
     public void deleteComment(SessionUser sessionUser, Long commentId) {
+
         Comment comment = findByCommentId(commentId);
+
         matchedWriter(sessionUser.getUserId(), comment.getWriter().getId());
+
         likeRepository.deleteByComment(comment);
+
         commentRepository.delete(comment);
+
         Board board = findByBoardId(comment.getBoard().getId());
+
         board.minusComments();
     }
 

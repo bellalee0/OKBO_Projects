@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardUpdateResponse {
+
     private Long id;
     private String title;
     private String content;

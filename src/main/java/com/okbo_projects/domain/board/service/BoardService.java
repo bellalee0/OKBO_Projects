@@ -4,8 +4,8 @@ import com.okbo_projects.common.entity.Board;
 import com.okbo_projects.common.entity.Comment;
 import com.okbo_projects.common.entity.User;
 import com.okbo_projects.common.exception.CustomException;
-import com.okbo_projects.common.utils.Team;
 import com.okbo_projects.common.model.SessionUser;
+import com.okbo_projects.common.utils.Team;
 import com.okbo_projects.domain.board.model.dto.BoardDto;
 import com.okbo_projects.domain.board.model.request.BoardCreateRequest;
 import com.okbo_projects.domain.board.model.request.BoardUpdateRequest;
@@ -23,11 +23,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static com.okbo_projects.common.exception.ErrorMessage.*;
+import static com.okbo_projects.common.exception.ErrorMessage.FORBIDDEN_ONLY_WRITER;
+import static com.okbo_projects.common.exception.ErrorMessage.NOT_FOUND_FOLLOWING;
 
 @RequiredArgsConstructor
 @Transactional
@@ -42,35 +44,50 @@ public class BoardService {
 
     //게시글 생성
     public BoardCreateResponse createBoard(SessionUser sessionUser, BoardCreateRequest request) {
+
         User user = findByUserId(sessionUser.getUserId());
         Team team = Team.valueOf((request.getTeam()));
+
         Board board = new Board(
                 request.getTitle(),
                 request.getContent(),
                 team,
                 user
         );
+
         boardRepository.save(board);
+
         BoardDto dto = BoardDto.from(board);
+
         return BoardCreateResponse.from(dto);
     }
 
     //게시글 수정
     public BoardUpdateResponse updateBoard(SessionUser sessionUser, Long boardId, BoardUpdateRequest request) {
+
         Board board = findByBoardId(boardId);
+
         matchedWriter(sessionUser.getUserId(), board.getWriter().getId());
+
         board.update(request);
+
         boardRepository.save(board);
+
         BoardDto dto = BoardDto.from(board);
+
         return BoardUpdateResponse.from(dto);
     }
 
     //게시글 상세조회
     @Transactional(readOnly = true)
     public BoardDetailedInquiryResponse detailedInquiryBoard(Long boardId, Pageable pageable) {
+
         Board board = findByBoardId(boardId);
+
         Page<Comment> comments = commentRepository.findByBoard_Id(board.getId(), pageable);
+
         Slice<CommentGetAllResponse> commentList = comments.map(i -> CommentGetAllResponse.from(CommentDto.from(i)));
+
         return BoardDetailedInquiryResponse.from(BoardDto.from(board), commentList);
     }
 
@@ -84,8 +101,11 @@ public class BoardService {
             Pageable pageable
     ) {
         User user = findByUserId(sessionUser.getUserId());
+
         boolean searchCondition = mySearchCondition(title, startDate, endDate);
+
         Page<Board> boardPage;
+
         if (searchCondition) {
             LocalDateTime startDateTime = convertToStartDateTime(startDate);
             LocalDateTime endDateTime = convertToEndDateTime(endDate);
@@ -93,6 +113,7 @@ public class BoardService {
         } else {
             boardPage = boardRepository.findByWriter(user, pageable);
         }
+
         return boardPage.map(board -> BoardGetMyArticlesResponse.from(BoardDto.from(board)));
     }
 
@@ -106,7 +127,9 @@ public class BoardService {
             Pageable pageable
     ) {
         boolean searchCondition = searchCondition(title, writer, startDate, endDate);
+
         Page<Board> boardPage;
+
         if (searchCondition) {
             LocalDateTime startDateTime = convertToStartDateTime(startDate);
             LocalDateTime endDateTime = convertToEndDateTime(endDate);
@@ -114,6 +137,7 @@ public class BoardService {
         } else {
             boardPage = boardRepository.findAll(pageable);
         }
+
         return boardPage.map(board -> BoardGetAllPageResponse.from(BoardDto.from(board)));
     }
 
@@ -128,8 +152,11 @@ public class BoardService {
             Pageable pageable
     ) {
         Team team = Team.valueOf(teamName);
+
         boolean searchCondition = searchCondition(title, writer, startDate, endDate);
+
         Page<Board> boardPage;
+
         if (searchCondition) {
             LocalDateTime startDateTime = convertToStartDateTime(startDate);
             LocalDateTime endDateTime = convertToEndDateTime(endDate);
@@ -137,6 +164,7 @@ public class BoardService {
         } else {
             boardPage = boardRepository.findByTeam(team, pageable);
         }
+
         return boardPage.map(board -> BoardGetTeamPageResponse.from(BoardDto.from(board)));
     }
 
@@ -151,9 +179,13 @@ public class BoardService {
             Pageable pageable
     ) {
         boolean searchCondition = searchCondition(title, writer, startDate, endDate);
+
         User user = findByUserId(sessionUser.getUserId());
+
         findByFromUser(user);
+
         Page<Board> boardPage;
+
         if (searchCondition) {
             LocalDateTime startDateTime = convertToStartDateTime(startDate);
             LocalDateTime endDateTime = convertToEndDateTime(endDate);
@@ -161,6 +193,7 @@ public class BoardService {
         } else {
             boardPage = boardRepository.findByFollowerBoard(user.getId(), pageable);
         }
+
         return boardPage.map(board -> BoardGetFollowPageResponse.from(BoardDto.from(board)));
     }
 
@@ -197,7 +230,9 @@ public class BoardService {
 
     // 팔로워 확인
     private void findByFromUser(User user) {
+
         boolean existsFollowingList = followRepository.existsByFromUser(user);
+
         if (!existsFollowingList) {
             throw new CustomException(NOT_FOUND_FOLLOWING);
         }
@@ -205,9 +240,13 @@ public class BoardService {
 
     // 게시글 삭제
     public void deleteBoard(SessionUser sessionUser, Long boardId) {
+
         Board board = findByBoardId(boardId);
+
         matchedWriter(sessionUser.getUserId(), board.getWriter().getId());
+
         likeRepository.deleteByBoard(board);
+
         boardRepository.delete(board);
     }
 

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserNicknameUpdateResponse {
+
     private Long id;
     private String nickname;
 
