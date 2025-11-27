@@ -59,9 +59,12 @@ public class BoardController {
     @GetMapping("/myBoard")
     public ResponseEntity<Page<BoardGetMyArticlesResponse>> viewListOfMyArticlesWritten(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate endDate,
             @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ){
-        Page<BoardGetMyArticlesResponse> result = boardService.viewListOfMyArticlesWritten(sessionUser,pageable);
+        Page<BoardGetMyArticlesResponse> result = boardService.viewListOfMyArticlesWritten(sessionUser, title, startDate, endDate, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -81,10 +84,15 @@ public class BoardController {
     // 게시글 구단별 전체 조회
     @GetMapping("/teams/{teamName}")
     public ResponseEntity<Page<BoardGetTeamPageResponse>> getBoardTeamAllPage(
-            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-            @PathVariable String teamName
+            @PathVariable String teamName,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String writer,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate endDate,
+            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+
     ) {
-        Page<BoardGetTeamPageResponse> result = boardService.getBoardTeamAllPage(pageable, teamName);
+        Page<BoardGetTeamPageResponse> result = boardService.getBoardTeamAllPage(teamName, title, writer, startDate, endDate, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
