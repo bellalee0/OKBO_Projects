@@ -1,4 +1,4 @@
-package com.okbo_projects.common.utils;
+package com.okbo_projects.common.model;
 
 import lombok.NoArgsConstructor;
 

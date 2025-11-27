@@ -1,6 +1,6 @@
 package com.okbo_projects.common.entity;
 
-import com.okbo_projects.common.utils.Team;
+import com.okbo_projects.common.model.Team;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
