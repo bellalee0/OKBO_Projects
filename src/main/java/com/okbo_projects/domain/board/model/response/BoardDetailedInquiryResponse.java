@@ -18,7 +18,6 @@ public class BoardDetailedInquiryResponse {
     private String team;
     private Long comments;
     private Long likes;
-    private int commentCount; // 댓글 수 필드 추가
     private LocalDateTime creatAt;
     private LocalDateTime modifiedAt;
 
@@ -31,7 +30,6 @@ public class BoardDetailedInquiryResponse {
                 dto.getTeam().getTeamName(),
                 dto.getComments(),
                 dto.getLikes(),
-                dto.getCommentCount(), // dto에서 commentCount 값 가져오기
                 dto.getCreatedAt(),
                 dto.getModifiedAt()
         );

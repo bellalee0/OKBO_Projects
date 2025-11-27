@@ -40,6 +40,7 @@ public class CommentService {
                 board
         );
         commentRepository.save(comment);
+        board.addComments();
         CommentDto commentDto = CommentDto.from(comment);
         return CommentCreateResponse.from(commentDto);
     }
@@ -66,6 +67,8 @@ public class CommentService {
         Comment comment = findByCommentId(commentId);
         matchedWriter(sessionUser.getUserId(), comment.getWriter().getId());
         commentRepository.delete(comment);
+        Board board = findByBoardId(comment.getBoard().getId());
+        board.minusComments();
     }
 
     private Comment findByCommentId(Long commentId) {

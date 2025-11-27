@@ -109,6 +109,7 @@ public class BoardService {
     public void deleteBoard(SessionUser sessionUser, Long boardId) {
         Board board = findByBoardId(boardId);
         matchedWriter(sessionUser.getUserId(), board.getWriter().getId());
+        likeRepository.deleteByBoard(board);
         boardRepository.delete(board);
     }
 

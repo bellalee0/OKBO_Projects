@@ -72,6 +72,4 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    //게시글별 댓글 수 카운트 기능
-
 }

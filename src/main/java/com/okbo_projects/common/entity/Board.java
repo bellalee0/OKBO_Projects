@@ -59,6 +59,4 @@ public class Board extends BaseEntity {
         this.likes--;
     }
 
-    @Formula("(SELECT COUNT(*) FROM comments c WHERE c.board_id = id)")
-    private int commentCount;
 }
