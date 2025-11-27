@@ -1,6 +1,5 @@
 package com.okbo_projects.domain.user.controller;
 
-
 import com.okbo_projects.common.model.SessionUser;
 import com.okbo_projects.domain.user.model.request.*;
 import com.okbo_projects.domain.user.model.response.UserCreateResponse;
@@ -25,7 +24,6 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserCreateResponse> create(@Valid @RequestBody UserCreateRequest request) {
         UserCreateResponse response = userService.create(request);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -38,17 +36,14 @@ public class UserController {
 
     // 로그아웃
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpSession session) {
-        session.invalidate();
-
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<String> logout() {
+        return ResponseEntity.status(HttpStatus.OK).body("로그아웃 완료");
     }
 
     // 내 정보 조회
     @GetMapping("/myPage")
-    public ResponseEntity<UserGetMyProfileResponse> getMyProfile(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser) {
+    public ResponseEntity<UserGetMyProfileResponse> getMyProfile(@RequestAttribute(name = "loginUser") SessionUser sessionUser) {
         UserGetMyProfileResponse response = userService.getMyProfile(sessionUser);
-
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -56,36 +51,30 @@ public class UserController {
     @GetMapping("/{nickname}")
     public ResponseEntity<UserGetOtherProfileResponse> getOtherProfile(@PathVariable String nickname) {
         UserGetOtherProfileResponse response = userService.getOtherProfile(nickname);
-
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 닉네임 변경
     @PutMapping("/nickname")
     public ResponseEntity<UserNicknameUpdateResponse> updateNickname(@Valid @RequestBody UserNicknameUpdateRequest request,
-                                                                     @SessionAttribute(name = "loginUser") SessionUser sessionUser) {
+                                                                     @RequestAttribute(name = "loginUser") SessionUser sessionUser) {
         UserNicknameUpdateResponse response = userService.updateNickname(request, sessionUser);
-
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 비밀번호 변경
     @PutMapping("/password")
     public ResponseEntity<Void> updatePassword(@Valid @RequestBody UserPasswordUpdateRequest request,
-                                               @SessionAttribute(name = "loginUser") SessionUser sessionUser) {
+                                               @RequestAttribute(name = "loginUser") SessionUser sessionUser) {
         userService.updatePassword(request, sessionUser);
-
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     // 유저 삭제 (회원 탈퇴)
     @DeleteMapping
     public ResponseEntity<Void> delete(@Valid @RequestBody UserDeleteRequest request,
-                                       @SessionAttribute(name = "loginUser") SessionUser sessionUser,
-                                       HttpSession session) {
+                                       @RequestAttribute(name = "loginUser") SessionUser sessionUser) {
         userService.delete(request, sessionUser);
-        session.invalidate();
-
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
