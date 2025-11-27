@@ -13,6 +13,7 @@ import com.okbo_projects.domain.comment.model.dto.CommentDto;
 import com.okbo_projects.domain.comment.model.request.CommentCreateRequest;
 import com.okbo_projects.domain.comment.model.response.CommentCreateResponse;
 import com.okbo_projects.domain.comment.repository.CommentRepository;
+import com.okbo_projects.domain.like.repository.LikeRepository;
 import com.okbo_projects.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,6 +31,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final LikeRepository likeRepository;
 
     // 댓글 생성
     public CommentCreateResponse createComment(Long boardId, SessionUser sessionUser, CommentCreateRequest request) {
@@ -67,6 +69,7 @@ public class CommentService {
     public void deleteComment(SessionUser sessionUser, Long commentId) {
         Comment comment = findByCommentId(commentId);
         matchedWriter(sessionUser.getUserId(), comment.getWriter().getId());
+        likeRepository.deleteByComment(comment);
         commentRepository.delete(comment);
         Board board = findByBoardId(comment.getBoard().getId());
         board.minusComments();
