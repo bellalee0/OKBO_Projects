@@ -37,8 +37,8 @@ public class LoginCheckFilter extends OncePerRequestFilter {
         whitelist.put("/boards/board/*", "GET"); // 단건 게시글 상세 조회
         whitelist.put("/boards", "GET"); // 게시글 전체 조회
         whitelist.put("/boards/teams/*", "GET"); // 구단별 게시글 조회
-        whitelist.put("/commemts/boards/*", "GET"); // 게시글별 댓글 조회
-        whitelist.put("/commemts/comments-count/boards/*", "GET"); // 게시글별 댓글 수 count
+        whitelist.put("/comments/boards/*", "GET"); // 게시글별 댓글 조회
+        whitelist.put("/comments/comments-count/boards/*", "GET"); // 게시글별 댓글 수 count
         whitelist.put("/likes/like-count/boards/*", "GET"); // 게시글 좋아요 count
         whitelist.put("/likes/like-count/comments/*", "GET"); // 댓글 좋아요 count
     }
