@@ -18,7 +18,7 @@ public class FollowController {
     // Follow 관계 create (fromUser: 로그인한 유저 / toUser: Path Variable로 입력받은 유저)
     @PostMapping("/{userNickname}")
     public ResponseEntity<Void> createFollow(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser,
             @PathVariable String userNickname ) {
         followService.createFollow(sessionUser, userNickname);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -27,7 +27,7 @@ public class FollowController {
     // Follow 관계 delete (fromUser: 로그인한 유저 / toUser: Path Variable로 입력받은 유저)
     @DeleteMapping("/{userNickname}")
     public ResponseEntity<Void> deleteFollow(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser,
             @PathVariable String userNickname ) {
         followService.deleteFollow(sessionUser, userNickname);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -36,7 +36,7 @@ public class FollowController {
     // Following, Follower 수 count
     @GetMapping("/follow-count")
     public ResponseEntity<FollowCountResponse> countFollow(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser,
             @RequestParam(name = "userNickname", required = false) String userNickname) {
         FollowCountResponse result = followService.countFollow(sessionUser, userNickname);
         return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -45,7 +45,7 @@ public class FollowController {
     // Following 유저 리스트 조회
     @GetMapping("/following")
     public ResponseEntity<Page<FollowGetFollowingListResponse>> getFollowingList(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(name = "userNickname", required = false) String userNickname ) {
@@ -56,7 +56,7 @@ public class FollowController {
     // Follower 유저 리스트 조회
     @GetMapping("/follower")
     public ResponseEntity<Page<FollowGetFollowerListResponse>> getFollowerList(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(name = "userNickname", required = false) String userNickname ) {
