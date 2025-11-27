@@ -9,18 +9,10 @@ import lombok.Getter;
 public class SessionUser {
 
     private final Long userId;
-    private final String userEmail;
-    private final String userNickname;
 
     public static SessionUser from(UserDto userDto) {
         return new SessionUser(
-                userDto.getId(),
-                userDto.getEmail(),
-                userDto.getNickname()
+                userDto.getId()
         );
-    }
-
-    public Object getId() {
-        return userId;
     }
 }
