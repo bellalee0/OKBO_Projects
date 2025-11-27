@@ -17,8 +17,9 @@ public class LikeController {
 
     // 게시글 좋아요 추가
     @PostMapping("/boards/{boardId}")
-    public ResponseEntity<Void> addBoardLike(@PathVariable Long boardId,
-                                             @SessionAttribute(name = "loginUser") SessionUser sessionUser) {
+    public ResponseEntity<Void> addBoardLike(
+            @PathVariable Long boardId,
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser) {
         likeService.addBoardLike(boardId, sessionUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -26,8 +27,9 @@ public class LikeController {
 
     // 게시글 좋아요 취소
     @DeleteMapping("/boards/{boardId}")
-    public ResponseEntity<Void> deleteBoardLike(@PathVariable Long boardId,
-                                                @SessionAttribute(name = "loginUser") SessionUser sessionUser) {
+    public ResponseEntity<Void> deleteBoardLike(
+            @PathVariable Long boardId,
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser) {
         likeService.deleteBoardLike(boardId, sessionUser);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -43,8 +45,9 @@ public class LikeController {
 
     // 댓글 좋아요 추가
     @PostMapping("/comments/{commentId}")
-    public ResponseEntity<Void> addCommentLike(@PathVariable Long commentId,
-                                               @SessionAttribute(name = "loginUser") SessionUser sessionUser) {
+    public ResponseEntity<Void> addCommentLike(
+            @PathVariable Long commentId,
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser) {
         likeService.addCommentLike(commentId, sessionUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -52,8 +55,9 @@ public class LikeController {
 
     // 댓글 좋아요 취소
     @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<Void> deleteCommentLike(@PathVariable Long commentId,
-                                                  @SessionAttribute(name = "loginUser") SessionUser sessionUser) {
+    public ResponseEntity<Void> deleteCommentLike(
+            @PathVariable Long commentId,
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser) {
         likeService.deleteCommentLike(commentId, sessionUser);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
