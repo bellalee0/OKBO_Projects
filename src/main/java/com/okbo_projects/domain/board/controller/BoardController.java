@@ -25,7 +25,7 @@ public class BoardController {
     //게시글 생성
     @PostMapping
     public ResponseEntity<BoardCreateResponse> createBoard(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser,
             @Valid @RequestBody BoardCreateRequest request
     ) {
         BoardCreateResponse result = boardService.createBoard(sessionUser, request);
@@ -35,7 +35,7 @@ public class BoardController {
     //게시글 수정
     @PutMapping("/{boardId}")
     public ResponseEntity<BoardUpdateResponse> updateBoard(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser,
             @PathVariable Long boardId,
             @Valid @RequestBody BoardUpdateRequest request
     ) {
@@ -58,7 +58,7 @@ public class BoardController {
     //내가 작성한 게시글 목록 조회
     @GetMapping("/myBoard")
     public ResponseEntity<Page<BoardGetMyArticlesResponse>> viewListOfMyArticlesWritten(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
@@ -98,7 +98,7 @@ public class BoardController {
     // 팔로워 게시글 조회
     @GetMapping("/followings")
     public ResponseEntity<Page<BoardGetFollowPageResponse>> getBoardFollowAllPage(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String writer,
             @RequestParam(required = false) String startDate,
@@ -112,7 +112,7 @@ public class BoardController {
     // 게시글 삭제
     @DeleteMapping("/{boardId}")
     public ResponseEntity<Void> deleteBoard(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser,
             @PathVariable Long boardId
     ) {
         boardService.deleteBoard(sessionUser, boardId);
