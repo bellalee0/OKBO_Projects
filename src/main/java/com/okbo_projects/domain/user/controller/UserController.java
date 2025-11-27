@@ -44,7 +44,7 @@ public class UserController {
     }
 
     // 내 정보 조회
-    @GetMapping("/myPage")
+    @GetMapping("/my-page")
     public ResponseEntity<UserGetMyProfileResponse> getMyProfile(@RequestAttribute(name = "loginUser") LoginUser loginUser) {
 
         UserGetMyProfileResponse response = userService.getMyProfile(loginUser);

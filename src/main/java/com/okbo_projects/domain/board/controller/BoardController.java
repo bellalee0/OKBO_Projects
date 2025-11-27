@@ -60,7 +60,7 @@ public class BoardController {
     }
 
     //내가 작성한 게시글 목록 조회
-    @GetMapping("/myBoard")
+    @GetMapping("/my-board")
     public ResponseEntity<Page<BoardGetMyArticlesResponse>> viewListOfMyArticlesWritten(
             @RequestAttribute(name = "loginUser") LoginUser loginUser,
             @RequestParam(required = false) String title,
