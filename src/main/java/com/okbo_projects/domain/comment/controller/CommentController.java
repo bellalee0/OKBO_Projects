@@ -27,7 +27,7 @@ public class CommentController {
     // 댓글 생성
     @PostMapping("/boards/{boardId}")
     public ResponseEntity<CommentCreateResponse> createComment(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser,
             @Valid @RequestBody CommentCreateRequest request,
             @PathVariable Long boardId
     ){
@@ -50,7 +50,7 @@ public class CommentController {
     //댓글 수정
     @PutMapping("/{commentId}")
     public ResponseEntity<CommentUpdateResponse> updateComment(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser,
             @PathVariable Long commentId,
             @Valid @RequestBody CommentUpdateRequest request
     ){
@@ -62,7 +62,7 @@ public class CommentController {
     //댓글 삭제
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @RequestAttribute(name = "loginUser") SessionUser sessionUser,
             @PathVariable Long commentId
     ){
         commentService.deleteComment(sessionUser,commentId);
