@@ -3,6 +3,7 @@ package com.okbo_projects.domain.user.service;
 import com.okbo_projects.common.entity.User;
 import com.okbo_projects.common.exception.CustomException;
 import com.okbo_projects.common.model.SessionUser;
+import com.okbo_projects.common.utils.JwtUtils;
 import com.okbo_projects.common.utils.PasswordEncoder;
 import com.okbo_projects.common.utils.Team;
 import com.okbo_projects.domain.follow.repository.FollowRepository;
@@ -27,6 +28,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
+    private final JwtUtils jwtUtils;
 
     // 회원가입
     public UserCreateResponse create(UserCreateRequest request) {
@@ -54,7 +56,7 @@ public class UserService {
     }
 
     // 로그인
-    public SessionUser login(LoginRequest request) {
+    public String login(LoginRequest request) {
         User user = userRepository.findUserByEmail(request.getEmail());
 
         if (!user.isActivated()) {
@@ -64,7 +66,7 @@ public class UserService {
             throw new CustomException(UNAUTHORIZED_WRONG_PASSWORD);
         }
 
-        return SessionUser.from(UserDto.from(user));
+        return jwtUtils.generateToken(user.getId());
     }
 
     // 내 프로필 조회

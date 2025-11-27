@@ -31,11 +31,9 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest request, HttpSession session) {
-        SessionUser sessionUser = userService.login(request);
-        session.setAttribute("loginUser", sessionUser);
-
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest request) {
+        String createdToken = userService.login(request);
+        return ResponseEntity.status(HttpStatus.OK).body(createdToken);
     }
 
     // 로그아웃
