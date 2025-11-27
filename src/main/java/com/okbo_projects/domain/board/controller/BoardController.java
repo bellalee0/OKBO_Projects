@@ -99,9 +99,13 @@ public class BoardController {
     @GetMapping("/followings")
     public ResponseEntity<Page<BoardGetFollowPageResponse>> getBoardFollowAllPage(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String writer,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
             @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Page<BoardGetFollowPageResponse> result = boardService.getBoardFollowAllPage(sessionUser, pageable);
+        Page<BoardGetFollowPageResponse> result = boardService.getBoardFollowAllPage(sessionUser, title, writer, startDate, endDate, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
