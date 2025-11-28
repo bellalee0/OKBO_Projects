@@ -1,10 +1,20 @@
-# OKBO – KBO 야구 팬들을 위한 커뮤니티 플랫폼
+# ⚾️ OKBO – KBO 야구 팬들을 위한 커뮤니티 플랫폼
+
 
 ### “흩어져 있던 야구 기록과 팬심을 한곳에!”
 
 나만의 야구 일지를 기록하고, 같은 팀을 응원하는 팬들과 실시간으로 소통하는 야구 커뮤니티 플랫폼입니다.
 
-## 프로젝트 목적
+## 📌 프로젝트 소개
+
+- 팀스파르타 내일배움캠프의 실무형 Kotlin & Spring 개발자 양성과정 중 진행된 팀 프로젝트
+
+- 기간 : 2025년 11월 21일(금) ~ 28일(금)
+  
+- 주제 : Spring Boot에서 JPA와 JWT에 대한 이해를 바탕으로, 실제로 사용될 수 있는 뉴스피드 구현
+
+
+## ⚾️ OKBO 프로젝트 목적
 
 야구가 취미이지만
 
@@ -14,71 +24,43 @@
 
 취미 생활을 더 재미있고, 더 깊게 즐길 수 있는 커뮤니티 환경을 목표로 합니다.
 
-같은 팀을 응원하는 사람과 연결되고, 기록하고, 공유할 수 있는 플랫폼을 제공하는 것이 OKBO의 핵심 목적입니다.
+**같은 팀을 응원하는 사람과 연결되고, 기록하고, 공유할 수 있는 플랫폼을 제공**하는 것이 OKBO의 핵심 목적입니다.
 
-## 핵심 기능
 
-1. 나의 구단 선택
-    - 최초 가입 시 응원하는 구단 선택
-    - 선택한 구단을 기반으로 홈 피드 구성
+### 🧩 핵심 기능
 
-2. 게시글 작성
-    - 경기 후기, 응원 메시지, 분석 등 원하는 내용 작성
+**1. 나의 구단 선택**
+- [x] 최초 가입 시 응원하는 구단 선택
+- [x] 선택한 구단을 기반으로 홈 피드 구성
 
-3. 구단별 게시글 조회
-    - 특정 구단 팬들이 올린 게시글을 모아서 조회
-    - 구단 중심의 커뮤니티 공간 제공
+**2. 게시글 작성**
+- [x] 경기 후기, 응원 메시지, 분석 등 원하는 내용 작성
 
-4. 친구 팔로우
-    - 마음에 드는 사용자를 팔로우
+**3. 구단별 게시글 조회**
+- [x] 특정 구단 팬들이 올린 게시글을 모아서 조회
+- [x] 구단 중심의 커뮤니티 공간 제공
 
-5. 팔로우한 사람들의 게시글 조회
-    - 개인화된 피드 제공
+**4. 친구 팔로우**
+- [x] 마음에 드는 사용자를 팔로우
 
-## 기술 스택 (Tech Stack)
+**5. 팔로우한 사람들의 게시글 조회**
+- [x] 개인화된 피드 제공
 
-- Java: 17
-- Spring Boot: 3.5.8
-- MySQL: 8.4
-- IntelliJ version: 25.2.2
-- API Test: Postman
 
-## 프로젝트 구조 (Directory Structure)
+### 🛠️ 사용하는 기술
 
-```
-OKBO_Projects/
-├── src/
-│   ├── main/java/
-│   │   └── com/okbo_projects/
-│   │       ├── common/
-│   │       |  ├── entity
-│   │       │  ├── exception
-│   │       │  ├── filter
-│   │       │  ├── model
-│   │       │  └── utils
-│   │       │
-│   │       └── domain
-│   │          ├── board
-│   │          ├── comment
-│   │          ├── follow
-│   │          ├── like
-│   │          └── user
-│   │
-│   └── resources/
-│       └── application.yml
-├── build.gradle
-└── README.md
-```
+`Java 17` `Spring Boot 3.5.8` `MySQL 8.4` `IntelliJ version 25.2.2` `Postman`
 
-각 도메인은 controller, service, repository 계층으로 분리되어 있고, model 패키지에서 dto, request, response 객체들을 관리합니다.
 
-- board: 게시판 기능
-- comment: 댓글 기능
-- follow: 팔로우 기능
-- like: 좋아요 기능
-- user: 사용자 관리
+## 🧱 설계
 
-## API 명세서
+### 📝 와이어프레임
+
+[와이어프레임 by draw.id](https://drive.google.com/file/d/1ribiYon1CsOWFij3WowWcq9C-Eb3nI2E/view?usp=sharing)
+
+### 📝 API 명세서
+
+[API 명세서 by Notion](https://road-cartoon-1a1.notion.site/2b91d6e7a68c8157b58dd59b83f8306a?v=2b91d6e7a68c81d8bfa7000cfce56d45&source=copy_link)
 
 <details>
 <summary>유저</summary>
@@ -105,11 +87,48 @@ OKBO_Projects/
   <img width="1753" height="614" alt="좋아요api" src="https://github.com/user-attachments/assets/9811a1aa-13ab-4909-8a07-cd57d49d9cd3" />
 </details>
 
-## ERD
 
+### 📝 ERD
+
+[ERD 명세서 by Notion](https://road-cartoon-1a1.notion.site/ERD-2b91d6e7a68c81ac980af85dc8a51d31?source=copy_link)
 <img width="1345" height="781" alt="image" src="https://github.com/user-attachments/assets/7986da55-46ae-44d8-8285-9fd9cc6cbe50" />
 
-## 팀 소개 – 5조 오버플로우(Overflow)
+
+### 📁 프로젝트 구조 (Directory Structure)
+```
+OKBO_Projects/
+├── src/
+│   ├── main/java/
+│   │   └── com/okbo_projects/
+│   │       ├── common/
+│   │       |  ├── entity
+│   │       │  ├── exception
+│   │       │  ├── filter
+│   │       │  ├── model
+│   │       │  └── utils
+│   │       │
+│   │       └── domain
+│   │          ├── board
+│   │          ├── comment
+│   │          ├── follow
+│   │          ├── like
+│   │          └── user
+│   │
+│   └── resources/
+│       └── application.yml
+├── build.gradle
+└── README.md
+```
+
+각 도메인은 controller, service, repository 계층으로 분리되어 있고, model 패키지에서 dto, request, response 객체들을 관리합니다.
+- board: 게시판 기능
+- comment: 댓글 기능
+- follow: 팔로우 기능
+- like: 좋아요 기능
+- user: 사용자 관리
+
+
+## 👥 팀 소개 – 5조 오버플로우(Overflow)
 
 ### “아이디어와 열정이 넘쳐흘러 곧바로 코드로 구현합니다.”
 
@@ -119,14 +138,15 @@ OKBO_Projects/
 
 팀원
 
-- 윤지현    : 유저 CRUD 구현, 좋아요 CRUD 구현
+- 윤지현	: 유저 CRUD 구현, 좋아요 CRUD 구현
 
-- 이서연    : 팔로우 CRUD 구현, 정렬 기능 구현, JWT 적용
+- 이서연	: 팔로우 CRUD 구현, 정렬 기능 구현, JWT 적용
 
-- 이세진    : 게시글 CRUD 구현, 댓글 CRUD 구현
+- 이세진	: 게시글 CRUD 구현, 댓글 CRUD 구현
 
-- 최승희    : 게시글 CRUD 구현, 댓글 CRUD 구현
+- 최승희	: 게시글 CRUD 구현, 댓글 CRUD 구현
 
-## 라이선스
+
+### 라이선스
 
 본 프로젝트는 팀스파르타 내일배움캠프의 실무형 Kotlin & Spring 개발자 양성과정 중 팀 Overflow의 학습 및 포트폴리오 목적으로 제작되었습니다.
