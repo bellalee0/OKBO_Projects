@@ -1,5 +1,7 @@
 package com.okbo_projects.common.filter;
 
+import static com.okbo_projects.common.exception.ErrorMessage.UNAUTHORIZED_LOGIN_REQUIRED;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.okbo_projects.common.exception.CustomException;
 import com.okbo_projects.common.model.LoginUser;
@@ -9,19 +11,16 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.okbo_projects.common.exception.ErrorMessage.UNAUTHORIZED_LOGIN_REQUIRED;
 
 @Slf4j(topic = "Filter")
 @Component
@@ -45,7 +44,8 @@ public class LoginCheckFilter extends OncePerRequestFilter {
     private final JwtUtils jwtUtils;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+        FilterChain filterChain) throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
         CustomException unauthorizedException = new CustomException(UNAUTHORIZED_LOGIN_REQUIRED);
@@ -59,7 +59,8 @@ public class LoginCheckFilter extends OncePerRequestFilter {
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             handleCustomException(response, unauthorizedException);
-            log.error("CustomException 발생 : " + unauthorizedException.getErrorMessage().getMessage());
+            log.error(
+                "CustomException 발생 : " + unauthorizedException.getErrorMessage().getMessage());
             return;
         }
 
@@ -67,7 +68,8 @@ public class LoginCheckFilter extends OncePerRequestFilter {
 
         if (!jwtUtils.validateToken(jwt)) {
             handleCustomException(response, unauthorizedException);
-            log.error("CustomException 발생 : " + unauthorizedException.getErrorMessage().getMessage());
+            log.error(
+                "CustomException 발생 : " + unauthorizedException.getErrorMessage().getMessage());
             return;
         }
 
@@ -96,7 +98,8 @@ public class LoginCheckFilter extends OncePerRequestFilter {
     }
 
     // Filter 내부에서 발생하는 CustomException 처리
-    private void handleCustomException(HttpServletResponse response, CustomException e) throws IOException {
+    private void handleCustomException(HttpServletResponse response, CustomException e)
+        throws IOException {
 
         response.setStatus(e.getErrorMessage().getStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -106,7 +109,8 @@ public class LoginCheckFilter extends OncePerRequestFilter {
         writeErrorResponse(response, errorResponse);
     }
 
-    private void writeErrorResponse(HttpServletResponse response, ErrorResponse body) throws IOException {
+    private void writeErrorResponse(HttpServletResponse response, ErrorResponse body)
+        throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(body);

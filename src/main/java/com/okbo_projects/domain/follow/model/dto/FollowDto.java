@@ -17,9 +17,9 @@ public class FollowDto {
 
     public static FollowDto from(Follow follow) {
         return new FollowDto(
-                follow.getId(),
-                follow.getFromUser(),
-                follow.getToUser()
+            follow.getId(),
+            follow.getFromUser(),
+            follow.getToUser()
         );
     }
 }

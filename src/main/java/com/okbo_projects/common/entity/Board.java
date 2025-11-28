@@ -2,7 +2,17 @@ package com.okbo_projects.common.entity;
 
 import com.okbo_projects.common.model.Team;
 import com.okbo_projects.domain.board.model.request.BoardUpdateRequest;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,12 +60,15 @@ public class Board extends BaseEntity {
     public void addComments() {
         this.comments++;
     }
+
     public void addLikes() {
         this.likes++;
     }
+
     public void minusComments() {
         this.comments--;
     }
+
     public void minusLikes() {
         this.likes--;
     }

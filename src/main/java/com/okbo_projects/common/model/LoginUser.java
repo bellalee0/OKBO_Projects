@@ -12,7 +12,7 @@ public class LoginUser {
 
     public static LoginUser from(UserDto userDto) {
         return new LoginUser(
-                userDto.getId()
+            userDto.getId()
         );
     }
 }

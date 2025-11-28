@@ -3,7 +3,13 @@ package com.okbo_projects.domain.board.controller;
 import com.okbo_projects.common.model.LoginUser;
 import com.okbo_projects.domain.board.model.request.BoardCreateRequest;
 import com.okbo_projects.domain.board.model.request.BoardUpdateRequest;
-import com.okbo_projects.domain.board.model.response.*;
+import com.okbo_projects.domain.board.model.response.BoardCreateResponse;
+import com.okbo_projects.domain.board.model.response.BoardDetailedInquiryResponse;
+import com.okbo_projects.domain.board.model.response.BoardGetAllPageResponse;
+import com.okbo_projects.domain.board.model.response.BoardGetFollowPageResponse;
+import com.okbo_projects.domain.board.model.response.BoardGetMyArticlesResponse;
+import com.okbo_projects.domain.board.model.response.BoardGetTeamPageResponse;
+import com.okbo_projects.domain.board.model.response.BoardUpdateResponse;
 import com.okbo_projects.domain.board.service.BoardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,19 +20,29 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/boards")
 @RequiredArgsConstructor
 public class BoardController {
+
     private final BoardService boardService;
 
     //게시글 생성
     @PostMapping
     public ResponseEntity<BoardCreateResponse> createBoard(
-            @RequestAttribute(name = "loginUser") LoginUser loginUser,
-            @Valid @RequestBody BoardCreateRequest request
+        @RequestAttribute(name = "loginUser") LoginUser loginUser,
+        @Valid @RequestBody BoardCreateRequest request
     ) {
         BoardCreateResponse result = boardService.createBoard(loginUser, request);
 
@@ -36,9 +52,9 @@ public class BoardController {
     //게시글 수정
     @PutMapping("/{boardId}")
     public ResponseEntity<BoardUpdateResponse> updateBoard(
-            @RequestAttribute(name = "loginUser") LoginUser loginUser,
-            @PathVariable long boardId,
-            @Valid @RequestBody BoardUpdateRequest request
+        @RequestAttribute(name = "loginUser") LoginUser loginUser,
+        @PathVariable long boardId,
+        @Valid @RequestBody BoardUpdateRequest request
     ) {
         BoardUpdateResponse result = boardService.updateBoard(loginUser, boardId, request);
 
@@ -48,9 +64,9 @@ public class BoardController {
     //게시글 상세조회
     @GetMapping("/board/{boardId}")
     public ResponseEntity<BoardDetailedInquiryResponse> detailedInquiryBoard(
-            @PathVariable long boardId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+        @PathVariable long boardId,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
@@ -62,13 +78,14 @@ public class BoardController {
     //내가 작성한 게시글 목록 조회
     @GetMapping("/my-board")
     public ResponseEntity<Page<BoardGetMyArticlesResponse>> viewListOfMyArticlesWritten(
-            @RequestAttribute(name = "loginUser") LoginUser loginUser,
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate,
-            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+        @RequestAttribute(name = "loginUser") LoginUser loginUser,
+        @RequestParam(required = false) String title,
+        @RequestParam(required = false) String startDate,
+        @RequestParam(required = false) String endDate,
+        @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Page<BoardGetMyArticlesResponse> result = boardService.viewListOfMyArticlesWritten(loginUser, title, startDate, endDate, pageable);
+        Page<BoardGetMyArticlesResponse> result = boardService.viewListOfMyArticlesWritten(
+            loginUser, title, startDate, endDate, pageable);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
@@ -76,13 +93,14 @@ public class BoardController {
     // 게시글 전체 조회
     @GetMapping
     public ResponseEntity<Page<BoardGetAllPageResponse>> getBoardAllPage(
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String writer,
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate,
-            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+        @RequestParam(required = false) String title,
+        @RequestParam(required = false) String writer,
+        @RequestParam(required = false) String startDate,
+        @RequestParam(required = false) String endDate,
+        @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Page<BoardGetAllPageResponse> result = boardService.getBoardAllPage(title, writer, startDate, endDate, pageable);
+        Page<BoardGetAllPageResponse> result = boardService.getBoardAllPage(title, writer,
+            startDate, endDate, pageable);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
@@ -90,14 +108,15 @@ public class BoardController {
     // 게시글 구단별 전체 조회
     @GetMapping("/teams/{teamName}")
     public ResponseEntity<Page<BoardGetTeamPageResponse>> getBoardTeamAllPage(
-            @PathVariable String teamName,
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String writer,
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate,
-            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+        @PathVariable String teamName,
+        @RequestParam(required = false) String title,
+        @RequestParam(required = false) String writer,
+        @RequestParam(required = false) String startDate,
+        @RequestParam(required = false) String endDate,
+        @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Page<BoardGetTeamPageResponse> result = boardService.getBoardTeamAllPage(teamName, title, writer, startDate, endDate, pageable);
+        Page<BoardGetTeamPageResponse> result = boardService.getBoardTeamAllPage(teamName, title,
+            writer, startDate, endDate, pageable);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
@@ -105,14 +124,15 @@ public class BoardController {
     // 팔로워 게시글 조회
     @GetMapping("/followings")
     public ResponseEntity<Page<BoardGetFollowPageResponse>> getBoardFollowAllPage(
-            @RequestAttribute(name = "loginUser") LoginUser loginUser,
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String writer,
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate,
-            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+        @RequestAttribute(name = "loginUser") LoginUser loginUser,
+        @RequestParam(required = false) String title,
+        @RequestParam(required = false) String writer,
+        @RequestParam(required = false) String startDate,
+        @RequestParam(required = false) String endDate,
+        @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Page<BoardGetFollowPageResponse> result = boardService.getBoardFollowAllPage(loginUser, title, writer, startDate, endDate, pageable);
+        Page<BoardGetFollowPageResponse> result = boardService.getBoardFollowAllPage(loginUser,
+            title, writer, startDate, endDate, pageable);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
@@ -120,8 +140,8 @@ public class BoardController {
     // 게시글 삭제
     @DeleteMapping("/{boardId}")
     public ResponseEntity<Void> deleteBoard(
-            @RequestAttribute(name = "loginUser") LoginUser loginUser,
-            @PathVariable long boardId
+        @RequestAttribute(name = "loginUser") LoginUser loginUser,
+        @PathVariable long boardId
     ) {
         boardService.deleteBoard(loginUser, boardId);
 

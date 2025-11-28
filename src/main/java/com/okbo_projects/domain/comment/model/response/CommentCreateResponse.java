@@ -17,10 +17,10 @@ public class CommentCreateResponse {
 
     public static CommentCreateResponse from(CommentDto commentDto) {
         return new CommentCreateResponse(
-                commentDto.getId(),
-                commentDto.getBoardId(),
-                commentDto.getComments(),
-                commentDto.getWriter()
+            commentDto.getId(),
+            commentDto.getBoardId(),
+            commentDto.getComments(),
+            commentDto.getWriter()
         );
     }
 }

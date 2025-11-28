@@ -1,11 +1,10 @@
 package com.okbo_projects.domain.comment.model.response;
 
 import com.okbo_projects.domain.comment.model.dto.CommentDto;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -21,12 +20,12 @@ public class CommentUpdateResponse {
 
     public static CommentUpdateResponse from(CommentDto dto) {
         return new CommentUpdateResponse(
-                dto.getId(),
-                dto.getBoardId(),
-                dto.getComments(),
-                dto.getWriter(),
-                dto.getCreatedAt(),
-                dto.getModifiedAt()
+            dto.getId(),
+            dto.getBoardId(),
+            dto.getComments(),
+            dto.getWriter(),
+            dto.getCreatedAt(),
+            dto.getModifiedAt()
         );
     }
 }

@@ -15,8 +15,8 @@ public class UserNicknameUpdateResponse {
 
     public static UserNicknameUpdateResponse from(UserDto userDto) {
         return new UserNicknameUpdateResponse(
-                userDto.getId(),
-                userDto.getNickname()
+            userDto.getId(),
+            userDto.getNickname()
         );
     }
 }

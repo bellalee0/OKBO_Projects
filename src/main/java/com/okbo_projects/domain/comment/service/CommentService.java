@@ -1,5 +1,7 @@
 package com.okbo_projects.domain.comment.service;
 
+import static com.okbo_projects.common.exception.ErrorMessage.FORBIDDEN_ONLY_WRITER;
+
 import com.okbo_projects.common.entity.Board;
 import com.okbo_projects.common.entity.Comment;
 import com.okbo_projects.common.entity.User;
@@ -22,8 +24,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.okbo_projects.common.exception.ErrorMessage.FORBIDDEN_ONLY_WRITER;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -35,16 +35,17 @@ public class CommentService {
     private final LikeRepository likeRepository;
 
     // 댓글 생성
-    public CommentCreateResponse createComment(Long boardId, LoginUser loginUser, CommentCreateRequest request) {
+    public CommentCreateResponse createComment(Long boardId, LoginUser loginUser,
+        CommentCreateRequest request) {
 
         Board board = findByBoardId(boardId);
 
         User user = findByUserId(loginUser.getUserId());
 
         Comment comment = new Comment(
-                request.getComments(),
-                user,
-                board
+            request.getComments(),
+            user,
+            board
         );
 
         commentRepository.save(comment);
@@ -68,7 +69,8 @@ public class CommentService {
     }
 
     //댓글 수정
-    public CommentUpdateResponse updateComment(LoginUser loginUser, Long commentId, CommentUpdateRequest request) {
+    public CommentUpdateResponse updateComment(LoginUser loginUser, Long commentId,
+        CommentUpdateRequest request) {
 
         Comment comment = findByCommentId(commentId);
 

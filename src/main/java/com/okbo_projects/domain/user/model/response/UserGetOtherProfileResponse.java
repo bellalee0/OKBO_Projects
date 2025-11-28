@@ -15,8 +15,8 @@ public class UserGetOtherProfileResponse {
 
     public static UserGetOtherProfileResponse from(UserDto userDto) {
         return new UserGetOtherProfileResponse(
-                userDto.getNickname(),
-                userDto.getTeam().getTeamName()
+            userDto.getNickname(),
+            userDto.getTeam().getTeamName()
         );
     }
 }

@@ -17,10 +17,10 @@ public class UserGetMyProfileResponse {
 
     public static UserGetMyProfileResponse from(UserDto userDto) {
         return new UserGetMyProfileResponse(
-                userDto.getId(),
-                userDto.getNickname(),
-                userDto.getEmail(),
-                userDto.getTeam().getTeamName()
+            userDto.getId(),
+            userDto.getNickname(),
+            userDto.getEmail(),
+            userDto.getTeam().getTeamName()
         );
     }
 }

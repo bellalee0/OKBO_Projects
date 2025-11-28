@@ -1,15 +1,14 @@
 package com.okbo_projects.domain.follow.repository;
 
+import static com.okbo_projects.common.exception.ErrorMessage.BAD_REQUEST_NOT_FOLLOWING_UNFOLLOW;
+
 import com.okbo_projects.common.entity.Follow;
 import com.okbo_projects.common.entity.User;
 import com.okbo_projects.common.exception.CustomException;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.Optional;
-
-import static com.okbo_projects.common.exception.ErrorMessage.BAD_REQUEST_NOT_FOLLOWING_UNFOLLOW;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
 
@@ -42,8 +41,9 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     // fromUser, toUser 2가지 기준으로 조회(Optional로 반환)
     Optional<Follow> findByFromUserAndToUser(User fromUser, User toUser);
+
     default Follow findFollowByFromUserAndToUser(User fromUser, User toUser) {
         return findByFromUserAndToUser(fromUser, toUser)
-                .orElseThrow(() -> new CustomException(BAD_REQUEST_NOT_FOLLOWING_UNFOLLOW));
+            .orElseThrow(() -> new CustomException(BAD_REQUEST_NOT_FOLLOWING_UNFOLLOW));
     }
 }

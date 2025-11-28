@@ -1,5 +1,10 @@
 package com.okbo_projects.domain.like.service;
 
+import static com.okbo_projects.common.exception.ErrorMessage.BAD_REQUEST_NOT_LIKE_UNLIKE_ON_BOARD;
+import static com.okbo_projects.common.exception.ErrorMessage.BAD_REQUEST_NOT_LIKE_UNLIKE_ON_COMMENT;
+import static com.okbo_projects.common.exception.ErrorMessage.CONFLICT_ALREADY_BOARD_LIKE;
+import static com.okbo_projects.common.exception.ErrorMessage.CONFLICT_ALREADY_COMMENT_LIKE;
+
 import com.okbo_projects.common.entity.Board;
 import com.okbo_projects.common.entity.Comment;
 import com.okbo_projects.common.entity.Like;
@@ -15,8 +20,6 @@ import com.okbo_projects.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.okbo_projects.common.exception.ErrorMessage.*;
 
 @Service
 @Transactional
@@ -42,8 +45,8 @@ public class LikeService {
         board.addLikes();
 
         Like like = new Like(
-                user,
-                board
+            user,
+            board
         );
 
         likeRepository.save(like);
@@ -86,8 +89,8 @@ public class LikeService {
         }
 
         Like like = new Like(
-                user,
-                comment
+            user,
+            comment
         );
 
         likeRepository.save(like);

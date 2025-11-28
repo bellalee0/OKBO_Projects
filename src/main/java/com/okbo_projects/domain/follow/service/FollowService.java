@@ -1,5 +1,11 @@
 package com.okbo_projects.domain.follow.service;
 
+import static com.okbo_projects.common.exception.ErrorMessage.BAD_REQUEST_NOT_ALLOWED_SELF_FOLLOW;
+import static com.okbo_projects.common.exception.ErrorMessage.CONFLICT_ALREADY_FOLLOWING;
+import static com.okbo_projects.common.exception.ErrorMessage.NOT_FOUND_FOLLOWER;
+import static com.okbo_projects.common.exception.ErrorMessage.NOT_FOUND_FOLLOWING;
+import static com.okbo_projects.common.exception.ErrorMessage.NOT_FOUND_USER;
+
 import com.okbo_projects.common.entity.Follow;
 import com.okbo_projects.common.entity.User;
 import com.okbo_projects.common.exception.CustomException;
@@ -17,8 +23,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.okbo_projects.common.exception.ErrorMessage.*;
 
 @RequiredArgsConstructor
 @Transactional
@@ -79,7 +83,8 @@ public class FollowService {
     }
 
     // Following 유저 리스트 조회 (생성일 기준 내림차순 정렬)
-    public Page<FollowGetFollowingListResponse> getFollowingList(LoginUser loginUser, int page, int size, String userNickname) {
+    public Page<FollowGetFollowingListResponse> getFollowingList(LoginUser loginUser, int page,
+        int size, String userNickname) {
 
         User user;
 
@@ -97,11 +102,12 @@ public class FollowService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
         return followRepository.findByFromUser(user, pageable)
-                .map(follow -> FollowGetFollowingListResponse.from(FollowDto.from(follow)));
+            .map(follow -> FollowGetFollowingListResponse.from(FollowDto.from(follow)));
     }
 
     // Follower 유저 리스트 조회 (생성일 기준 내림차순 정렬)
-    public Page<FollowGetFollowerListResponse> getFollowerList(LoginUser loginUser, int page, int size, String userNickname) {
+    public Page<FollowGetFollowerListResponse> getFollowerList(LoginUser loginUser, int page,
+        int size, String userNickname) {
 
         User user;
 
@@ -119,6 +125,6 @@ public class FollowService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
         return followRepository.findByToUser(user, pageable)
-                .map(follow -> FollowGetFollowerListResponse.from(FollowDto.from(follow)));
+            .map(follow -> FollowGetFollowerListResponse.from(FollowDto.from(follow)));
     }
 }

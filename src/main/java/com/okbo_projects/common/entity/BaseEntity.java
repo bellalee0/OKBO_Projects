@@ -1,13 +1,16 @@
 package com.okbo_projects.common.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
 
 @Getter
 @MappedSuperclass
@@ -28,7 +31,7 @@ public abstract class BaseEntity {
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean isDeleted;
 
-    public void updateIsDeleted(){
+    public void updateIsDeleted() {
         this.isDeleted = true;
     }
 }

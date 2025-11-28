@@ -17,10 +17,10 @@ public class BoardUpdateResponse {
 
     public static BoardUpdateResponse from(BoardDto dto) {
         return new BoardUpdateResponse(
-                dto.getId(),
-                dto.getTitle(),
-                dto.getContent(),
-                dto.getTeam().getTeamName()
+            dto.getId(),
+            dto.getTitle(),
+            dto.getContent(),
+            dto.getTeam().getTeamName()
         );
     }
 }

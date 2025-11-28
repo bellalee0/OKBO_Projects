@@ -2,11 +2,10 @@ package com.okbo_projects.domain.board.model.dto;
 
 import com.okbo_projects.common.entity.Board;
 import com.okbo_projects.common.model.Team;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -25,15 +24,15 @@ public class BoardDto {
 
     public static BoardDto from(Board board) {
         return new BoardDto(
-                board.getId(),
-                board.getTitle(),
-                board.getTeam(),
-                board.getContent(),
-                board.getWriter().getNickname(),
-                board.getComments(),
-                board.getLikes(),
-                board.getCreatedAt(),
-                board.getModifiedAt()
+            board.getId(),
+            board.getTitle(),
+            board.getTeam(),
+            board.getContent(),
+            board.getWriter().getNickname(),
+            board.getComments(),
+            board.getLikes(),
+            board.getCreatedAt(),
+            board.getModifiedAt()
         );
     }
 }

@@ -12,7 +12,7 @@ public class FollowGetFollowerListResponse {
 
     public static FollowGetFollowerListResponse from(FollowDto followDto) {
         return new FollowGetFollowerListResponse(
-                followDto.getFromUser().getNickname()
+            followDto.getFromUser().getNickname()
         );
     }
 }

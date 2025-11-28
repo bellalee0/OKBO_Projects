@@ -1,7 +1,11 @@
 package com.okbo_projects.domain.user.controller;
 
 import com.okbo_projects.common.model.LoginUser;
-import com.okbo_projects.domain.user.model.request.*;
+import com.okbo_projects.domain.user.model.request.LoginRequest;
+import com.okbo_projects.domain.user.model.request.UserCreateRequest;
+import com.okbo_projects.domain.user.model.request.UserDeleteRequest;
+import com.okbo_projects.domain.user.model.request.UserNicknameUpdateRequest;
+import com.okbo_projects.domain.user.model.request.UserPasswordUpdateRequest;
 import com.okbo_projects.domain.user.model.response.UserCreateResponse;
 import com.okbo_projects.domain.user.model.response.UserGetMyProfileResponse;
 import com.okbo_projects.domain.user.model.response.UserGetOtherProfileResponse;
@@ -11,17 +15,27 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
 
     // 유저 생성 (회원가입)
     @PostMapping
-    public ResponseEntity<UserCreateResponse> createUser(@Valid @RequestBody UserCreateRequest request) {
+    public ResponseEntity<UserCreateResponse> createUser(
+        @Valid @RequestBody UserCreateRequest request) {
 
         UserCreateResponse response = userService.createUser(request);
 
@@ -45,7 +59,8 @@ public class UserController {
 
     // 내 정보 조회
     @GetMapping("/my-page")
-    public ResponseEntity<UserGetMyProfileResponse> getMyProfile(@RequestAttribute(name = "loginUser") LoginUser loginUser) {
+    public ResponseEntity<UserGetMyProfileResponse> getMyProfile(
+        @RequestAttribute(name = "loginUser") LoginUser loginUser) {
 
         UserGetMyProfileResponse response = userService.getMyProfile(loginUser);
 
@@ -64,8 +79,8 @@ public class UserController {
     // 닉네임 변경
     @PutMapping("/nickname")
     public ResponseEntity<UserNicknameUpdateResponse> updateUserNickname(
-            @Valid @RequestBody UserNicknameUpdateRequest request,
-            @RequestAttribute(name = "loginUser") LoginUser loginUser
+        @Valid @RequestBody UserNicknameUpdateRequest request,
+        @RequestAttribute(name = "loginUser") LoginUser loginUser
     ) {
         UserNicknameUpdateResponse response = userService.updateUserNickname(request, loginUser);
 
@@ -75,8 +90,8 @@ public class UserController {
     // 비밀번호 변경
     @PutMapping("/password")
     public ResponseEntity<Void> updateUserPassword(
-            @Valid @RequestBody UserPasswordUpdateRequest request,
-            @RequestAttribute(name = "loginUser") LoginUser loginUser
+        @Valid @RequestBody UserPasswordUpdateRequest request,
+        @RequestAttribute(name = "loginUser") LoginUser loginUser
     ) {
         userService.updateUserPassword(request, loginUser);
 
@@ -86,8 +101,8 @@ public class UserController {
     // 유저 삭제 (회원 탈퇴)
     @DeleteMapping
     public ResponseEntity<Void> deleteUser(
-            @Valid @RequestBody UserDeleteRequest request,
-            @RequestAttribute(name = "loginUser") LoginUser loginUser
+        @Valid @RequestBody UserDeleteRequest request,
+        @RequestAttribute(name = "loginUser") LoginUser loginUser
     ) {
         userService.deleteUser(request, loginUser);
 

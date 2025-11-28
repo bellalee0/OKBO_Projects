@@ -17,10 +17,10 @@ public class UserCreateResponse {
 
     public static UserCreateResponse from(UserDto userDto) {
         return new UserCreateResponse(
-                userDto.getId(),
-                userDto.getNickname(),
-                userDto.getEmail(),
-                userDto.getTeam().getTeamName()
+            userDto.getId(),
+            userDto.getNickname(),
+            userDto.getEmail(),
+            userDto.getTeam().getTeamName()
         );
     }
 }

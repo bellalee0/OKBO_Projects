@@ -16,9 +16,9 @@ public class CommentGetAllResponse {
 
     public static CommentGetAllResponse from(CommentDto commentDto) {
         return new CommentGetAllResponse(
-                commentDto.getId(),
-                commentDto.getComments(),
-                commentDto.getWriter()
+            commentDto.getId(),
+            commentDto.getComments(),
+            commentDto.getWriter()
         );
     }
 }

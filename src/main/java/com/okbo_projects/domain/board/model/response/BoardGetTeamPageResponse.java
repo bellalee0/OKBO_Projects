@@ -1,11 +1,10 @@
 package com.okbo_projects.domain.board.model.response;
 
 import com.okbo_projects.domain.board.model.dto.BoardDto;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -22,13 +21,13 @@ public class BoardGetTeamPageResponse {
 
     public static BoardGetTeamPageResponse from(BoardDto boardDto) {
         return new BoardGetTeamPageResponse(
-                boardDto.getId(),
-                boardDto.getTitle(),
-                boardDto.getWriter(),
-                boardDto.getComments(),
-                boardDto.getLikes(),
-                boardDto.getCreatedAt(),
-                boardDto.getModifiedAt()
+            boardDto.getId(),
+            boardDto.getTitle(),
+            boardDto.getWriter(),
+            boardDto.getComments(),
+            boardDto.getLikes(),
+            boardDto.getCreatedAt(),
+            boardDto.getModifiedAt()
         );
     }
 }
