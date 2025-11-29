@@ -13,8 +13,6 @@ import com.okbo_projects.common.exception.CustomException;
 import com.okbo_projects.common.model.LoginUser;
 import com.okbo_projects.domain.board.repository.BoardRepository;
 import com.okbo_projects.domain.comment.repository.CommentRepository;
-import com.okbo_projects.domain.like.model.response.BoardLikesCountResponse;
-import com.okbo_projects.domain.like.model.response.CommentLikesCountResponse;
 import com.okbo_projects.domain.like.repository.LikeRepository;
 import com.okbo_projects.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,17 +35,12 @@ public class LikeService {
         Board board = boardRepository.findBoardById(boardId);
         User user = userRepository.findUserById(loginUser.getUserId());
 
-        boolean checkLikeExistence = likeRepository.existsByBoardAndUser(board, user);
-        if (checkLikeExistence) {
+        if (likeRepository.existsByBoardAndUser(board, user)) {
             throw new CustomException(CONFLICT_ALREADY_BOARD_LIKE);
         }
 
+        Like like = new Like(user, board);
         board.addLikes();
-
-        Like like = new Like(
-            user,
-            board
-        );
 
         likeRepository.save(like);
     }
@@ -58,23 +51,12 @@ public class LikeService {
         Board board = boardRepository.findBoardById(boardId);
         User user = userRepository.findUserById(loginUser.getUserId());
 
-        boolean checkLikeExistence = likeRepository.existsByBoardAndUser(board, user);
-        if (!checkLikeExistence) {
+        if (!likeRepository.existsByBoardAndUser(board, user)) {
             throw new CustomException(BAD_REQUEST_NOT_LIKE_UNLIKE_ON_BOARD);
         }
 
-        board.minusLikes();
-
         likeRepository.deleteByBoardAndUser(board, user);
-    }
-
-    // 게시글 별 좋아요 개수
-    public BoardLikesCountResponse countBoardLikes(Long boardId) {
-
-        Board board = boardRepository.findBoardById(boardId);
-        Long count = likeRepository.countByBoard(board);
-
-        return new BoardLikesCountResponse(count);
+        board.minusLikes();
     }
 
     // 댓글 좋아요 추가
@@ -83,15 +65,11 @@ public class LikeService {
         Comment comment = commentRepository.findCommentById(commentId);
         User user = userRepository.findUserById(loginUser.getUserId());
 
-        boolean checkLikeExistence = likeRepository.existsByCommentAndUser(comment, user);
-        if (checkLikeExistence) {
+        if (likeRepository.existsByCommentAndUser(comment, user)) {
             throw new CustomException(CONFLICT_ALREADY_COMMENT_LIKE);
         }
 
-        Like like = new Like(
-            user,
-            comment
-        );
+        Like like = new Like(user, comment);
 
         likeRepository.save(like);
     }
@@ -102,20 +80,10 @@ public class LikeService {
         Comment comment = commentRepository.findCommentById(commentId);
         User user = userRepository.findUserById(loginUser.getUserId());
 
-        boolean checkLikeExistence = likeRepository.existsByCommentAndUser(comment, user);
-        if (!checkLikeExistence) {
+        if (!likeRepository.existsByCommentAndUser(comment, user)) {
             throw new CustomException(BAD_REQUEST_NOT_LIKE_UNLIKE_ON_COMMENT);
         }
 
         likeRepository.deleteByCommentAndUser(comment, user);
-    }
-
-    // 댓글 별 좋아요 개수
-    public CommentLikesCountResponse countCommentLikes(Long commentId) {
-
-        Comment comment = commentRepository.findCommentById(commentId);
-        Long count = likeRepository.countByComment(comment);
-
-        return new CommentLikesCountResponse(count);
     }
 }

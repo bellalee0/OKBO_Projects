@@ -1,14 +1,11 @@
 package com.okbo_projects.domain.like.controller;
 
 import com.okbo_projects.common.model.LoginUser;
-import com.okbo_projects.domain.like.model.response.BoardLikesCountResponse;
-import com.okbo_projects.domain.like.model.response.CommentLikesCountResponse;
 import com.okbo_projects.domain.like.service.LikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -44,15 +41,6 @@ public class LikeController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    // 게시글 좋아요 개수
-    @GetMapping("/boards/{boardId}")
-    public ResponseEntity<BoardLikesCountResponse> countBoardLikes(@PathVariable long boardId) {
-
-        BoardLikesCountResponse response = likeService.countBoardLikes(boardId);
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
     // 댓글 좋아요 추가
     @PostMapping("/comments/{commentId}")
     public ResponseEntity<Void> createCommentLike(
@@ -73,15 +61,5 @@ public class LikeController {
         likeService.deleteCommentLike(commentId, loginUser);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    // 댓글 좋아요 개수
-    @GetMapping("/comments/{commentId}")
-    public ResponseEntity<CommentLikesCountResponse> countCommentLikes(
-        @PathVariable long commentId) {
-
-        CommentLikesCountResponse response = likeService.countCommentLikes(commentId);
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
