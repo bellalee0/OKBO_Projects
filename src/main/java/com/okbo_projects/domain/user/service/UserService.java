@@ -3,7 +3,6 @@ package com.okbo_projects.domain.user.service;
 import static com.okbo_projects.common.exception.ErrorMessage.BAD_REQUEST_PASSWORD_SAME_AS_CURRENT;
 import static com.okbo_projects.common.exception.ErrorMessage.CONFLICT_USED_EMAIL;
 import static com.okbo_projects.common.exception.ErrorMessage.CONFLICT_USED_NICKNAME;
-import static com.okbo_projects.common.exception.ErrorMessage.NOT_FOUND_USER;
 import static com.okbo_projects.common.exception.ErrorMessage.UNAUTHORIZED_WRONG_PASSWORD;
 
 import com.okbo_projects.common.entity.User;
@@ -49,15 +48,11 @@ public class UserService {
             throw new CustomException(CONFLICT_USED_EMAIL);
         }
 
-        String encodingPassword = passwordEncoder.encode(request.getPassword());
-
-        Team team = Team.valueOf(request.getFavoriteTeam());
-
         User user = new User(
             request.getNickname(),
             request.getEmail(),
-            encodingPassword,
-            team
+            passwordEncoder.encode(request.getPassword()),
+            Team.valueOf(request.getFavoriteTeam())
         );
 
         userRepository.save(user);
@@ -69,10 +64,6 @@ public class UserService {
     public String login(LoginRequest request) {
 
         User user = userRepository.findUserByEmail(request.getEmail());
-
-        if (user.isDeleted()) {
-            throw new CustomException(NOT_FOUND_USER);
-        }
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomException(UNAUTHORIZED_WRONG_PASSWORD);
@@ -130,9 +121,7 @@ public class UserService {
             throw new CustomException(BAD_REQUEST_PASSWORD_SAME_AS_CURRENT);
         }
 
-        String encodingPassword = passwordEncoder.encode(newPassword);
-
-        user.updatePassword(encodingPassword);
+        user.updatePassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 
