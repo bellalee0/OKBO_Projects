@@ -30,7 +30,7 @@ public class LikeService {
     private final CommentRepository commentRepository;
 
     // 게시글 좋아요 추가
-    public void createBoardLike(Long boardId, LoginUser loginUser) {
+    public void createBoardLike(long boardId, LoginUser loginUser) {
 
         Board board = boardRepository.findBoardById(boardId);
         User user = userRepository.findUserById(loginUser.getUserId());
@@ -46,7 +46,7 @@ public class LikeService {
     }
 
     // 게시글 좋아요 취소
-    public void deleteBoardLike(Long boardId, LoginUser loginUser) {
+    public void deleteBoardLike(long boardId, LoginUser loginUser) {
 
         Board board = boardRepository.findBoardById(boardId);
         User user = userRepository.findUserById(loginUser.getUserId());
@@ -60,7 +60,7 @@ public class LikeService {
     }
 
     // 댓글 좋아요 추가
-    public void createCommentLike(Long commentId, LoginUser loginUser) {
+    public void createCommentLike(long commentId, LoginUser loginUser) {
 
         Comment comment = commentRepository.findCommentById(commentId);
         User user = userRepository.findUserById(loginUser.getUserId());
@@ -75,7 +75,7 @@ public class LikeService {
     }
 
     // 댓글 좋아요 삭제
-    public void deleteCommentLike(Long commentId, LoginUser loginUser) {
+    public void deleteCommentLike(long commentId, LoginUser loginUser) {
 
         Comment comment = commentRepository.findCommentById(commentId);
         User user = userRepository.findUserById(loginUser.getUserId());
