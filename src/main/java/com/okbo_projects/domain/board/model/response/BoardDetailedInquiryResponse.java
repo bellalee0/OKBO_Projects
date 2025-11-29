@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Page;
 
 @Getter
 @NoArgsConstructor
@@ -22,10 +22,10 @@ public class BoardDetailedInquiryResponse {
     private Long likes;
     private LocalDateTime creatAt;
     private LocalDateTime modifiedAt;
-    private Slice<CommentGetAllResponse> commentList;
+    private Page<CommentGetAllResponse> commentList;
 
     public static BoardDetailedInquiryResponse from(BoardDto dto,
-        Slice<CommentGetAllResponse> commentList) {
+        Page<CommentGetAllResponse> commentList) {
         return new BoardDetailedInquiryResponse(
             dto.getId(),
             dto.getTitle(),

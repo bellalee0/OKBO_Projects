@@ -38,7 +38,7 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    //게시글 생성
+    // 게시글 생성
     @PostMapping
     public ResponseEntity<BoardCreateResponse> createBoard(
         @RequestAttribute(name = "loginUser") LoginUser loginUser,
@@ -49,7 +49,7 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
-    //게시글 수정
+    // 게시글 수정
     @PutMapping("/{boardId}")
     public ResponseEntity<BoardUpdateResponse> updateBoard(
         @RequestAttribute(name = "loginUser") LoginUser loginUser,
@@ -61,7 +61,7 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    //게시글 상세조회
+    // 게시글 상세조회
     @GetMapping("/board/{boardId}")
     public ResponseEntity<BoardDetailedInquiryResponse> detailedInquiryBoard(
         @PathVariable long boardId,
@@ -75,7 +75,7 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    //내가 작성한 게시글 목록 조회
+    // 내가 작성한 게시글 목록 조회
     @GetMapping("/my-board")
     public ResponseEntity<Page<BoardGetMyArticlesResponse>> viewListOfMyArticlesWritten(
         @RequestAttribute(name = "loginUser") LoginUser loginUser,

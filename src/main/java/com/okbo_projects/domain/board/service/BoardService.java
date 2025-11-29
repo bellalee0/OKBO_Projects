@@ -32,7 +32,6 @@ import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,58 +46,45 @@ public class BoardService {
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
 
-    //게시글 생성
+    // 게시글 생성
     public BoardCreateResponse createBoard(LoginUser loginUser, BoardCreateRequest request) {
 
         User user = findByUserId(loginUser.getUserId());
-        Team team = Team.valueOf((request.getTeam()));
 
-        Board board = new Board(
-            request.getTitle(),
-            request.getContent(),
-            team,
-            user
-        );
-
+        Board board = new Board(request, user);
         boardRepository.save(board);
 
         BoardDto dto = BoardDto.from(board);
-
         return BoardCreateResponse.from(dto);
     }
 
-    //게시글 수정
-    public BoardUpdateResponse updateBoard(LoginUser loginUser, Long boardId,
-        BoardUpdateRequest request) {
+    // 게시글 수정
+    public BoardUpdateResponse updateBoard(LoginUser loginUser, Long boardId, BoardUpdateRequest request) {
 
         Board board = findByBoardId(boardId);
 
         matchedWriter(loginUser.getUserId(), board.getWriter().getId());
 
         board.update(request);
-
         boardRepository.save(board);
 
         BoardDto dto = BoardDto.from(board);
-
         return BoardUpdateResponse.from(dto);
     }
 
-    //게시글 상세조회
+    // 게시글 상세조회
     @Transactional(readOnly = true)
     public BoardDetailedInquiryResponse detailedInquiryBoard(Long boardId, Pageable pageable) {
 
         Board board = findByBoardId(boardId);
 
-        Page<Comment> comments = commentRepository.findByBoardId(board.getId(), pageable);
-
-        Slice<CommentGetAllResponse> commentList = comments.map(
-            i -> CommentGetAllResponse.from(CommentDto.from(i)));
+        Page<CommentGetAllResponse> commentList = commentRepository.findByBoardId(board.getId(), pageable)
+            .map(comment -> CommentGetAllResponse.from(CommentDto.from(comment)));
 
         return BoardDetailedInquiryResponse.from(BoardDto.from(board), commentList);
     }
 
-    //내가 작성한 게시글 목록 조회
+    // 내가 작성한 게시글 목록 조회
     @Transactional(readOnly = true)
     public Page<BoardGetMyArticlesResponse> viewListOfMyArticlesWritten(
         LoginUser loginUser,
@@ -208,7 +194,7 @@ public class BoardService {
         return boardPage.map(board -> BoardGetFollowPageResponse.from(BoardDto.from(board)));
     }
 
-    // check condition nullable()
+    // check condition nullable(게시글 목록 조회)
     private boolean searchCondition(String title, String writer, String startDate, String endDate) {
         return (title != null && !title.isBlank()) ||
             (writer != null && !writer.isBlank()) ||

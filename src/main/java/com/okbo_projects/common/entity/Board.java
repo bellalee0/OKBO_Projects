@@ -1,6 +1,7 @@
 package com.okbo_projects.common.entity;
 
 import com.okbo_projects.common.model.Team;
+import com.okbo_projects.domain.board.model.request.BoardCreateRequest;
 import com.okbo_projects.domain.board.model.request.BoardUpdateRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,11 +44,11 @@ public class Board extends BaseEntity {
     private Long comments;
     private Long likes;
 
-    public Board(String title, String content, Team team, User writer) {
-        this.title = title;
-        this.content = content;
-        this.team = team;
-        this.writer = writer;
+    public Board(BoardCreateRequest request, User user) {
+        this.title = request.getTitle();
+        this.content = request.getContent();
+        this.team = Team.valueOf(request.getTeam());
+        this.writer = user;
         this.comments = 0L;
         this.likes = 0L;
     }

@@ -13,7 +13,6 @@ public class BoardGetMyArticlesResponse {
 
     private Long id;
     private String title;
-    private String content;
     private String team;
     private Long comments;
     private Long likes;
@@ -24,7 +23,6 @@ public class BoardGetMyArticlesResponse {
         return new BoardGetMyArticlesResponse(
             boardDto.getId(),
             boardDto.getTitle(),
-            boardDto.getContent(),
             boardDto.getTeam().getTeamName(),
             boardDto.getComments(),
             boardDto.getLikes(),
