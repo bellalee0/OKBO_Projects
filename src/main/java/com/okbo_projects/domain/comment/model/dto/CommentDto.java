@@ -12,18 +12,20 @@ import lombok.NoArgsConstructor;
 public class CommentDto {
 
     private Long id;
+    private Long boardId;
     private String comments;
     private String writer;
-    private Long boardId;
+    private Long likes;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
     public static CommentDto from(Comment comment) {
         return new CommentDto(
             comment.getId(),
+            comment.getBoard().getId(),
             comment.getComments(),
             comment.getWriter().getNickname(),
-            comment.getBoard().getId(),
+            comment.getLikes(),
             comment.getCreatedAt(),
             comment.getModifiedAt()
         );

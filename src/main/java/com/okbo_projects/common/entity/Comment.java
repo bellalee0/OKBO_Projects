@@ -35,13 +35,24 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
+    private Long likes;
+
     public Comment(String comments, User writer, Board board) {
         this.comments = comments;
         this.writer = writer;
         this.board = board;
+        this.likes = 0L;
     }
 
     public void update(CommentUpdateRequest request) {
         this.comments = request.getComments();
+    }
+
+    public void addLikes() {
+        this.likes++;
+    }
+
+    public void minusLikes() {
+        this.likes--;
     }
 }

@@ -10,15 +10,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommentGetAllResponse {
 
-    private Long commentId;
+    private Long id;
     private String comments;
     private String writer;
+    private Long likes;
 
     public static CommentGetAllResponse from(CommentDto commentDto) {
         return new CommentGetAllResponse(
             commentDto.getId(),
             commentDto.getComments(),
-            commentDto.getWriter()
+            commentDto.getWriter(),
+            commentDto.getLikes()
         );
     }
 }

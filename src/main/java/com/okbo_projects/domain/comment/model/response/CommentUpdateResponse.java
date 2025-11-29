@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommentUpdateResponse {
 
-    private Long commentId;
+    private Long id;
     private Long boardId;
     private String comments;
     private String writer;
+    private Long likes;
     private LocalDateTime creatAt;
     private LocalDateTime modifiedAt;
 
@@ -24,6 +25,7 @@ public class CommentUpdateResponse {
             dto.getBoardId(),
             dto.getComments(),
             dto.getWriter(),
+            dto.getLikes(),
             dto.getCreatedAt(),
             dto.getModifiedAt()
         );

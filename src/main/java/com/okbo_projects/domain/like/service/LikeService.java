@@ -72,6 +72,7 @@ public class LikeService {
         Like like = new Like(user, comment);
 
         likeRepository.save(like);
+        comment.addLikes();
     }
 
     // 댓글 좋아요 삭제
@@ -85,5 +86,6 @@ public class LikeService {
         }
 
         likeRepository.deleteByCommentAndUser(comment, user);
+        comment.minusLikes();
     }
 }

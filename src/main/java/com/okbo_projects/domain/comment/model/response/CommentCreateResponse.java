@@ -10,17 +10,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommentCreateResponse {
 
-    private long commentId;
+    private long id;
     private long boardId;
     private String comments;
     private String writer;
+    private Long likes;
 
     public static CommentCreateResponse from(CommentDto commentDto) {
         return new CommentCreateResponse(
             commentDto.getId(),
             commentDto.getBoardId(),
             commentDto.getComments(),
-            commentDto.getWriter()
+            commentDto.getWriter(),
+            commentDto.getLikes()
         );
     }
 }
