@@ -178,8 +178,6 @@ public class BoardService {
 
         User user = findByUserId(loginUser.getUserId());
 
-        findByFromUser(user);
-
         Page<Board> boardPage;
 
         if (searchCondition) {
@@ -225,16 +223,6 @@ public class BoardService {
                 .atTime(23, 59, 59);
         }
         return null;
-    }
-
-    // 팔로워 확인
-    private void findByFromUser(User user) {
-
-        boolean existsFollowingList = followRepository.existsByFromUser(user);
-
-        if (!existsFollowingList) {
-            throw new CustomException(NOT_FOUND_FOLLOWING);
-        }
     }
 
     // 게시글 삭제
