@@ -56,40 +56,15 @@
 
 [와이어프레임 by draw.id](https://drive.google.com/file/d/1ribiYon1CsOWFij3WowWcq9C-Eb3nI2E/view?usp=sharing)
 
+
 ### 📝 API 명세서
 
 [API 명세서 by Notion](https://road-cartoon-1a1.notion.site/2b91d6e7a68c8157b58dd59b83f8306a?v=2b91d6e7a68c81d8bfa7000cfce56d45&source=copy_link)
-
-<details>
-<summary>유저</summary>
-  <img width="1754" height="960" alt="유저api" src="https://github.com/user-attachments/assets/97bce951-d729-4573-81c0-29d5728cc265" />
-</details>
-
-<details>
-<summary>팔로우</summary>
-  <img width="1754" height="633" alt="팔로우api" src="https://github.com/user-attachments/assets/c6e3f3b6-229d-45f9-9b08-4fdf3ab539da" />
-</details>
-
-<details>
-<summary>게시글</summary>
-  <img width="1754" height="2011" alt="게시글 api" src="https://github.com/user-attachments/assets/811386a7-b203-496c-82c3-e847253e4f6f" />
-</details>
-
-<details>
-<summary>댓글</summary>
-  <img width="1756" height="777" alt="댓글api" src="https://github.com/user-attachments/assets/dffcfca7-b258-4f7b-85b6-766229b9b77a" />
-</details>
-
-<details>
-<summary>좋아요</summary>
-  <img width="1753" height="614" alt="좋아요api" src="https://github.com/user-attachments/assets/9811a1aa-13ab-4909-8a07-cd57d49d9cd3" />
-</details>
 
 
 ### 📝 ERD
 
 [ERD 명세서 by Notion](https://road-cartoon-1a1.notion.site/ERD-2b91d6e7a68c81ac980af85dc8a51d31?source=copy_link)
-<img width="1345" height="781" alt="image" src="https://github.com/user-attachments/assets/7986da55-46ae-44d8-8285-9fd9cc6cbe50" />
 
 
 ### 📁 프로젝트 구조 (Directory Structure)
