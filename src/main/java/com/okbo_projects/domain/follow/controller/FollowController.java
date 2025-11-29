@@ -7,6 +7,9 @@ import com.okbo_projects.domain.follow.model.response.FollowGetFollowingListResp
 import com.okbo_projects.domain.follow.service.FollowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +28,7 @@ public class FollowController {
 
     private final FollowService followService;
 
-    // Follow 관계 create (fromUser: 로그인한 유저 / toUser: Path Variable로 입력받은 유저)
+    // Follow 관계 create
     @PostMapping("/{userNickname}")
     public ResponseEntity<Void> createFollow(
         @RequestAttribute(name = "loginUser") LoginUser loginUser,
@@ -36,7 +39,7 @@ public class FollowController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // Follow 관계 delete (fromUser: 로그인한 유저 / toUser: Path Variable로 입력받은 유저)
+    // Follow 관계 delete
     @DeleteMapping("/{userNickname}")
     public ResponseEntity<Void> deleteFollow(
         @RequestAttribute(name = "loginUser") LoginUser loginUser,
@@ -66,8 +69,8 @@ public class FollowController {
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(name = "userNickname", required = false) String userNickname
     ) {
-        Page<FollowGetFollowingListResponse> result = followService.getFollowingList(loginUser,
-            page, size, userNickname);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<FollowGetFollowingListResponse> result = followService.getFollowingList(loginUser, pageable, userNickname);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
@@ -80,8 +83,8 @@ public class FollowController {
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(name = "userNickname", required = false) String userNickname
     ) {
-        Page<FollowGetFollowerListResponse> result = followService.getFollowerList(loginUser, page,
-            size, userNickname);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<FollowGetFollowerListResponse> result = followService.getFollowerList(loginUser, pageable, userNickname);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
