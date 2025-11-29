@@ -20,7 +20,6 @@ import com.okbo_projects.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,67 +34,55 @@ public class CommentService {
     private final LikeRepository likeRepository;
 
     // 댓글 생성
-    public CommentCreateResponse createComment(Long boardId, LoginUser loginUser,
-        CommentCreateRequest request) {
+    public CommentCreateResponse createComment(long boardId, LoginUser loginUser, CommentCreateRequest request) {
 
         Board board = findByBoardId(boardId);
-
         User user = findByUserId(loginUser.getUserId());
 
-        Comment comment = new Comment(
-            request.getComments(),
-            user,
-            board
-        );
+        Comment comment = new Comment(request.getComments(), user, board);
 
         commentRepository.save(comment);
-
         board.addComments();
 
         CommentDto commentDto = CommentDto.from(comment);
-
         return CommentCreateResponse.from(commentDto);
     }
 
     // 댓글 전체 조회
     @Transactional(readOnly = true)
-    public Slice<CommentGetAllResponse> getAllComment(Long boardId, Pageable pageable) {
+    public Page<CommentGetAllResponse> getAllComment(long boardId, Pageable pageable) {
 
         Board board = findByBoardId(boardId);
 
         Page<Comment> commentPage = commentRepository.findByBoardId(board.getId(), pageable);
 
-        return commentPage.map(i -> CommentGetAllResponse.from(CommentDto.from(i)));
+        return commentPage.map(comment -> CommentGetAllResponse.from(CommentDto.from(comment)));
     }
 
-    //댓글 수정
-    public CommentUpdateResponse updateComment(LoginUser loginUser, Long commentId,
-        CommentUpdateRequest request) {
+    // 댓글 수정
+    public CommentUpdateResponse updateComment(long commentId, LoginUser loginUser, CommentUpdateRequest request) {
 
         Comment comment = findByCommentId(commentId);
 
         matchedWriter(loginUser.getUserId(), comment.getWriter().getId());
 
         comment.update(request);
-
         commentRepository.save(comment);
 
         return CommentUpdateResponse.from(CommentDto.from(comment));
     }
 
-    //댓글 삭제
-    public void deleteComment(LoginUser loginUser, Long commentId) {
+    // 댓글 삭제
+    public void deleteComment(long commentId, LoginUser loginUser) {
 
         Comment comment = findByCommentId(commentId);
 
         matchedWriter(loginUser.getUserId(), comment.getWriter().getId());
 
         likeRepository.deleteByComment(comment);
-
         commentRepository.delete(comment);
 
         Board board = findByBoardId(comment.getBoard().getId());
-
         board.minusComments();
     }
 

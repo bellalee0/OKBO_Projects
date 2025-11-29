@@ -10,9 +10,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    Page<Comment> findByBoardId(Long boardId, Pageable pageable);
+    Page<Comment> findByBoardId(long boardId, Pageable pageable);
 
-    default Comment findCommentById(Long commentId) {
+    default Comment findCommentById(long commentId) {
         return findById(commentId).orElseThrow(() -> new CustomException(NOT_FOUND_COMMENT));
     }
 }
