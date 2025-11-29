@@ -96,10 +96,6 @@ public class UserService {
 
         User user = userRepository.findUserByNickname(userNickname);
 
-        if (user.isDeleted()) {
-            throw new CustomException(NOT_FOUND_USER);
-        }
-
         return UserGetOtherProfileResponse.from(UserDto.from(user));
     }
 

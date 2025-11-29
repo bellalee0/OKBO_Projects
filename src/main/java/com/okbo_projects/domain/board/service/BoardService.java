@@ -3,6 +3,7 @@ package com.okbo_projects.domain.board.service;
 import static com.okbo_projects.common.exception.ErrorMessage.FORBIDDEN_ONLY_WRITER;
 
 import com.okbo_projects.common.entity.Board;
+import com.okbo_projects.common.entity.Comment;
 import com.okbo_projects.common.entity.User;
 import com.okbo_projects.common.exception.CustomException;
 import com.okbo_projects.common.model.LoginUser;
@@ -27,6 +28,7 @@ import com.okbo_projects.domain.user.repository.UserRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +42,6 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
-    private final FollowRepository followRepository;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
 
@@ -232,7 +233,11 @@ public class BoardService {
 
         likeRepository.deleteByBoard(board);
 
-        boardRepository.delete(board);
+        List<Comment> comments = commentRepository.findByBoardId(board.getId());
+        comments.forEach(comment -> comment.updateIsDeleted());
+
+        board.updateIsDeleted();
+        boardRepository.save(board);
     }
 
     // 회원 확인

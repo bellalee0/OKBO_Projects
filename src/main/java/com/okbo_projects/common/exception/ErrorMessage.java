@@ -37,6 +37,7 @@ public enum ErrorMessage {
     CONFLICT_ALREADY_FOLLOWING(HttpStatus.CONFLICT, "이미 팔로우 한 사용자 입니다."),
     CONFLICT_ALREADY_BOARD_LIKE(HttpStatus.CONFLICT, "이미 좋아요를 한 게시글 입니다."),
     CONFLICT_ALREADY_COMMENT_LIKE(HttpStatus.CONFLICT, "이미 좋아요를 한 댓글 입니다."),
+    CONFLICT_ALREADY_DELETED_COMMENT(HttpStatus.CONFLICT, "이미 삭제된 댓글 입니다."),
 
     ;
 

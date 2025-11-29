@@ -5,10 +5,20 @@ import com.okbo_projects.common.exception.CustomException;
 import com.okbo_projects.common.exception.ErrorMessage;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+
+    @Override
+    @Query("""
+          select user
+          from User user
+          where user.id = :id and user.isDeleted = false
+          """)
+    Optional<User> findById(@Param("id") Long id);
 
     // 닉네임 존재 여부 확인
     boolean existsUserByNickname(String nickname);
@@ -20,7 +30,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     // 닉네임으로 유저 조회
-    Optional<User> findByNickname(String nickname);
+    @Query("""
+          select user
+          from User user
+          where user.nickname = :nickname and user.isDeleted = false
+          """)
+    Optional<User> findByNickname(@Param("nickname") String nickname);
 
     // id로 유저 조회
     default User findUserById(Long id) {

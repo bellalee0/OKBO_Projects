@@ -1,5 +1,6 @@
 package com.okbo_projects.domain.comment.service;
 
+import static com.okbo_projects.common.exception.ErrorMessage.CONFLICT_ALREADY_DELETED_COMMENT;
 import static com.okbo_projects.common.exception.ErrorMessage.FORBIDDEN_ONLY_WRITER;
 
 import com.okbo_projects.common.entity.Board;
@@ -78,9 +79,12 @@ public class CommentService {
         Comment comment = findByCommentId(commentId);
 
         matchedWriter(loginUser.getUserId(), comment.getWriter().getId());
+        if (comment.isDeleted()) { throw new CustomException(CONFLICT_ALREADY_DELETED_COMMENT); }
 
         likeRepository.deleteByComment(comment);
-        commentRepository.delete(comment);
+
+        comment.updateIsDeleted();
+        commentRepository.save(comment);
 
         Board board = findByBoardId(comment.getBoard().getId());
         board.minusComments();
