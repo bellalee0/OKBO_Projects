@@ -1,10 +1,8 @@
 package com.okbo_projects.domain.board.service;
 
 import static com.okbo_projects.common.exception.ErrorMessage.FORBIDDEN_ONLY_WRITER;
-import static com.okbo_projects.common.exception.ErrorMessage.NOT_FOUND_FOLLOWING;
 
 import com.okbo_projects.common.entity.Board;
-import com.okbo_projects.common.entity.Comment;
 import com.okbo_projects.common.entity.User;
 import com.okbo_projects.common.exception.CustomException;
 import com.okbo_projects.common.model.LoginUser;
