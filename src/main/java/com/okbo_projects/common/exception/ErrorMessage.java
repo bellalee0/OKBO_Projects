@@ -12,8 +12,8 @@ public enum ErrorMessage {
     BAD_REQUEST_NOT_ALLOWED_SELF_FOLLOW(HttpStatus.BAD_REQUEST, "자기 자신은 팔로우 할 수 없습니다."),
     BAD_REQUEST_NOT_FOLLOWING_UNFOLLOW(HttpStatus.BAD_REQUEST, "대상을 팔로우 하고 있지 않습니다."),
     BAD_REQUEST_PASSWORD_SAME_AS_CURRENT(HttpStatus.BAD_REQUEST, "현재 비밀번호와 동일한 비밀번호로 변경할 수 없습니다."),
-    BAD_REQUEST_NOT_LIKE_UNLIKE_ON_BOARD(HttpStatus.NOT_FOUND, "좋아요를 하지 않은 게시글 입니다."),
-    BAD_REQUEST_NOT_LIKE_UNLIKE_ON_COMMENT(HttpStatus.NOT_FOUND, "좋아요를 하지 않은 댓글 입니다."),
+    BAD_REQUEST_NOT_LIKE_UNLIKE_ON_BOARD(HttpStatus.BAD_REQUEST, "좋아요를 하지 않은 게시글 입니다."),
+    BAD_REQUEST_NOT_LIKE_UNLIKE_ON_COMMENT(HttpStatus.BAD_REQUEST, "좋아요를 하지 않은 댓글 입니다."),
 
 
     // 401
