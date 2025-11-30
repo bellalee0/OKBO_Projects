@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { STORAGE_KEYS, HTTP_STATUS } from '../utils/constants';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 
@@ -13,7 +14,7 @@ const axiosInstance = axios.create({
 // 요청 인터셉터: JWT 토큰 자동 추가
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -28,19 +29,51 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response) {
-      if (error.response.status === 401) {
-        localStorage.removeItem('accessToken');
+    // 네트워크 에러
+    if (!error.response) {
+      console.error('Network Error:', error);
+      return Promise.reject({
+        message: '네트워크 연결을 확인해주세요.',
+        status: null,
+      });
+    }
+
+    const { status, data } = error.response;
+
+    // 백엔드 ErrorResponse 형식: { status, message }
+    const errorMessage = data?.message || '알 수 없는 오류가 발생했습니다.';
+
+    // 401 Unauthorized: 인증 실패
+    if (status === HTTP_STATUS.UNAUTHORIZED) {
+      localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
+
+      // 로그인 페이지가 아닌 경우에만 리다이렉트
+      if (window.location.pathname !== '/login') {
         window.location.href = '/login';
       }
-      if (error.response.status === 403) {
-        alert('접근 권한이 없습니다.');
-      }
-      if (error.response.status === 500) {
-        alert('서버 오류가 발생했습니다.');
-      }
     }
-    return Promise.reject(error);
+
+    // 403 Forbidden: 권한 없음
+    if (status === HTTP_STATUS.FORBIDDEN) {
+      console.error('Access Forbidden:', errorMessage);
+    }
+
+    // 404 Not Found: 리소스 없음
+    if (status === HTTP_STATUS.NOT_FOUND) {
+      console.error('Resource Not Found:', errorMessage);
+    }
+
+    // 500 Internal Server Error: 서버 오류
+    if (status >= HTTP_STATUS.INTERNAL_SERVER_ERROR) {
+      console.error('Server Error:', errorMessage);
+    }
+
+    // 에러 객체를 일관된 형식으로 반환
+    return Promise.reject({
+      status,
+      message: errorMessage,
+      originalError: error,
+    });
   }
 );
 

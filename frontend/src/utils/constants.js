@@ -21,3 +21,28 @@ export const TEAM_OPTIONS = TEAM_LIST.map(team => ({
   value: team.name,
   label: team.displayName,
 }));
+
+// 페이지네이션 설정
+export const PAGINATION = {
+  DEFAULT_PAGE: 0,
+  DEFAULT_SIZE: 10,
+  DEFAULT_SORT: 'createdAt,desc',
+};
+
+// HTTP 상태 코드
+export const HTTP_STATUS = {
+  OK: 200,
+  CREATED: 201,
+  NO_CONTENT: 204,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  INTERNAL_SERVER_ERROR: 500,
+};
+
+// 로컬 스토리지 키
+export const STORAGE_KEYS = {
+  ACCESS_TOKEN: 'accessToken',
+  AUTH_STORAGE: 'auth-storage',
+};

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { STORAGE_KEYS } from '../utils/constants';
 
 const useAuthStore = create(
   persist(
@@ -8,18 +9,18 @@ const useAuthStore = create(
       isAuthenticated: false,
       
       login: (userData, token) => {
-        localStorage.setItem('accessToken', token);
-        set({ 
-          user: userData, 
-          isAuthenticated: true 
+        localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, token);
+        set({
+          user: userData,
+          isAuthenticated: true
         });
       },
-      
+
       logout: () => {
-        localStorage.removeItem('accessToken');
-        set({ 
-          user: null, 
-          isAuthenticated: false 
+        localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
+        set({
+          user: null,
+          isAuthenticated: false
         });
       },
       
@@ -28,10 +29,10 @@ const useAuthStore = create(
       },
     }),
     {
-      name: 'auth-storage',
-      partialize: (state) => ({ 
+      name: STORAGE_KEYS.AUTH_STORAGE,
+      partialize: (state) => ({
         user: state.user,
-        isAuthenticated: state.isAuthenticated 
+        isAuthenticated: state.isAuthenticated
       }),
     }
   )
