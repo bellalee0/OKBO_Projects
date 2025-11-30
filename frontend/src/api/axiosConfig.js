@@ -1,7 +1,14 @@
 import axios from 'axios';
 import { STORAGE_KEYS, HTTP_STATUS } from '../utils/constants';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+// 개발 환경에서는 Vite proxy 사용 (baseURL을 빈 문자열로 설정)
+// 프로덕션 빌드 시에는 환경 변수에서 실제 API URL 사용
+const API_BASE_URL = import.meta.env.MODE === 'production'
+  ? (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080')
+  : '';  // 개발 모드에서는 무조건 빈 문자열 (Vite proxy 사용)
+
+console.log('🔧 Axios baseURL:', API_BASE_URL);
+console.log('🔧 Mode:', import.meta.env.MODE);
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
