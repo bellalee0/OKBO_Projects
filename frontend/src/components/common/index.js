@@ -1,2 +1,8 @@
 export { default as ErrorBoundary } from './ErrorBoundary.jsx';
 export { default as ProtectedRoute } from './ProtectedRoute.jsx';
+export { default as Button } from './Button.jsx';
+export { default as Input } from './Input.jsx';
+export { default as Loading } from './Loading.jsx';
+export { default as Select } from './Select.jsx';
+export { default as Modal } from './Modal.jsx';
+export { default as Header } from './Header.jsx';
