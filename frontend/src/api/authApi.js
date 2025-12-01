@@ -39,10 +39,20 @@ export const deleteAccount = async (data) => {
 
 /**
  * 내 프로필 조회
- * @returns {Promise} 프로필 정보
+ * @returns {Promise} 프로필 정보 (id, nickname, email, teamName)
  */
 export const getMyProfile = async () => {
   const response = await axiosInstance.get('/users/my-page');
+  return response.data;
+};
+
+/**
+ * 다른 사용자 프로필 조회
+ * @param {string} nickname - 조회할 사용자 닉네임
+ * @returns {Promise} 프로필 정보 (nickname, teamName)
+ */
+export const getUserByNickname = async (nickname) => {
+  const response = await axiosInstance.get(`/users/${nickname}`);
   return response.data;
 };
 
