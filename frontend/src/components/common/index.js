@@ -6,3 +6,4 @@ export { default as Loading } from './Loading.jsx';
 export { default as Select } from './Select.jsx';
 export { default as Modal } from './Modal.jsx';
 export { default as Header } from './Header.jsx';
+export { default as TeamRankCard } from './TeamRankCard.jsx';

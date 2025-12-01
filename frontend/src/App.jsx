@@ -7,6 +7,11 @@ import SignupPage from './pages/auth/SignupPage';
 import LoginPage from './pages/auth/LoginPage';
 import SignoutPage from './pages/auth/SignoutPage';
 
+// Profile Pages
+import MyProfilePage from './pages/profile/MyProfilePage';
+import EditProfilePage from './pages/profile/EditProfilePage';
+import ChangePasswordPage from './pages/profile/ChangePasswordPage';
+
 // Home Page (임시)
 const HomePage = () => {
   const { isAuthenticated, user } = useAuthStore();
@@ -86,6 +91,32 @@ function App() {
             element={
               <ProtectedRoute>
                 <SignoutPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Profile Routes */}
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <MyProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/edit"
+            element={
+              <ProtectedRoute>
+                <EditProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/password"
+            element={
+              <ProtectedRoute>
+                <ChangePasswordPage />
               </ProtectedRoute>
             }
           />
