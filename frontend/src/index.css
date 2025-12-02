@@ -2,9 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ========== OKBO Design Token System ========== */
+:root {
+  /* 공통 레이아웃 컬러 */
+  --bg-page: #F4F6F8;
+  --bg-surface: #FFFFFF;
+  --text-main: #111111;
+  --text-sub: #767676;
+  --border-line: #E0E0E0;
+
+  /* 레이아웃 규격 */
+  --site-width: 1200px;
+  --radius-box: 12px;
+}
+
+/* ⚾️ 10개 구단 테마 시스템 (Solid Color) */
+[data-team="kt"] { --team-main: #000000; --team-sub: #EC1C24; }
+[data-team="lg"] { --team-main: #C30452; --team-sub: #000000; }
+[data-team="doosan"] { --team-main: #131230; --team-sub: #ED1C24; }
+[data-team="ssg"] { --team-main: #CE0E2D; --team-sub: #FFB81C; }
+[data-team="kia"] { --team-main: #EA0029; --team-sub: #06141F; }
+[data-team="lotte"] { --team-main: #041E42; --team-sub: #D00F31; }
+[data-team="samsung"] { --team-main: #074CA1; --team-sub: #A0C6EB; }
+[data-team="hanwha"] { --team-main: #F37321; --team-sub: #231F20; }
+[data-team="nc"] { --team-main: #315288; --team-sub: #AF917B; }
+[data-team="kiwoom"] { --team-main: #820024; --team-sub: #570514; }
+
 body {
-  background-color: #f9fafb;
-  color: #111827;
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 }
 
 .btn-primary {

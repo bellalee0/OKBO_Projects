@@ -123,3 +123,24 @@ export const TEAM_COLORS = {
 export const getTeamColor = (teamName) => {
   return TEAM_COLORS[teamName] || '#6B7280';
 };
+
+/**
+ * 팀 이름을 data-team 속성 값으로 변환
+ * @param {string} teamName - 팀 이름 (예: 'LG 트윈스', 'KT 위즈')
+ * @returns {string} data-team 속성 값 (예: 'lg', 'kt')
+ */
+export const getTeamDataAttribute = (teamName) => {
+  const teamMap = {
+    'KT 위즈': 'kt',
+    'LG 트윈스': 'lg',
+    '두산 베어스': 'doosan',
+    'SSG 랜더스': 'ssg',
+    '기아 타이거즈': 'kia',
+    '롯데 자이언츠': 'lotte',
+    '삼성 라이온즈': 'samsung',
+    '한화 이글스': 'hanwha',
+    'NC 다이노스': 'nc',
+    '키움 히어로즈': 'kiwoom'
+  };
+  return teamMap[teamName] || '';
+};
