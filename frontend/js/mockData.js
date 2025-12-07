@@ -9,24 +9,83 @@ const IS_DEMO_MODE = !window.location.hostname.includes('localhost') &&
 const MOCK_USERS = [
   {
     id: 1,
-    nickname: "야구팬123",
-    email: "fan123@example.com",
+    nickname: "두산팬",
+    email: "doosan@test.com",
     favoriteTeam: "DOOSAN",
-    createdAt: "2024-11-20T10:00:00"
+    createdAt: "2025-12-07T10:00:00",
+    modifiedAt: "2025-12-07T10:00:00"
   },
   {
     id: 2,
-    nickname: "LG사랑",
-    email: "lglove@example.com",
-    favoriteTeam: "LG",
-    createdAt: "2024-11-21T14:30:00"
+    nickname: "한화팬",
+    email: "hanwha@test.com",
+    favoriteTeam: "HANWHA",
+    createdAt: "2025-12-07T10:00:00",
+    modifiedAt: "2025-12-07T10:00:00"
   },
   {
     id: 3,
-    nickname: "키움홧팅",
-    email: "kiwoom@example.com",
+    nickname: "기아팬",
+    email: "kia@test.com",
+    favoriteTeam: "KIA",
+    createdAt: "2025-12-07T10:00:00",
+    modifiedAt: "2025-12-07T10:00:00"
+  },
+  {
+    id: 4,
+    nickname: "크트팬",
+    email: "kt@test.com",
+    favoriteTeam: "KT",
+    createdAt: "2025-12-07T10:00:00",
+    modifiedAt: "2025-12-07T10:00:00"
+  },
+  {
+    id: 5,
+    nickname: "키움팬",
+    email: "kiwoom@test.com",
     favoriteTeam: "KIWOOM",
-    createdAt: "2024-11-22T09:15:00"
+    createdAt: "2025-12-07T10:00:00",
+    modifiedAt: "2025-12-07T10:00:00"
+  },
+  {
+    id: 6,
+    nickname: "LG팬",
+    email: "lg@test.com",
+    favoriteTeam: "LG",
+    createdAt: "2025-12-07T10:00:00",
+    modifiedAt: "2025-12-07T10:00:00"
+  },
+  {
+    id: 7,
+    nickname: "롯데팬",
+    email: "lotte@test.com",
+    favoriteTeam: "LOTTE",
+    createdAt: "2025-12-07T10:00:00",
+    modifiedAt: "2025-12-07T10:00:00"
+  },
+  {
+    id: 8,
+    nickname: "NC팬",
+    email: "nc@test.com",
+    favoriteTeam: "NC",
+    createdAt: "2025-12-07T10:00:00",
+    modifiedAt: "2025-12-07T10:00:00"
+  },
+  {
+    id: 9,
+    nickname: "삼성팬",
+    email: "samsung@test.com",
+    favoriteTeam: "SAMSUNG",
+    createdAt: "2025-12-07T10:00:00",
+    modifiedAt: "2025-12-07T10:00:00"
+  },
+  {
+    id: 10,
+    nickname: "쓱팬",
+    email: "ssg@test.com",
+    favoriteTeam: "SSG",
+    createdAt: "2025-12-07T10:00:00",
+    modifiedAt: "2025-12-07T10:00:00"
   }
 ];
 
@@ -153,7 +212,7 @@ let CURRENT_USER = null;
 // ID 카운터 (새로운 데이터 생성 시 사용)
 let nextBoardId = 6;
 let nextCommentId = 4;
-let nextUserId = 4;
+let nextUserId = 11;
 
 // Mock API 응답 생성 헬퍼 함수
 function createMockResponse(data, delay = 300) {
