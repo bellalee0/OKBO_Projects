@@ -1,10 +1,7 @@
 // API Base URL
 const API_BASE_URL = 'http://localhost:8080';
 
-// 환경 감지 (배포 환경인지 확인)
-const IS_DEMO_MODE = !window.location.hostname.includes('localhost') &&
-    !window.location.hostname.includes('127.0.0.1');
-
+// IS_DEMO_MODE는 mockData.js에서 이미 선언되었으므로 여기서는 선언하지 않음
 console.log('🌐 Current hostname:', window.location.hostname);
 console.log('🎭 Demo Mode:', IS_DEMO_MODE);
 
