@@ -6,7 +6,7 @@
   
 - 주제 : Spring Boot에서 JPA와 JWT에 대한 이해를 바탕으로, 실제로 사용될 수 있는 뉴스피드 구현
   
-- 배포 링크 : [OKBO](https://bellalee0.github.io/OKBO_Projects/frontend/index.html)
+- 배포 링크 : [OKBO](https://bellalee0.github.io/OKBO_Projects/frontend/main.html)
   
   테스트 방법 : 구단별 1명의 사용자가 만들어져 있기 때문에, 원하는 팀 선택하여 로그인 후 테스트 진행
   
