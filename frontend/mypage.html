@@ -434,7 +434,7 @@
                 if (startDate) params.startDate = startDate;
                 if (endDate) params.endDate = endDate;
 
-                const data = await apiGet('/boards/my-board' + buildQueryParams(params));
+                const data = await apiGet('/boards/my-boards' + buildQueryParams(params));
                 displayMyBoards(data);
             } catch (error) {
                 document.getElementById('myBoardList').innerHTML =

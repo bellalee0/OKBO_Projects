@@ -70,11 +70,26 @@ const MockAPI = {
     const followingCount = MOCK_FOLLOWS.filter(f => f.fromUserId === CURRENT_USER.id).length;
     const followerCount = MOCK_FOLLOWS.filter(f => f.toUserId === CURRENT_USER.id).length;
 
+    // favoriteTeam을 한글 팀 이름으로 변환
+    const teamNameMap = {
+      'DOOSAN': '두산 베어즈',
+      'HANWHA': '한화 이글스',
+      'KIA': '기아 타이거즈',
+      'KT': 'KT 위즈',
+      'KIWOOM': '키움 히어로즈',
+      'LG': 'LG 트윈스',
+      'LOTTE': '롯데 자이언츠',
+      'NC': 'NC 다이노스',
+      'SAMSUNG': '삼성 라이온즈',
+      'SSG': 'SSG 랜더스'
+    };
+
     return {
       id: CURRENT_USER.id,
       nickname: CURRENT_USER.nickname,
       email: CURRENT_USER.email,
       favoriteTeam: CURRENT_USER.favoriteTeam,
+      teamName: teamNameMap[CURRENT_USER.favoriteTeam] || CURRENT_USER.favoriteTeam,
       followingCount: followingCount,
       followerCount: followerCount
     };
@@ -94,10 +109,25 @@ const MockAPI = {
     const isFollowing = CURRENT_USER ?
         MOCK_FOLLOWS.some(f => f.fromUserId === CURRENT_USER.id && f.toUserId === user.id) : false;
 
+    // favoriteTeam을 한글 팀 이름으로 변환
+    const teamNameMap = {
+      'DOOSAN': '두산 베어즈',
+      'HANWHA': '한화 이글스',
+      'KIA': '기아 타이거즈',
+      'KT': 'KT 위즈',
+      'KIWOOM': '키움 히어로즈',
+      'LG': 'LG 트윈스',
+      'LOTTE': '롯데 자이언츠',
+      'NC': 'NC 다이노스',
+      'SAMSUNG': '삼성 라이온즈',
+      'SSG': 'SSG 랜더스'
+    };
+
     return {
       id: user.id,
       nickname: user.nickname,
       favoriteTeam: user.favoriteTeam,
+      teamName: teamNameMap[user.favoriteTeam] || user.favoriteTeam,
       followingCount: followingCount,
       followerCount: followerCount,
       isFollowing: isFollowing
