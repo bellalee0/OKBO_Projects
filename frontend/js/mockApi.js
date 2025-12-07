@@ -51,6 +51,11 @@ const MockAPI = {
     const token = `mock-jwt-token-${user.id}-${Date.now()}`;
     CURRENT_USER = user;
 
+    // localStorage에 사용자 정보 저장 (데모 모드 로그인 상태 유지)
+    if (IS_DEMO_MODE) {
+      localStorage.setItem('mock_user', JSON.stringify(user));
+    }
+
     return token;
   },
 

@@ -316,6 +316,20 @@ function createTimestamp() {
   return new Date().toISOString();
 }
 
+// 데모 모드에서 로그인 상태 복원
+if (IS_DEMO_MODE) {
+  const savedUser = localStorage.getItem('mock_user');
+  if (savedUser) {
+    try {
+      CURRENT_USER = JSON.parse(savedUser);
+      console.log('✅ Restored login state:', CURRENT_USER.nickname);
+    } catch (e) {
+      console.error('Failed to restore user:', e);
+      localStorage.removeItem('mock_user');
+    }
+  }
+}
+
 console.log('🎭 Mock Data Module Loaded');
 console.log('📊 Demo Mode:', IS_DEMO_MODE);
 if (IS_DEMO_MODE) {
