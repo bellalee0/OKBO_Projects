@@ -5,6 +5,15 @@
 - 기간 : 2025년 11월 21일(금) ~ 28일(금)
   
 - 주제 : Spring Boot에서 JPA와 JWT에 대한 이해를 바탕으로, 실제로 사용될 수 있는 뉴스피드 구현
+  
+- 배포 링크 : [OKBO](https://bellalee0.github.io/OKBO_Projects/frontend/index.html)
+  
+  테스트 방법 : 구단별 1명의 사용자가 만들어져 있기 때문에, 원하는 팀 선택하여 로그인 후 테스트 진행
+  
+  ID: `[팀]@test.com` 예시: `kt@test.com` | PW: `1234`
+  
+  (팀 : doosan, hanwha, kia, kt, kiwoom, lg, lotte, nc, samsung, ssg)
+
 
 ## ⚾️ OKBO – KBO 야구 팬들을 위한 커뮤니티 플랫폼
 
@@ -101,6 +110,73 @@ OKBO_Projects/
 - user: 사용자 관리
 
 
+## 💻 개인 Dev - Front-end 개발
+
+※ 본 과정은 Back-end 개발자 양성 과정으로 Front-end 개발은 진행되지 않았으며, 팀 프로젝트가 완료된 이후 개인적으로 추가한 작업입니다.
+  
+※ 기존에 작업한 와이어프레임을 바탕으로 **Claude Code를 활용한 바이브 코딩으로 구현**하였습니다.
+
+기술 스택: `HTML` `CSS` `JavaScript`
+
+### 📁 프로젝트 구조
+```
+frontend/
+├── index.html              # 로그인 페이지
+├── signup.html             # 회원가입 페이지
+├── main.html               # 메인 페이지 (게시글 목록)
+├── board-detail.html       # 게시글 상세 페이지
+├── board-create.html       # 게시글 작성 페이지
+├── board-edit.html         # 게시글 수정 페이지
+├── mypage.html             # 마이페이지
+├── user-profile.html       # 다른 유저 프로필 페이지
+├── css/
+│   ├── style.css           # 공통 스타일
+│   └── team-theme.css      # 구단별 테마 색상
+└── js/
+    ├── api.js              # API 호출 공통 함수
+    └── auth.js             # 인증 관련 유틸리티
+```
+
+### ✨ 페이지별 상세 기능
+
+| 페이지 |	주요 기능 |
+|:---|:---|
+| index.html | 로그인 폼, 이메일/비밀번호 검증, JWT 토큰 획득 및 저장 |
+| signup.html | 회원가입 폼, 10개 구단 선택 드롭다운, 입력값 검증 |
+| main.html | 게시글 목록 테이블, 전체/팔로잉 토글, 구단 필터, 검색, 정렬, 페이지네이션 |
+| board-detail.html | 게시글 상세 내용, 작성자 정보, 좋아요, 댓글 CRUD, 수정/삭제 버튼 (작성자만) |
+| board-create.html | 게시글 작성 폼, 제목/내용 입력, 구단 선택, 작성 완료 후 상세 페이지 이동 |
+| board-edit.html | 게시글 수정 폼, 기존 내용 로드, 제목/내용 수정 (구단은 변경 불가) |
+| mypage.html | 내 프로필 조회, 닉네임/비밀번호 변경, 회원 탈퇴, 내가 쓴 글 목록, 팔로잉/팔로워 관리 |
+| user-profile.html | 다른 유저 정보 조회, 팔로우/언팔로우, 해당 유저가 작성한 게시글 목록 |
+
+
+## 🚀 실행 방법
+
+**1. 백엔드 실행**
+
+```
+./gradlew bootRun
+```
+
+**2. 프론트엔드 실행** (3가지 방법 중 선택)
+
+- VS Code Live Server: `index.html` 우클릭 → Open with Live Server
+
+- Python 서버: `python3 -m http.server 8000` (루트 디렉토리에서)
+
+- Node.js http-server: `http-server -p 8000` (루트 디렉토리에서)
+
+**3. 브라우저 접속**
+
+http://localhost:8000/frontend/main.html
+
+**⚠️ 주의사항**
+
+- CORS 설정이 백엔드에 적용되어야 정상 작동
+- JWT 토큰은 LocalStorage에 저장 (보안 주의)
+- 최신 브라우저 사용 권장 (Chrome, Firefox, Safari, Edge)
+
 ## 👥 팀 소개 – 5조 오버플로우(Overflow)
 
 ### “아이디어와 열정이 넘쳐흘러 곧바로 코드로 구현합니다.”
@@ -120,6 +196,7 @@ OKBO_Projects/
 - 최승희	: 게시글 CRUD 구현, 댓글 CRUD 구현
 
 
-### 라이선스
+### 안내
 
 본 프로젝트는 팀스파르타 내일배움캠프의 실무형 Kotlin & Spring 개발자 양성과정 중 팀 Overflow의 학습 및 포트폴리오 목적으로 제작되었습니다.
+백엔드 개발은 팀 Overflow에서 진행하였으며, 프론트엔드 개발은 개인의 흥미로 Claude Code를 사용한 바이브 코딩으로 진행되었습니다.
