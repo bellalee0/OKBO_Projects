@@ -100,14 +100,14 @@ async function apiCallMock(endpoint, options = {}) {
     }
 
     // ========== 게시글 API ==========
-    if (path.startsWith('/boards/all') && method === 'GET') {
+    if (path === '/boards' && method === 'GET') {
       return await MockAPI.getBoards(params);
     }
-    if (path.startsWith('/boards/follow') && method === 'GET') {
+    if (path === '/boards/followings' && method === 'GET') {
       return await MockAPI.getFollowingBoards(params);
     }
-    if (path.startsWith('/boards/team') && method === 'GET') {
-      return await MockAPI.getBoards({ ...params, team: params.team });
+    if (pathParts[0] === 'boards' && pathParts[1] === 'teams' && pathParts.length === 3 && method === 'GET') {
+      return await MockAPI.getBoards({ ...params, team: pathParts[2] });
     }
     if (path === '/boards/my-boards' && method === 'GET') {
       return await MockAPI.getMyBoards(params);
@@ -115,16 +115,16 @@ async function apiCallMock(endpoint, options = {}) {
     if (pathParts[0] === 'boards' && pathParts[1] === 'user' && pathParts.length === 3 && method === 'GET') {
       return await MockAPI.getUserBoards(pathParts[2], params);
     }
-    if (pathParts[0] === 'boards' && pathParts[1] === 'board' && pathParts.length === 3 && method === 'GET') {
-      return await MockAPI.getBoard(pathParts[2]);
+    if (pathParts[0] === 'boards' && !isNaN(pathParts[1]) && pathParts.length === 2 && method === 'GET') {
+      return await MockAPI.getBoard(pathParts[1]);
     }
     if (path === '/boards' && method === 'POST') {
       return await MockAPI.createBoard(body);
     }
-    if (pathParts[0] === 'boards' && pathParts.length === 2 && method === 'PUT') {
+    if (pathParts[0] === 'boards' && !isNaN(pathParts[1]) && pathParts.length === 2 && method === 'PUT') {
       return await MockAPI.updateBoard(pathParts[1], body);
     }
-    if (pathParts[0] === 'boards' && pathParts.length === 2 && method === 'DELETE') {
+    if (pathParts[0] === 'boards' && !isNaN(pathParts[1]) && pathParts.length === 2 && method === 'DELETE') {
       await MockAPI.deleteBoard(pathParts[1]);
       return '';
     }

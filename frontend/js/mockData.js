@@ -96,11 +96,12 @@ let MOCK_BOARDS = [
     title: "오늘 경기 정말 짜릿했습니다!",
     content: "9회말 역전 홈런으로 승리했네요. 정말 감동적인 경기였습니다. 우리 팀 파이팅!",
     team: "DOOSAN",
-    writer: "야구팬123",
+    writer: "두산팬",
     writerId: 1,
     likes: 15,
-    comments: 3,
-    createdAt: "2024-11-25T20:30:00",
+    comments: 2,
+    createdAt: "2025-12-06T20:30:00",
+    modifiedAt: "2025-12-06T20:30:00",
     isDeleted: false
   },
   {
@@ -108,11 +109,12 @@ let MOCK_BOARDS = [
     title: "내일 경기 예측해봅니다",
     content: "내일 날씨도 좋고 우리 에이스가 선발이라 좋은 결과 있을 것 같아요!",
     team: "LG",
-    writer: "LG사랑",
-    writerId: 2,
+    writer: "LG팬",
+    writerId: 6,
     likes: 8,
-    comments: 5,
-    createdAt: "2024-11-26T15:20:00",
+    comments: 1,
+    createdAt: "2025-12-05T15:20:00",
+    modifiedAt: "2025-12-05T15:20:00",
     isDeleted: false
   },
   {
@@ -120,35 +122,103 @@ let MOCK_BOARDS = [
     title: "시즌 결산 - 우리 팀의 한 해",
     content: "올 시즌도 열심히 응원했습니다. 내년에는 더 좋은 성적 기대합니다!",
     team: "KIWOOM",
-    writer: "키움홧팅",
-    writerId: 3,
+    writer: "키움팬",
+    writerId: 5,
     likes: 22,
-    comments: 8,
-    createdAt: "2024-11-27T11:00:00",
+    comments: 0,
+    createdAt: "2025-12-04T11:00:00",
+    modifiedAt: "2025-12-04T11:00:00",
     isDeleted: false
   },
   {
     id: 4,
-    title: "신인 선수 활약이 인상적이네요",
-    content: "이번에 올라온 신인 선수 정말 잘하는 것 같아요. 기대됩니다!",
-    team: "DOOSAN",
-    writer: "야구팬123",
-    writerId: 1,
+    title: "한화 이글스 파이팅!",
+    content: "우리 팀 올해는 꼭 좋은 성적 거두길 바랍니다. 팬들의 응원이 힘이 됩니다!",
+    team: "HANWHA",
+    writer: "한화팬",
+    writerId: 2,
     likes: 12,
-    comments: 2,
-    createdAt: "2024-11-27T18:45:00",
+    comments: 0,
+    createdAt: "2025-12-03T18:45:00",
+    modifiedAt: "2025-12-03T18:45:00",
     isDeleted: false
   },
   {
     id: 5,
     title: "직관 후기 공유합니다",
     content: "오늘 직관 다녀왔는데 분위기 정말 좋았어요. 현장에서 보니 더 재밌네요!",
-    team: "LG",
-    writer: "LG사랑",
-    writerId: 2,
+    team: "KIA",
+    writer: "기아팬",
+    writerId: 3,
     likes: 18,
-    comments: 6,
-    createdAt: "2024-11-28T19:30:00",
+    comments: 0,
+    createdAt: "2025-12-02T19:30:00",
+    modifiedAt: "2025-12-02T19:30:00",
+    isDeleted: false
+  },
+  {
+    id: 6,
+    title: "KT 위즈 신인 선수 대박!",
+    content: "이번 시즌 신인 선수들 활약이 정말 인상적이네요. 기대됩니다!",
+    team: "KT",
+    writer: "크트팬",
+    writerId: 4,
+    likes: 10,
+    comments: 0,
+    createdAt: "2025-12-01T14:20:00",
+    modifiedAt: "2025-12-01T14:20:00",
+    isDeleted: false
+  },
+  {
+    id: 7,
+    title: "롯데 자이언츠 응원합니다",
+    content: "부산 팬으로서 우리 롯데 자이언츠를 항상 응원합니다!",
+    team: "LOTTE",
+    writer: "롯데팬",
+    writerId: 7,
+    likes: 14,
+    comments: 0,
+    createdAt: "2025-11-30T16:45:00",
+    modifiedAt: "2025-11-30T16:45:00",
+    isDeleted: false
+  },
+  {
+    id: 8,
+    title: "NC 다이노스 홈경기 후기",
+    content: "창원에서 본 경기 정말 재밌었어요. 다음에 또 가고 싶네요!",
+    team: "NC",
+    writer: "NC팬",
+    writerId: 8,
+    likes: 9,
+    comments: 0,
+    createdAt: "2025-11-29T13:10:00",
+    modifiedAt: "2025-11-29T13:10:00",
+    isDeleted: false
+  },
+  {
+    id: 9,
+    title: "삼성 라이온즈 우승 가자!",
+    content: "대구 시민으로서 삼성 라이온즈의 우승을 간절히 바랍니다!",
+    team: "SAMSUNG",
+    writer: "삼성팬",
+    writerId: 9,
+    likes: 20,
+    comments: 0,
+    createdAt: "2025-11-28T10:30:00",
+    modifiedAt: "2025-11-28T10:30:00",
+    isDeleted: false
+  },
+  {
+    id: 10,
+    title: "SSG 랜더스 신인왕 후보!",
+    content: "우리 팀 신인 선수가 신인왕 후보에 올랐네요. 정말 자랑스럽습니다!",
+    team: "SSG",
+    writer: "쓱팬",
+    writerId: 10,
+    likes: 16,
+    comments: 0,
+    createdAt: "2025-11-27T09:15:00",
+    modifiedAt: "2025-11-27T09:15:00",
     isDeleted: false
   }
 ];
@@ -159,30 +229,33 @@ let MOCK_COMMENTS = [
     id: 1,
     comments: "정말 감동적이었죠! 저도 그 순간 소름 돋았어요",
     boardId: 1,
-    writer: "LG사랑",
+    writer: "한화팬",
     writerId: 2,
     likes: 3,
-    createdAt: "2024-11-25T21:00:00",
+    createdAt: "2025-12-06T21:00:00",
+    modifiedAt: "2025-12-06T21:00:00",
     isDeleted: false
   },
   {
     id: 2,
     comments: "역전 홈런의 주인공이 진짜 멋있었습니다",
     boardId: 1,
-    writerId: 3,
-    writer: "키움홧팅",
+    writerId: 5,
+    writer: "키움팬",
     likes: 2,
-    createdAt: "2024-11-25T21:15:00",
+    createdAt: "2025-12-06T21:15:00",
+    modifiedAt: "2025-12-06T21:15:00",
     isDeleted: false
   },
   {
     id: 3,
-    comments: "내년 시즌도 기대됩니다!",
-    boardId: 3,
-    writer: "야구팬123",
+    comments: "LG도 응원합니다!",
+    boardId: 2,
+    writer: "두산팬",
     writerId: 1,
     likes: 1,
-    createdAt: "2024-11-27T12:00:00",
+    createdAt: "2025-12-05T16:00:00",
+    modifiedAt: "2025-12-05T16:00:00",
     isDeleted: false
   }
 ];
@@ -210,7 +283,7 @@ let MOCK_LIKES = {
 let CURRENT_USER = null;
 
 // ID 카운터 (새로운 데이터 생성 시 사용)
-let nextBoardId = 6;
+let nextBoardId = 11;
 let nextCommentId = 4;
 let nextUserId = 11;
 
