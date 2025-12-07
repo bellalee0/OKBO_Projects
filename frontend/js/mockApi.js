@@ -585,8 +585,8 @@ const MockAPI = {
     const followerCount = MOCK_FOLLOWS.filter(f => f.toUserId === userId).length;
 
     return {
-      followingCount: followingCount,
-      followerCount: followerCount
+      following: followingCount,
+      follower: followerCount
     };
   },
 
