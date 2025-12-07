@@ -9,10 +9,12 @@ import lombok.Getter;
 public class FollowGetFollowerListResponse {
 
     private String nickname;
+    private String favoriteTeam;
 
     public static FollowGetFollowerListResponse from(FollowDto followDto) {
         return new FollowGetFollowerListResponse(
-            followDto.getFromUser().getNickname()
+            followDto.getFromUser().getNickname(),
+            followDto.getFromUser().getTeam().getTeamName()
         );
     }
 }

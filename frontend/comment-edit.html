@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OKBO - 댓글 수정</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚾</text></svg>">
+    <link rel="stylesheet" href="/frontend/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/frontend/main.html" style="text-decoration: none; color: inherit;">
+                <div class="logo">⚾ OKBO</div>
+            </a>
+            <nav></nav>
+        </div>
+    </header>
+
+    <div class="form-container" style="max-width: 800px;">
+        <h2>댓글 수정</h2>
+        <form id="commentForm">
+            <div class="form-group">
+                <label for="comments">댓글 내용 (최대 225자)</label>
+                <textarea id="comments" name="comments" required maxlength="225"></textarea>
+            </div>
+
+            <div class="flex gap-10">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">수정</button>
+                <button type="button" class="btn btn-secondary" onclick="history.back()" style="flex: 1;">취소</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="/frontend/js/api.js"></script>
+    <script src="/frontend/js/auth.js"></script>
+    <script>
+        requireAuth();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const commentId = urlParams.get('id');
+        const boardId = urlParams.get('boardId');
+        const currentContent = urlParams.get('content');
+
+        // 기존 댓글 내용 표시
+        if (currentContent) {
+            document.getElementById('comments').value = decodeURIComponent(currentContent);
+        }
+
+        // 댓글 수정 제출
+        document.getElementById('commentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const comments = document.getElementById('comments').value;
+
+            try {
+                await apiPut(`/comments/${commentId}`, { comments });
+
+                alert('댓글이 수정되었습니다.');
+                window.location.href = `/frontend/board-detail.html?id=${boardId}`;
+            } catch (error) {
+                alert('댓글 수정 실패: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

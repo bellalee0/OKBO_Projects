@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OKBO - 게시글 상세</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚾</text></svg>">
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <link rel="stylesheet" href="/frontend/css/team-theme.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/frontend/main.html" style="text-decoration: none; color: inherit;">
+                <div class="logo">⚾ OKBO</div>
+            </a>
+            <nav></nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 게시글 상세 -->
+        <div id="boardDetail">
+            <div class="loading">게시글을 불러오는 중...</div>
+        </div>
+
+        <!-- 댓글 작성 -->
+        <div id="commentFormCard" class="card mt-20" style="display: none;">
+            <h3>댓글 작성</h3>
+            <form id="commentForm">
+                <div class="form-group">
+                    <textarea id="commentContent" placeholder="댓글을 입력하세요" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">댓글 작성</button>
+            </form>
+        </div>
+
+        <!-- 댓글 목록 -->
+        <div id="commentList" class="mt-20"></div>
+
+        <!-- 댓글 페이지네이션 -->
+        <div class="pagination" id="commentPagination"></div>
+    </div>
+
+    <script src="/frontend/js/api.js"></script>
+    <script src="/frontend/js/auth.js"></script>
+    <script>
+        // requireAuth() 제거 - 로그인 없이도 게시글 조회 가능
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const boardId = urlParams.get('id');
+        const sourceMode = urlParams.get('source') || 'all'; // 'all' 또는 'following'
+        const sourceTeam = urlParams.get('team') || ''; // 팀 필터 정보
+        let isLiked = false; // 게시글 좋아요 상태 추적
+        let commentLikes = {}; // 댓글별 좋아요 상태 추적 { commentId: true/false }
+        let currentUserNickname = ''; // 현재 로그인한 사용자 닉네임
+        const isUserLoggedIn = isLoggedIn(); // 로그인 여부 저장
+
+        // 현재 사용자 정보 가져오기
+        async function loadCurrentUser() {
+            try {
+                const user = await apiGet('/users/my-page');
+                currentUserNickname = user.nickname;
+            } catch (error) {
+                console.error('사용자 정보 로드 실패:', error);
+            }
+        }
+
+        // 팀 테마 적용 (로그인한 유저의 팀 기준)
+        async function applyUserTeamTheme() {
+            try {
+                const userData = await apiGet('/users/my-page');
+                const teamEnum = getTeamEnumFromName(userData.teamName);
+                document.body.setAttribute('data-team', teamEnum);
+                document.querySelector('.container')?.setAttribute('data-team', teamEnum);
+            } catch (error) {
+                console.error('팀 테마 적용 실패:', error);
+            }
+        }
+
+        // 한글 팀 이름을 enum으로 변환
+        function getTeamEnumFromName(teamName) {
+            const teamEnumMap = {
+                '두산 베어즈': 'DOOSAN',
+                '한화 이글스': 'HANHWA',
+                '기아 타이거즈': 'KIA',
+                'KT 위즈': 'KT',
+                '키움 히어로즈': 'KIWOOM',
+                'LG 트윈스': 'LG',
+                '롯데 자이언츠': 'LOTTE',
+                'NC 다이노스': 'NC',
+                '삼성 라이온즈': 'SAMSUNG',
+                'SSG 랜더스': 'SSG'
+            };
+            return teamEnumMap[teamName] || teamName;
+        }
+
+        // 팀 배지 클릭 시 팀별 게시판으로 이동
+        function goToTeamBoard(teamEnum) {
+            let url = '/frontend/main.html';
+
+            // 출처 페이지의 모드와 팀 필터를 유지하면서 클릭한 팀으로 이동
+            if (sourceMode === 'following') {
+                // 팔로잉 게시글 페이지에서 온 경우
+                url += `?mode=following&team=${teamEnum}`;
+            } else {
+                // 전체 게시글 페이지에서 온 경우
+                url += `?team=${teamEnum}`;
+            }
+
+            window.location.href = url;
+        }
+
+        // 게시글 좋아요 여부 확인
+        async function checkBoardLike() {
+            if (!isUserLoggedIn) return;
+
+            try {
+                isLiked = await apiGet(`/likes/boards/${boardId}`);
+            } catch (error) {
+                console.error('게시글 좋아요 상태 확인 실패:', error);
+                isLiked = false;
+            }
+        }
+
+        // 댓글 좋아요 여부 확인
+        async function checkCommentLikes(comments) {
+            if (!isUserLoggedIn || !comments || comments.length === 0) return;
+
+            // 모든 댓글의 좋아요 상태 확인
+            const likeChecks = comments.map(async (comment) => {
+                try {
+                    const liked = await apiGet(`/likes/comments/${comment.id}`);
+                    commentLikes[comment.id] = liked;
+                } catch (error) {
+                    console.error(`댓글 ${comment.id} 좋아요 상태 확인 실패:`, error);
+                    commentLikes[comment.id] = false;
+                }
+            });
+
+            await Promise.all(likeChecks);
+        }
+
+        // 게시글 상세 로드
+        async function loadBoardDetail() {
+            try {
+                const data = await apiGet(`/boards/board/${boardId}?page=0&size=10`);
+
+                // 게시글 좋아요 상태 확인
+                await checkBoardLike();
+
+                // 댓글 좋아요 상태 확인
+                if (data.commentList && data.commentList.content) {
+                    await checkCommentLikes(data.commentList.content);
+                }
+
+                displayBoard(data);
+            } catch (error) {
+                document.getElementById('boardDetail').innerHTML =
+                    `<div class="alert alert-error">게시글을 불러오는데 실패했습니다: ${error.message}</div>`;
+            }
+        }
+
+        // 게시글 표시
+        function displayBoard(data) {
+            // data 자체가 게시글 정보
+            const isAuthor = currentUserNickname === data.writer;
+
+            // 작성자 표시 (로그인 시 링크, 비로그인 시 텍스트만)
+            const writerDisplay = isUserLoggedIn
+                ? `<a href="/frontend/user-profile.html?nickname=${encodeURIComponent(data.writer)}" class="author-link">${data.writer}</a>`
+                : data.writer;
+
+            document.getElementById('boardDetail').innerHTML = `
+                <div class="card">
+                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                        <h2 class="card-title" style="margin: 0;">${data.title}</h2>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <span class="team-badge" onclick="goToTeamBoard('${getTeamEnumFromName(data.team)}')" style="cursor: pointer;" title="팀별 게시판으로 이동">
+                                ${data.team}
+                            </span>
+                            ${isAuthor ? `
+                                <button class="btn btn-sm btn-secondary" onclick="editBoard()">수정</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteBoard()">삭제</button>
+                            ` : ''}
+                        </div>
+                    </div>
+                    <div class="card-meta">
+                        작성자: ${writerDisplay} | 작성일: ${formatDate(data.creatAt || data.createdAt)}
+                    </div>
+                    <div class="card-content" style="white-space: pre-line;">${data.content}</div>
+                    <div class="card-footer">
+                        <div id="likeCount">
+                            👍 좋아요 ${data.likes} | 💬 댓글 ${data.comments}
+                        </div>
+                        ${isUserLoggedIn ? `
+                            <button id="likeButton" class="btn btn-sm ${isLiked ? 'btn-danger' : 'btn-primary'}" onclick="toggleLike()" style="width: 100px; padding: 5px 8px;">
+                                ${isLiked ? '💔 취소' : '👍 좋아요'}
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            // 댓글 표시 (commentList로 접근)
+            displayComments(data.commentList);
+        }
+
+        // 댓글 표시
+        function displayComments(commentsData) {
+            const commentList = document.getElementById('commentList');
+
+            if (!commentsData.content || commentsData.content.length === 0) {
+                commentList.innerHTML = '<div class="alert alert-info">댓글이 없습니다.</div>';
+                return;
+            }
+
+            commentList.innerHTML = commentsData.content.map(comment => {
+                const isCommentLiked = commentLikes[comment.id] || false;
+                const isCommentAuthor = currentUserNickname === comment.writer;
+                const encodedContent = encodeURIComponent(comment.comments);
+                // 댓글 작성자 표시 (로그인 시 링크, 비로그인 시 텍스트만)
+                const commentWriterDisplay = isUserLoggedIn
+                    ? `<a href="/frontend/user-profile.html?nickname=${encodeURIComponent(comment.writer)}" class="comment-author author-link">${comment.writer}</a>`
+                    : `<span class="comment-author">${comment.writer}</span>`;
+                return `
+                <div class="comment-item">
+                    <div class="comment-header">
+                        ${commentWriterDisplay}
+                    </div>
+                    <div class="comment-content">${comment.comments}</div>
+                    <div class="comment-actions" style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <span id="commentLikeCount-${comment.id}">👍 ${comment.likes}</span>
+                            ${isCommentAuthor && isUserLoggedIn ? `
+                                <button class="btn btn-sm btn-secondary" onclick="editComment(${comment.id}, '${encodedContent}')">수정</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteComment(${comment.id})">삭제</button>
+                            ` : ''}
+                        </div>
+                        ${isUserLoggedIn ? `
+                            <button id="commentLikeButton-${comment.id}"
+                                    class="btn btn-sm ${isCommentLiked ? 'btn-secondary' : 'btn-primary'}"
+                                    onclick="toggleCommentLike(${comment.id})"
+                                    style="padding: 5px 10px; width: 95px;">
+                                ${isCommentLiked ? '좋아요 취소' : '좋아요'}
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+                `;
+            }).join('');
+
+            // 댓글 페이지네이션
+            createCommentPagination(commentsData);
+        }
+
+        // 댓글 페이지네이션
+        function createCommentPagination(data) {
+            const pagination = document.getElementById('commentPagination');
+            const totalPages = data.totalPages;
+            const currentPage = data.number;
+
+            let html = '';
+            html += `<button onclick="loadComments(${currentPage - 1})" ${currentPage === 0 ? 'disabled' : ''}>이전</button>`;
+
+            for (let i = 0; i < totalPages; i++) {
+                html += `<button onclick="loadComments(${i})" ${i === currentPage ? 'class="active"' : ''}>${i + 1}</button>`;
+            }
+
+            html += `<button onclick="loadComments(${currentPage + 1})" ${currentPage === totalPages - 1 ? 'disabled' : ''}>다음</button>`;
+            pagination.innerHTML = html;
+        }
+
+        // 댓글 로드
+        async function loadComments(page = 0) {
+            try {
+                const data = await apiGet(`/boards/board/${boardId}?page=${page}&size=10`);
+
+                // 댓글 좋아요 상태 확인
+                if (data.commentList && data.commentList.content) {
+                    await checkCommentLikes(data.commentList.content);
+                }
+
+                displayComments(data.commentList);
+            } catch (error) {
+                console.error('댓글 로드 실패:', error);
+            }
+        }
+
+        // 댓글 작성
+        document.getElementById('commentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const comments = document.getElementById('commentContent').value;
+
+            try {
+                await apiPost(`/comments/boards/${boardId}`, { comments });
+                alert('댓글이 작성되었습니다.');
+                document.getElementById('commentContent').value = '';
+                loadBoardDetail();
+            } catch (error) {
+                alert('댓글 작성 실패: ' + error.message);
+            }
+        });
+
+        // 게시글 좋아요 토글
+        async function toggleLike() {
+            try {
+                if (isLiked) {
+                    await apiDelete(`/likes/boards/${boardId}`);
+                    isLiked = false;
+                } else {
+                    await apiPost(`/likes/boards/${boardId}`);
+                    isLiked = true;
+                }
+
+                // 버튼 UI 업데이트
+                const likeButton = document.getElementById('likeButton');
+                likeButton.className = `btn btn-sm ${isLiked ? 'btn-danger' : 'btn-primary'}`;
+                likeButton.innerHTML = isLiked ? '💔 취소' : '👍 좋아요';
+                likeButton.style.width = '100px';
+                likeButton.style.padding = '5px 8px';
+
+                // 좋아요 수 업데이트
+                loadBoardDetail();
+            } catch (error) {
+                alert('좋아요 실패: ' + error.message);
+            }
+        }
+
+        // 댓글 좋아요 토글
+        async function toggleCommentLike(commentId) {
+            try {
+                const isCommentLiked = commentLikes[commentId] || false;
+
+                if (isCommentLiked) {
+                    await apiDelete(`/likes/comments/${commentId}`);
+                    commentLikes[commentId] = false;
+                } else {
+                    await apiPost(`/likes/comments/${commentId}`);
+                    commentLikes[commentId] = true;
+                }
+
+                // 버튼 UI 업데이트
+                const likeButton = document.getElementById(`commentLikeButton-${commentId}`);
+                const newState = commentLikes[commentId];
+                likeButton.innerHTML = newState ? '좋아요 취소' : '좋아요';
+                likeButton.className = `btn btn-sm ${newState ? 'btn-secondary' : 'btn-primary'}`;
+                likeButton.style.padding = '5px 10px';
+                likeButton.style.width = '95px';
+
+                // 좋아요 수 업데이트
+                loadBoardDetail();
+            } catch (error) {
+                alert('좋아요 실패: ' + error.message);
+            }
+        }
+
+        // 게시글 수정
+        function editBoard() {
+            window.location.href = `/frontend/board-edit.html?id=${boardId}`;
+        }
+
+        // 게시글 삭제
+        async function deleteBoard() {
+            if (!confirm('정말 삭제하시겠습니까?')) return;
+
+            try {
+                await apiDelete(`/boards/${boardId}`);
+                alert('게시글이 삭제되었습니다.');
+                window.location.href = '/frontend/main.html';
+            } catch (error) {
+                alert('삭제 실패: ' + error.message);
+            }
+        }
+
+        // 댓글 수정
+        function editComment(commentId, currentContent) {
+            window.location.href = `/frontend/comment-edit.html?id=${commentId}&boardId=${boardId}&content=${currentContent}`;
+        }
+
+        // 댓글 삭제
+        async function deleteComment(commentId) {
+            if (!confirm('댓글을 삭제하시겠습니까?')) return;
+
+            try {
+                await apiDelete(`/comments/${commentId}`);
+                alert('댓글이 삭제되었습니다.');
+                loadBoardDetail();
+            } catch (error) {
+                alert('댓글 삭제 실패: ' + error.message);
+            }
+        }
+
+        // 유틸리티 함수
+        function getTeamName(team) {
+            const teamNames = {
+                'DOOSAN': '두산', 'HANHWA': '한화', 'KIA': '기아', 'KT': 'KT',
+                'KIWOOM': '키움', 'LG': 'LG', 'LOTTE': '롯데', 'NC': 'NC',
+                'SAMSUNG': '삼성', 'SSG': 'SSG'
+            };
+            return teamNames[team] || team;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString('ko-KR');
+        }
+
+        // 페이지 로드 시 사용자 정보 및 게시글 상세 불러오기
+        (async function() {
+            if (isUserLoggedIn) {
+                // 1. 로그인한 유저의 팀 테마 적용
+                await applyUserTeamTheme();
+                // 2. 사용자 정보 로드
+                await loadCurrentUser();
+                // 3. 댓글 작성 폼 표시
+                document.getElementById('commentFormCard').style.display = 'block';
+            }
+            // 4. 게시글 상세 로드 (로그인 여부 관계없이)
+            await loadBoardDetail();
+        })();
+    </script>
+</body>
+</html>

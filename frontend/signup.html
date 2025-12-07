@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OKBO - 회원가입</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚾</text></svg>">
+    <link rel="stylesheet" href="/frontend/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/frontend/main.html" style="text-decoration: none; color: inherit;">
+                <div class="logo">⚾ OKBO</div>
+            </a>
+            <nav>
+                <a href="/frontend/main.html">게시글 보기</a>
+                <a href="/frontend/index.html">로그인</a>
+                <a href="/frontend/signup.html">회원가입</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="form-container">
+        <h2>회원가입</h2>
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="nickname">닉네임 (최대 10자)</label>
+                <input type="text" id="nickname" name="nickname" required maxlength="10" placeholder="닉네임을 입력하세요">
+            </div>
+
+            <div class="form-group">
+                <label for="email">이메일</label>
+                <input type="email" id="email" name="email" required placeholder="example@email.com">
+            </div>
+
+            <div class="form-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" name="password" required placeholder="비밀번호를 입력하세요">
+            </div>
+
+            <div class="form-group">
+                <label for="favoriteTeam">응원하는 구단</label>
+                <select id="favoriteTeam" name="favoriteTeam" required>
+                    <option value="">구단을 선택하세요</option>
+                    <option value="DOOSAN">두산 베어즈</option>
+                    <option value="HANHWA">한화 이글스</option>
+                    <option value="KIA">기아 타이거즈</option>
+                    <option value="KT">KT 위즈</option>
+                    <option value="KIWOOM">키움 히어로즈</option>
+                    <option value="LG">LG 트윈스</option>
+                    <option value="LOTTE">롯데 자이언츠</option>
+                    <option value="NC">NC 다이노스</option>
+                    <option value="SAMSUNG">삼성 라이온즈</option>
+                    <option value="SSG">SSG 랜더스</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">회원가입</button>
+        </form>
+
+        <div class="text-center mt-20">
+            <p>이미 계정이 있으신가요? <a href="/frontend/index.html">로그인</a></p>
+        </div>
+    </div>
+
+    <script src="/frontend/js/api.js"></script>
+    <script src="/frontend/js/auth.js"></script>
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nickname = document.getElementById('nickname').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const favoriteTeam = document.getElementById('favoriteTeam').value;
+
+            try {
+                await apiPost('/users', {
+                    nickname,
+                    email,
+                    password,
+                    favoriteTeam
+                });
+
+                alert('회원가입 성공! 로그인 페이지로 이동합니다.');
+                window.location.href = '/frontend/index.html';
+            } catch (error) {
+                alert('회원가입 실패: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

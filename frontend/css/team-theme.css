@@ -1,0 +1,249 @@
+/* ⚾ OKBO Team Theme System */
+/* 10개 KBO 구단 팀별 색상 테마 */
+
+:root {
+    /* 기본 테마 색상 */
+    --team-main: #3498db;
+    --team-sub: #2c3e50;
+    --team-accent: #e74c3c;
+}
+
+/* 1. KT Wiz (블랙) */
+[data-team="kt"],
+[data-team="KT"] {
+    --team-main: #000000;
+    --team-sub: #EC1C24;
+    --team-accent: #EC1C24;
+}
+
+/* 2. LG 트윈스 (블랙) */
+[data-team="lg"],
+[data-team="LG"] {
+    --team-main: #000000;
+    --team-sub: #C30452;
+    --team-accent: #C30452;
+}
+
+/* 3. 두산 베어스 (네이비) */
+[data-team="doosan"],
+[data-team="DOOSAN"] {
+    --team-main: #131230;
+    --team-sub: #ED1C24;
+    --team-accent: #ED1C24;
+}
+
+/* 4. SSG 랜더스 (카리스마 레드) */
+[data-team="ssg"],
+[data-team="SSG"] {
+    --team-main: #CE0E2D;
+    --team-sub: #FFB81C;
+    --team-accent: #FFB81C;
+}
+
+/* 5. KIA 타이거즈 (타이거즈 레드) */
+[data-team="kia"],
+[data-team="KIA"] {
+    --team-main: #EA0029;
+    --team-sub: #06141F;
+    --team-accent: #EA0029;
+}
+
+/* 6. 롯데 자이언츠 (헤리티지 블루) */
+[data-team="lotte"],
+[data-team="LOTTE"] {
+    --team-main: #041E42;
+    --team-sub: #D00F31;
+    --team-accent: #D00F31;
+}
+
+/* 7. 삼성 라이온즈 (라이온즈 블루) */
+[data-team="samsung"],
+[data-team="SAMSUNG"] {
+    --team-main: #074CA1;
+    --team-sub: #A0C6EB;
+    --team-accent: #074CA1;
+}
+
+/* 8. 한화 이글스 (이글스 오렌지) */
+[data-team="hanhwa"],
+[data-team="HANHWA"],
+[data-team="hanwha"] {
+    --team-main: #F37321;
+    --team-sub: #231F20;
+    --team-accent: #F37321;
+}
+
+/* 9. NC 다이노스 (마린 블루) */
+[data-team="nc"],
+[data-team="NC"] {
+    --team-main: #315288;
+    --team-sub: #AF917B;
+    --team-accent: #315288;
+}
+
+/* 10. 키움 히어로즈 (버건디) */
+[data-team="kiwoom"],
+[data-team="KIWOOM"] {
+    --team-main: #820024;
+    --team-sub: #570514;
+    --team-accent: #820024;
+}
+
+/* ===== 팀 테마 적용 클래스 ===== */
+
+/* 팀 정보 카드 - 팀 메인 컬러 단색 배경 */
+.team-info-card[data-team] {
+    background: var(--team-main);
+}
+
+/* 승률 원형 - 팀 악센트 컬러 테두리 */
+.team-info-card[data-team] .winrate-circle {
+    border-color: var(--team-accent);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* 팀 배지 - 팀 메인 컬러 */
+.team-badge[data-team] {
+    background-color: var(--team-main);
+    color: white;
+}
+
+/* 프로필 통계 숫자 - 팀 악센트 컬러 */
+[data-team] .stat-number {
+    color: var(--team-accent);
+}
+
+/* 게시글 카운트 배지 - 팀 악센트 컬러 */
+[data-team] .post-count-badge {
+    background: var(--team-accent);
+}
+
+/* 내가 쓴 글 헤더 밑줄 - 팀 악센트 컬러 */
+[data-team] .my-posts-header {
+    border-bottom-color: var(--team-accent);
+}
+
+/* 버튼 호버 효과 - 팀 메인 컬러 */
+[data-team] .btn-primary {
+    background-color: var(--team-main);
+}
+
+[data-team] .btn-primary:hover {
+    background-color: var(--team-sub);
+}
+
+/* 링크 색상 - 팀 악센트 컬러 */
+[data-team] a:hover,
+[data-team] .board-title-link:hover {
+    color: var(--team-accent);
+}
+
+/* 헤더 배경 - 팀 메인 컬러 */
+body[data-team] header {
+    background-color: var(--team-main);
+}
+
+/* OKBO 로고 - 팀 악센트 컬러 */
+body[data-team] .logo {
+    color: var(--team-accent);
+}
+
+/* 기아, 한화, 키움 - 로고 및 네비게이션 검정색 */
+body[data-team="KIA"] .logo,
+body[data-team="HANHWA"] .logo,
+body[data-team="KIWOOM"] .logo {
+    color: white;
+}
+
+body[data-team="KIA"] .logo:hover,
+body[data-team="HANHWA"] .logo:hover,
+body[data-team="KIWOOM"] .logo:hover,
+body[data-team="KIA"] nav a:hover,
+body[data-team="HANHWA"] nav a:hover,
+body[data-team="KIWOOM"] nav a:hover {
+    color: #000000 !important;
+}
+
+/* NC, 삼성 - 로고 흰색, 호버 시 회색 */
+body[data-team="NC"] .logo,
+body[data-team="SAMSUNG"] .logo {
+    color: white;
+}
+
+body[data-team="NC"] .logo:hover,
+body[data-team="SAMSUNG"] .logo:hover,
+body[data-team="NC"] nav a:hover,
+body[data-team="SAMSUNG"] nav a:hover {
+    color: #cccccc !important;
+}
+
+/* 게시글 제목 링크 - 팀 악센트 컬러 */
+[data-team] .title-cell a {
+    color: var(--team-accent);
+}
+
+[data-team] .title-cell a:hover {
+    color: var(--team-sub);
+}
+
+/* 작성자 링크 - 팀 악센트 컬러 */
+[data-team] .author-link {
+    color: var(--team-accent);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+[data-team] .author-link:hover {
+    color: var(--team-sub);
+    text-decoration: underline;
+}
+
+/* 정렬 버튼 활성화 - 팀 악센트 컬러 */
+[data-team] .sort-btn.active {
+    color: var(--team-accent);
+}
+
+/* 검색 버튼 - 팀 메인 컬러 */
+[data-team] .btn-primary.search-btn-custom {
+    background-color: var(--team-main);
+}
+
+[data-team] .btn-primary.search-btn-custom:hover {
+    background-color: var(--team-sub);
+}
+
+/* 페이지네이션 활성 버튼 - 팀 메인 컬러 */
+[data-team] .pagination button.active {
+    background-color: var(--team-main);
+    border-color: var(--team-main);
+}
+
+/* 계정 메뉴 항목 호버 - 팀 악센트 컬러 */
+[data-team] .account-menu-item:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+    border-left-color: var(--team-accent);
+}
+
+/* 게시글 상세 - 팀 배지 (로그인 사용자 색상) */
+[data-team] .team-badge {
+    background-color: var(--team-main);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+/* 팀 배지 호버 효과 */
+[data-team] .team-badge:hover {
+    background-color: var(--team-sub);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 댓글 없음 알림 - 로그인 사용자 팀 색상 */
+[data-team] .alert-info {
+    border-left: 4px solid var(--team-accent);
+    background-color: rgba(52, 152, 219, 0.1);
+}

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OKBO - 메인</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚾</text></svg>">
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <link rel="stylesheet" href="/frontend/css/team-theme.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/frontend/main.html" style="text-decoration: none; color: inherit;">
+                <div class="logo">⚾ OKBO</div>
+            </a>
+            <nav></nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 제목과 버튼 -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div style="display: flex; align-items: baseline; gap: 10px;">
+                <h1 id="pageTitle" onclick="refreshCurrentMode()" style="cursor: pointer;" title="새로고침">전체 게시글</h1>
+                <span id="toggleViewButton" class="toggle-view-link" onclick="toggleView()" style="display: none;">
+                    <span style="color: #ddd; margin: 0 5px;">|</span>
+                    <span class="toggle-text">팔로잉 게시글</span>
+                </span>
+            </div>
+            <button id="writeButton" class="btn btn-primary" onclick="window.location.href='/frontend/board-create.html'" style="padding: 8px 16px; width: auto; display: none;">글쓰기</button>
+        </div>
+
+        <!-- 검색 필터 -->
+        <div class="search-container">
+            <!-- 기간 검색 -->
+            <div class="search-row">
+                <label class="search-label">기간검색</label>
+                <input type="date" id="startDate">
+                <span style="margin: 0 5px;">~</span>
+                <input type="date" id="endDate">
+                <div class="date-quick-buttons">
+                    <button class="date-btn" onclick="setDateRange(1)">1일</button>
+                    <button class="date-btn" onclick="setDateRange(3)">3일</button>
+                    <button class="date-btn" onclick="setDateRange(7)">1주</button>
+                    <button class="date-btn" onclick="setDateRange(30)">1월</button>
+                    <button class="date-btn" onclick="setDateRange(180)">6개월</button>
+                    <button class="date-btn" onclick="setDateRange(365)">1년</button>
+                </div>
+            </div>
+
+            <!-- 검색 조건 -->
+            <div class="search-row">
+                <label class="search-label">검색조건</label>
+                <select id="searchType" class="search-select">
+                    <option value="title">제목</option>
+                    <option value="writer">작성자</option>
+                </select>
+                <input type="text" id="searchKeyword" placeholder="검색어를 입력하세요" style="flex: 1;">
+                <button class="btn btn-primary search-btn-custom" onclick="searchBoards()">검색</button>
+                <button class="btn btn-secondary search-btn-custom" onclick="resetSearch()">초기화</button>
+            </div>
+        </div>
+
+        <!-- 정렬 및 필터 -->
+        <div class="filter-sort-container">
+            <!-- 정렬 버튼 -->
+            <div class="sort-buttons">
+                <span style="font-weight: 500; color: #333;">정렬 : </span>
+                <span class="sort-btn" onclick="setSortBy('title')" data-sort="title">
+                    제목 <span class="sort-arrow">▼</span>
+                </span>
+                <span style="color: #ddd;">|</span>
+                <span class="sort-btn active" onclick="setSortBy('createdAt')" data-sort="createdAt">
+                    생성일 <span class="sort-arrow">▼</span>
+                </span>
+                <span style="color: #ddd;">|</span>
+                <span class="sort-btn" onclick="setSortBy('modifiedAt')" data-sort="modifiedAt">
+                    수정일 <span class="sort-arrow">▼</span>
+                </span>
+                <span style="color: #ddd;">|</span>
+                <span class="sort-btn" onclick="setSortBy('likes')" data-sort="likes">
+                    좋아요 수 <span class="sort-arrow">▼</span>
+                </span>
+                <span style="color: #ddd;">|</span>
+                <span class="sort-btn" onclick="setSortBy('comments')" data-sort="comments">
+                    댓글 수 <span class="sort-arrow">▼</span>
+                </span>
+            </div>
+
+            <!-- 구단별 조회 -->
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <select id="teamFilter" class="team-filter-select" onchange="filterByTeam(this.value)">
+                    <option value="">구단별 조회</option>
+                    <option value="DOOSAN">두산 베어즈</option>
+                    <option value="HANHWA">한화 이글스</option>
+                    <option value="KIA">기아 타이거즈</option>
+                    <option value="KT">KT 위즈</option>
+                    <option value="KIWOOM">키움 히어로즈</option>
+                    <option value="LG">LG 트윈스</option>
+                    <option value="LOTTE">롯데 자이언츠</option>
+                    <option value="NC">NC 다이노스</option>
+                    <option value="SAMSUNG">삼성 라이온즈</option>
+                    <option value="SSG">SSG 랜더스</option>
+                </select>
+                <div id="selectedTeamBadge" style="display: none;">
+                    <span class="team-badge" style="padding: 8px 12px; font-size: 14px; cursor: pointer;" onclick="clearTeamFilter()">
+                        <span id="selectedTeamName"></span> ✕
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 게시글 목록 -->
+        <div id="boardList">
+            <div class="loading">게시글을 불러오는 중...</div>
+        </div>
+
+        <!-- 페이지네이션 -->
+        <div class="pagination" id="pagination"></div>
+    </div>
+
+    <script src="/frontend/js/api.js"></script>
+    <script src="/frontend/js/auth.js"></script>
+    <script>
+        // requireAuth() 제거 - 로그인 없이도 게시글 조회 가능
+
+        let currentPage = 0;
+        let currentMode = 'all';
+        let currentTeam = '';
+        let currentSort = 'createdAt';
+        let currentOrder = 'desc';
+
+        // 팀 테마 적용 (로그인한 경우에만)
+        async function applyUserTeamTheme() {
+            if (!isLoggedIn()) return;
+
+            try {
+                const userData = await apiGet('/users/my-page');
+                const teamEnum = getTeamEnumFromName(userData.teamName);
+                document.body.setAttribute('data-team', teamEnum);
+                document.querySelector('.container')?.setAttribute('data-team', teamEnum);
+            } catch (error) {
+                console.error('팀 테마 적용 실패:', error);
+            }
+        }
+
+        // 한글 팀 이름을 enum으로 변환
+        function getTeamEnumFromName(teamName) {
+            const teamEnumMap = {
+                '두산 베어즈': 'DOOSAN',
+                '한화 이글스': 'HANHWA',
+                '기아 타이거즈': 'KIA',
+                'KT 위즈': 'KT',
+                '키움 히어로즈': 'KIWOOM',
+                'LG 트윈스': 'LG',
+                '롯데 자이언츠': 'LOTTE',
+                'NC 다이노스': 'NC',
+                '삼성 라이온즈': 'SAMSUNG',
+                'SSG 랜더스': 'SSG'
+            };
+            return teamEnumMap[teamName] || teamName;
+        }
+
+        // Query Parameter 생성
+        function buildQueryParams(params) {
+            const query = new URLSearchParams();
+            for (const [key, value] of Object.entries(params)) {
+                if (value !== null && value !== undefined && value !== '') {
+                    query.append(key, value);
+                }
+            }
+            const queryString = query.toString();
+            return queryString ? `?${queryString}` : '';
+        }
+
+        // 페이지 로드 시 팀 테마 적용
+        (async function initializeMainPage() {
+            if (isLoggedIn()) {
+                // 팀 테마를 먼저 적용하고 완료될 때까지 대기
+                await applyUserTeamTheme();
+                document.getElementById('toggleViewButton').style.display = 'block';
+                document.getElementById('writeButton').style.display = 'block';
+            }
+        })();
+
+        // 현재 모드 새로고침 (모든 필터 초기화)
+        function refreshCurrentMode() {
+            // 검색 필터 초기화
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            document.getElementById('searchType').value = 'title';
+            document.getElementById('searchKeyword').value = '';
+
+            // 팀 필터 초기화 (clearTeamFilter를 호출하지 않고 직접 초기화)
+            currentTeam = '';
+            document.getElementById('teamFilter').value = '';
+            document.getElementById('selectedTeamBadge').style.display = 'none';
+
+            // 정렬 초기화
+            currentSort = 'createdAt';
+            currentOrder = 'desc';
+
+            // 정렬 버튼 UI 초기화
+            document.querySelectorAll('.sort-btn').forEach(btn => {
+                btn.classList.remove('active');
+                const arrow = btn.querySelector('.sort-arrow');
+                arrow.textContent = '▼';
+            });
+            const defaultSortBtn = document.querySelector('.sort-btn[data-sort="createdAt"]');
+            if (defaultSortBtn) {
+                defaultSortBtn.classList.add('active');
+                const arrow = defaultSortBtn.querySelector('.sort-arrow');
+                arrow.textContent = '▼';
+            }
+
+            // 현재 모드로 게시글 로드
+            loadBoards(currentMode);
+        }
+
+        // 뷰 토글 함수
+        function toggleView() {
+            if (currentMode === 'all') {
+                currentMode = 'following';
+                document.getElementById('pageTitle').textContent = '팔로잉 게시글';
+                document.querySelector('#toggleViewButton .toggle-text').textContent = '전체 게시글';
+                loadBoards('following');
+            } else {
+                currentMode = 'all';
+                document.getElementById('pageTitle').textContent = '전체 게시글';
+                document.querySelector('#toggleViewButton .toggle-text').textContent = '팔로잉 게시글';
+                loadBoards('all');
+            }
+        }
+
+        // 정렬 설정 함수
+        function setSortBy(sortField) {
+            // 같은 필드를 다시 클릭하면 정렬 방향 토글
+            if (currentSort === sortField) {
+                currentOrder = currentOrder === 'desc' ? 'asc' : 'desc';
+            } else {
+                currentSort = sortField;
+                currentOrder = 'desc'; // 새로운 필드는 기본 내림차순
+            }
+
+            // 모든 버튼에서 active 클래스 제거
+            document.querySelectorAll('.sort-btn').forEach(btn => {
+                btn.classList.remove('active');
+                const arrow = btn.querySelector('.sort-arrow');
+                arrow.textContent = '▼';
+            });
+
+            // 선택된 버튼에 active 클래스 추가
+            const activeBtn = document.querySelector(`.sort-btn[data-sort="${sortField}"]`);
+            activeBtn.classList.add('active');
+            const arrow = activeBtn.querySelector('.sort-arrow');
+            arrow.textContent = currentOrder === 'desc' ? '▼' : '▲';
+
+            // 게시글 다시 로드
+            loadBoards(currentMode);
+        }
+
+        // 게시글 목록 로드
+        async function loadBoards(mode = 'all', page = 0) {
+            currentMode = mode;
+            currentPage = page;
+
+            try {
+                let endpoint = '/boards';
+
+                if (mode === 'following') {
+                    endpoint = '/boards/followings';
+                } else if (currentTeam) {
+                    endpoint = `/boards/teams/${currentTeam}`;
+                }
+
+                const params = {
+                    page,
+                    size: 10,
+                    sort: `${currentSort},${currentOrder}`
+                };
+
+                const data = await apiGet(endpoint + buildQueryParams(params));
+                displayBoards(data);
+            } catch (error) {
+                document.getElementById('boardList').innerHTML =
+                    `<div class="alert alert-error">게시글을 불러오는데 실패했습니다: ${error.message}</div>`;
+            }
+        }
+
+        // 구단별 필터
+        async function filterByTeam(team) {
+            currentTeam = team;
+            if (team) {
+                // teamFilter select 값 업데이트
+                document.getElementById('teamFilter').value = team;
+
+                // 선택된 팀 태그 표시
+                const teamName = getFullTeamName(team);
+                document.getElementById('selectedTeamName').textContent = teamName;
+                document.getElementById('selectedTeamBadge').style.display = 'block';
+
+                try {
+                    const params = {
+                        page: 0,
+                        size: 10,
+                        sort: `${currentSort},${currentOrder}`
+                    };
+                    const data = await apiGet(`/boards/teams/${team}` + buildQueryParams(params));
+                    displayBoards(data);
+                } catch (error) {
+                    document.getElementById('boardList').innerHTML =
+                        `<div class="alert alert-error">게시글을 불러오는데 실패했습니다: ${error.message}</div>`;
+                }
+            } else {
+                clearTeamFilter();
+            }
+        }
+
+        // 구단 필터 해제
+        function clearTeamFilter() {
+            currentTeam = '';
+            document.getElementById('teamFilter').value = '';
+            document.getElementById('selectedTeamBadge').style.display = 'none';
+            loadBoards(currentMode);
+        }
+
+        // 구단 전체 이름 가져오기
+        function getFullTeamName(team) {
+            const teamNames = {
+                'DOOSAN': '두산 베어즈',
+                'HANHWA': '한화 이글스',
+                'KIA': '기아 타이거즈',
+                'KT': 'KT 위즈',
+                'KIWOOM': '키움 히어로즈',
+                'LG': 'LG 트윈스',
+                'LOTTE': '롯데 자이언츠',
+                'NC': 'NC 다이노스',
+                'SAMSUNG': '삼성 라이온즈',
+                'SSG': 'SSG 랜더스'
+            };
+            return teamNames[team] || team;
+        }
+
+        // 빠른 날짜 범위 설정
+        function setDateRange(days) {
+            const endDate = new Date();
+            const startDate = new Date();
+            startDate.setDate(endDate.getDate() - days);
+
+            document.getElementById('startDate').value = startDate.toISOString().split('T')[0];
+            document.getElementById('endDate').value = endDate.toISOString().split('T')[0];
+        }
+
+        // 게시글 검색
+        async function searchBoards() {
+            const searchType = document.getElementById('searchType').value;
+            const searchKeyword = document.getElementById('searchKeyword').value;
+            const startDate = document.getElementById('startDate').value.replace(/-/g, '');
+            const endDate = document.getElementById('endDate').value.replace(/-/g, '');
+
+            try {
+                let endpoint = '/boards';
+                if (currentMode === 'following') {
+                    endpoint = '/boards/followings';
+                } else if (currentTeam) {
+                    endpoint = `/boards/teams/${currentTeam}`;
+                }
+
+                const params = {
+                    page: 0,
+                    size: 10,
+                    startDate,
+                    endDate,
+                    sort: `${currentSort},${currentOrder}`
+                };
+
+                // 검색 타입에 따라 title 또는 writer 추가
+                if (searchKeyword) {
+                    if (searchType === 'title') {
+                        params.title = searchKeyword;
+                    } else if (searchType === 'writer') {
+                        params.writer = searchKeyword;
+                    }
+                }
+
+                const data = await apiGet(endpoint + buildQueryParams(params));
+                displayBoards(data);
+            } catch (error) {
+                document.getElementById('boardList').innerHTML =
+                    `<div class="alert alert-error">검색에 실패했습니다: ${error.message}</div>`;
+            }
+        }
+
+        // 검색 조건 초기화
+        function resetSearch() {
+            // 1. 모든 입력 필드 초기화
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            document.getElementById('searchType').value = 'title';
+            document.getElementById('searchKeyword').value = '';
+
+            // 2. 구단 필터 초기화
+            clearTeamFilter();
+
+            // 3. 정렬 초기화 (기본값: 생성일 내림차순)
+            currentSort = 'createdAt';
+            currentOrder = 'desc';
+
+            // 4. 정렬 버튼 UI 초기화
+            document.querySelectorAll('.sort-btn').forEach(btn => {
+                btn.classList.remove('active');
+                const arrow = btn.querySelector('.sort-arrow');
+                arrow.textContent = '▼';
+            });
+
+            const defaultSortBtn = document.querySelector('.sort-btn[data-sort="createdAt"]');
+            defaultSortBtn.classList.add('active');
+
+            // 5. 게시글 목록 다시 로드 (첫 페이지)
+            loadBoards(currentMode, 0);
+        }
+
+        // 게시글 표시
+        function displayBoards(data) {
+            const boardList = document.getElementById('boardList');
+            const pagination = document.getElementById('pagination');
+
+            if (!data.content || data.content.length === 0) {
+                boardList.innerHTML = '<div class="alert alert-info">게시글이 없습니다.</div>';
+                pagination.innerHTML = '';
+                return;
+            }
+
+            // 게시글 테이블 생성
+            boardList.innerHTML = `
+                <table class="board-table">
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>제목</th>
+                            <th>구단</th>
+                            <th>작성자</th>
+                            <th>작성일</th>
+                            <th>좋아요</th>
+                            <th>댓글</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.content.map((board, index) => {
+                            // 상세 페이지로 이동 시 출처와 팀 정보 전달
+                            let detailUrl = `/frontend/board-detail.html?id=${board.id}&source=${currentMode}`;
+                            if (currentTeam) {
+                                detailUrl += `&team=${currentTeam}`;
+                            }
+                            // 작성자 표시 (로그인 시 링크, 비로그인 시 텍스트만)
+                            const writerDisplay = isLoggedIn()
+                                ? `<a href="/frontend/user-profile.html?nickname=${encodeURIComponent(board.writer)}" class="author-link">${board.writer}</a>`
+                                : board.writer;
+                            return `
+                            <tr>
+                                <td>${board.id}</td>
+                                <td class="title-cell">
+                                    <a href="${detailUrl}">
+                                        ${board.title}
+                                    </a>
+                                </td>
+                                <td>${getTeamName(board.team)}</td>
+                                <td>${writerDisplay}</td>
+                                <td>${formatDate(board.createdAt)}</td>
+                                <td>${board.likes}</td>
+                                <td>${board.comments}</td>
+                            </tr>
+                        `}).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            // 페이지네이션 생성
+            createPagination(data);
+        }
+
+        // 페이지네이션 생성
+        function createPagination(data) {
+            const pagination = document.getElementById('pagination');
+            const totalPages = data.totalPages;
+            const currentPage = data.number;
+
+            let html = '';
+
+            // 이전 버튼
+            html += `<button onclick="loadBoards('${currentMode}', ${currentPage - 1})" ${currentPage === 0 ? 'disabled' : ''}>이전</button>`;
+
+            // 페이지 번호
+            for (let i = 0; i < totalPages; i++) {
+                html += `<button onclick="loadBoards('${currentMode}', ${i})" ${i === currentPage ? 'class="active"' : ''}>${i + 1}</button>`;
+            }
+
+            // 다음 버튼
+            html += `<button onclick="loadBoards('${currentMode}', ${currentPage + 1})" ${currentPage === totalPages - 1 ? 'disabled' : ''}>다음</button>`;
+
+            pagination.innerHTML = html;
+        }
+
+        // 구단명 변환
+        function getTeamName(team) {
+            const teamNames = {
+                'DOOSAN': '두산',
+                'HANHWA': '한화',
+                'KIA': '기아',
+                'KT': 'KT',
+                'KIWOOM': '키움',
+                'LG': 'LG',
+                'LOTTE': '롯데',
+                'NC': 'NC',
+                'SAMSUNG': '삼성',
+                'SSG': 'SSG'
+            };
+            return teamNames[team] || team;
+        }
+
+        // 날짜 포맷팅
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ko-KR');
+        }
+
+        // 페이지 로드 시 URL 파라미터 확인 및 게시글 목록 불러오기
+        (function initializePage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const mode = urlParams.get('mode');
+            const team = urlParams.get('team');
+
+            // URL에 팀 파라미터가 있으면 팀 필터 적용
+            if (team) {
+                // mode에 따라 currentMode 설정 (팀 필터는 전체 게시글에서만 작동)
+                if (mode === 'following') {
+                    currentMode = 'following';
+                    document.getElementById('pageTitle').textContent = '팔로잉 게시글';
+                    document.querySelector('#toggleViewButton .toggle-text').textContent = '전체 게시글';
+                } else {
+                    currentMode = 'all';
+                }
+                filterByTeam(team);
+            } else if (mode === 'following') {
+                // 팔로잉 모드로 시작
+                currentMode = 'following';
+                document.getElementById('pageTitle').textContent = '팔로잉 게시글';
+                document.querySelector('#toggleViewButton .toggle-text').textContent = '전체 게시글';
+                loadBoards('following');
+            } else {
+                // 기본: 전체 게시글
+                loadBoards('all');
+            }
+        })();
+    </script>
+</body>
+</html>

@@ -47,6 +47,12 @@ public class LoginCheckFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
 
+        // CORS preflight 요청(OPTIONS)은 바로 통과
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String requestURI = request.getRequestURI();
         CustomException unauthorizedException = new CustomException(UNAUTHORIZED_LOGIN_REQUIRED);
 

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -30,6 +31,17 @@ public class LikeController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    // 게시글 좋아요 여부 확인
+    @GetMapping("/boards/{boardId}")
+    public ResponseEntity<Boolean> checkBoardLike(
+        @PathVariable long boardId,
+        @RequestAttribute(name = "loginUser") LoginUser loginUser
+    ) {
+        boolean checkBoardLike = likeService.checkBoardLike(boardId, loginUser);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(checkBoardLike);
+    }
+
     // 게시글 좋아요 취소
     @DeleteMapping("/boards/{boardId}")
     public ResponseEntity<Void> deleteBoardLike(
@@ -50,6 +62,17 @@ public class LikeController {
         likeService.createCommentLike(commentId, loginUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    // 댓글 좋아요 여부 확인
+    @GetMapping("/comments/{commentId}")
+    public ResponseEntity<Boolean> checkCommentLike(
+        @PathVariable long commentId,
+        @RequestAttribute(name = "loginUser") LoginUser loginUser
+    ) {
+        boolean checkCommentLike = likeService.checkCommentLike(commentId, loginUser);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(checkCommentLike);
     }
 
     // 댓글 좋아요 취소
