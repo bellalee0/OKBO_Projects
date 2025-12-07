@@ -45,6 +45,15 @@ public class LikeService {
         likeRepository.save(like);
     }
 
+    // 게시글 좋아요 여부 확인
+    public boolean checkBoardLike(long boardId, LoginUser loginUser) {
+
+        Board board = boardRepository.findBoardById(boardId);
+        User user = userRepository.findUserById(loginUser.getUserId());
+
+        return likeRepository.existsByBoardAndUser(board, user);
+    }
+
     // 게시글 좋아요 취소
     public void deleteBoardLike(long boardId, LoginUser loginUser) {
 
@@ -73,6 +82,15 @@ public class LikeService {
 
         likeRepository.save(like);
         comment.addLikes();
+    }
+
+    // 댓글 좋아요 여부 확인
+    public boolean checkCommentLike(long commentId, LoginUser loginUser) {
+
+        Comment comment = commentRepository.findCommentById(commentId);
+        User user = userRepository.findUserById(loginUser.getUserId());
+
+        return likeRepository.existsByCommentAndUser(comment, user);
     }
 
     // 댓글 좋아요 삭제

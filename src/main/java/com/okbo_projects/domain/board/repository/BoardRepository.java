@@ -62,7 +62,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         SELECT board
           FROM Board board
          WHERE (:title IS NULL OR :title = '' OR board.title LIKE %:title%)
-           AND (:writer IS NULL OR :writer = '' OR board.writer.nickname LIKE CONCAT('%', :writer, '%'))
+           AND (:writer IS NULL OR :writer = '' OR board.writer.nickname = :writer)
            AND (:startDate IS NULL OR board.createdAt >= :startDate)
            AND (:endDate IS NULL OR board.createdAt <= :endDate)
            AND board.isDeleted = false
@@ -81,7 +81,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
           FROM Board board
          WHERE board.team = :team
            AND (:title IS NULL OR board.title LIKE %:title%)
-           AND (:writer IS NULL OR board.writer.nickname LIKE %:writer%)
+           AND (:writer IS NULL OR board.writer.nickname = :writer)
            AND (:startDate IS NULL OR board.createdAt >= :startDate)
            AND (:endDate IS NULL OR board.createdAt <= :endDate)
            AND board.isDeleted = false
@@ -122,7 +122,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
               FROM Follow follow
              WHERE follow.fromUser.id = :userId)
            AND (:title IS NULL OR :title = '' OR board.title LIKE %:title%)
-           AND (:writer IS NULL OR :writer = '' OR board.writer.nickname LIKE CONCAT('%', :writer, '%'))
+           AND (:writer IS NULL OR :writer = '' OR board.writer.nickname = :writer)
            AND (:startDate IS NULL OR board.createdAt >= :startDate)
            AND (:endDate IS NULL OR board.createdAt <= :endDate)
            AND board.isDeleted = false

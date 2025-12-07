@@ -13,6 +13,7 @@ public class BoardGetTeamPageResponse {
 
     private Long id;
     private String title;
+    private String team;
     private String writer;
     private Long comments;
     private Long likes;
@@ -23,6 +24,7 @@ public class BoardGetTeamPageResponse {
         return new BoardGetTeamPageResponse(
             boardDto.getId(),
             boardDto.getTitle(),
+            boardDto.getTeam().getTeamName(),
             boardDto.getWriter(),
             boardDto.getComments(),
             boardDto.getLikes(),
