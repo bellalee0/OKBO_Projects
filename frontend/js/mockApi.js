@@ -30,6 +30,24 @@ const MockAPI = {
 
     MOCK_USERS.push(newUser);
 
+    // 데모 모드에서 localStorage에 회원가입 정보 저장
+    if (IS_DEMO_MODE) {
+      try {
+        // 기존에 저장된 사용자 목록 가져오기
+        const savedUsers = localStorage.getItem('mock_registered_users');
+        const registeredUsers = savedUsers ? JSON.parse(savedUsers) : [];
+
+        // 새 사용자 추가
+        registeredUsers.push(newUser);
+
+        // localStorage에 저장
+        localStorage.setItem('mock_registered_users', JSON.stringify(registeredUsers));
+        console.log('✅ User registered and saved to localStorage:', newUser.nickname);
+      } catch (e) {
+        console.error('Failed to save registered user to localStorage:', e);
+      }
+    }
+
     return {
       id: newUser.id,
       nickname: newUser.nickname,
@@ -99,7 +117,9 @@ const MockAPI = {
   async getUserProfile(nickname) {
     await createMockResponse(null, 300);
 
-    const user = MOCK_USERS.find(u => u.nickname === nickname);
+    // URL 디코딩 처리 (실제 백엔드에서는 자동으로 디코딩됨)
+    const decodedNickname = decodeURIComponent(nickname);
+    const user = MOCK_USERS.find(u => u.nickname === decodedNickname);
     if (!user) {
       throw new Error('사용자를 찾을 수 없습니다.');
     }
@@ -175,8 +195,47 @@ const MockAPI = {
       boards = boards.filter(b => b.writer.includes(params.writer));
     }
 
-    // 정렬 (최신순)
-    boards.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    // 기간 필터
+    if (params.startDate) {
+      const startDate = parseDateString(params.startDate); // yyyyMMdd -> Date
+      boards = boards.filter(b => new Date(b.createdAt) >= startDate);
+    }
+
+    if (params.endDate) {
+      const endDate = parseDateString(params.endDate); // yyyyMMdd -> Date
+      endDate.setHours(23, 59, 59, 999); // 해당 일의 끝까지
+      boards = boards.filter(b => new Date(b.createdAt) <= endDate);
+    }
+
+    // 정렬 처리
+    if (params.sort) {
+      const [sortField, sortOrder] = params.sort.split(',');
+      boards.sort((a, b) => {
+        let aVal = a[sortField];
+        let bVal = b[sortField];
+
+        // 날짜 필드는 Date 객체로 변환
+        if (sortField === 'createdAt' || sortField === 'modifiedAt') {
+          aVal = new Date(aVal);
+          bVal = new Date(bVal);
+        }
+
+        // 문자열은 소문자로 변환하여 비교
+        if (typeof aVal === 'string') {
+          aVal = aVal.toLowerCase();
+          bVal = bVal.toLowerCase();
+        }
+
+        if (sortOrder === 'asc') {
+          return aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
+        } else {
+          return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
+        }
+      });
+    } else {
+      // 기본 정렬: 최신순
+      boards.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
 
     return paginate(boards, params.page || 0, params.size || 10);
   },
@@ -197,7 +256,53 @@ const MockAPI = {
         !b.isDeleted && followingUserIds.includes(b.writerId)
     );
 
-    boards.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    // 검색 필터
+    if (params.title) {
+      boards = boards.filter(b => b.title.includes(params.title));
+    }
+
+    if (params.writer) {
+      boards = boards.filter(b => b.writer.includes(params.writer));
+    }
+
+    // 기간 필터
+    if (params.startDate) {
+      const startDate = parseDateString(params.startDate);
+      boards = boards.filter(b => new Date(b.createdAt) >= startDate);
+    }
+
+    if (params.endDate) {
+      const endDate = parseDateString(params.endDate);
+      endDate.setHours(23, 59, 59, 999);
+      boards = boards.filter(b => new Date(b.createdAt) <= endDate);
+    }
+
+    // 정렬 처리
+    if (params.sort) {
+      const [sortField, sortOrder] = params.sort.split(',');
+      boards.sort((a, b) => {
+        let aVal = a[sortField];
+        let bVal = b[sortField];
+
+        if (sortField === 'createdAt' || sortField === 'modifiedAt') {
+          aVal = new Date(aVal);
+          bVal = new Date(bVal);
+        }
+
+        if (typeof aVal === 'string') {
+          aVal = aVal.toLowerCase();
+          bVal = bVal.toLowerCase();
+        }
+
+        if (sortOrder === 'asc') {
+          return aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
+        } else {
+          return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
+        }
+      });
+    } else {
+      boards.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
 
     return paginate(boards, params.page || 0, params.size || 10);
   },
@@ -214,7 +319,49 @@ const MockAPI = {
         !b.isDeleted && b.writerId === CURRENT_USER.id
     );
 
-    boards.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    // 검색 필터
+    if (params.title) {
+      boards = boards.filter(b => b.title.includes(params.title));
+    }
+
+    // 기간 필터
+    if (params.startDate) {
+      const startDate = parseDateString(params.startDate);
+      boards = boards.filter(b => new Date(b.createdAt) >= startDate);
+    }
+
+    if (params.endDate) {
+      const endDate = parseDateString(params.endDate);
+      endDate.setHours(23, 59, 59, 999);
+      boards = boards.filter(b => new Date(b.createdAt) <= endDate);
+    }
+
+    // 정렬 처리
+    if (params.sort) {
+      const [sortField, sortOrder] = params.sort.split(',');
+      boards.sort((a, b) => {
+        let aVal = a[sortField];
+        let bVal = b[sortField];
+
+        if (sortField === 'createdAt' || sortField === 'modifiedAt') {
+          aVal = new Date(aVal);
+          bVal = new Date(bVal);
+        }
+
+        if (typeof aVal === 'string') {
+          aVal = aVal.toLowerCase();
+          bVal = bVal.toLowerCase();
+        }
+
+        if (sortOrder === 'asc') {
+          return aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
+        } else {
+          return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
+        }
+      });
+    } else {
+      boards.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
 
     return paginate(boards, params.page || 0, params.size || 10);
   },
@@ -223,7 +370,9 @@ const MockAPI = {
   async getUserBoards(nickname, params = {}) {
     await createMockResponse(null, 400);
 
-    const user = MOCK_USERS.find(u => u.nickname === nickname);
+    // URL 디코딩 처리
+    const decodedNickname = decodeURIComponent(nickname);
+    const user = MOCK_USERS.find(u => u.nickname === decodedNickname);
     if (!user) {
       throw new Error('사용자를 찾을 수 없습니다.');
     }
@@ -232,7 +381,49 @@ const MockAPI = {
         !b.isDeleted && b.writerId === user.id
     );
 
-    boards.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    // 검색 필터
+    if (params.title) {
+      boards = boards.filter(b => b.title.includes(params.title));
+    }
+
+    // 기간 필터
+    if (params.startDate) {
+      const startDate = parseDateString(params.startDate);
+      boards = boards.filter(b => new Date(b.createdAt) >= startDate);
+    }
+
+    if (params.endDate) {
+      const endDate = parseDateString(params.endDate);
+      endDate.setHours(23, 59, 59, 999);
+      boards = boards.filter(b => new Date(b.createdAt) <= endDate);
+    }
+
+    // 정렬 처리
+    if (params.sort) {
+      const [sortField, sortOrder] = params.sort.split(',');
+      boards.sort((a, b) => {
+        let aVal = a[sortField];
+        let bVal = b[sortField];
+
+        if (sortField === 'createdAt' || sortField === 'modifiedAt') {
+          aVal = new Date(aVal);
+          bVal = new Date(bVal);
+        }
+
+        if (typeof aVal === 'string') {
+          aVal = aVal.toLowerCase();
+          bVal = bVal.toLowerCase();
+        }
+
+        if (sortOrder === 'asc') {
+          return aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
+        } else {
+          return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
+        }
+      });
+    } else {
+      boards.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
 
     return paginate(boards, params.page || 0, params.size || 10);
   },
@@ -273,6 +464,7 @@ const MockAPI = {
       likes: 0,
       comments: 0,
       createdAt: createTimestamp(),
+      modifiedAt: createTimestamp(),
       isDeleted: false
     };
 
@@ -306,6 +498,7 @@ const MockAPI = {
 
     board.title = data.title;
     board.content = data.content;
+    board.modifiedAt = createTimestamp();
 
     return {
       id: board.id,
@@ -516,7 +709,9 @@ const MockAPI = {
       throw new Error('로그인이 필요합니다.');
     }
 
-    const targetUser = MOCK_USERS.find(u => u.nickname === nickname);
+    // URL 디코딩 처리
+    const decodedNickname = decodeURIComponent(nickname);
+    const targetUser = MOCK_USERS.find(u => u.nickname === decodedNickname);
     if (!targetUser) {
       throw new Error('사용자를 찾을 수 없습니다.');
     }
@@ -547,7 +742,9 @@ const MockAPI = {
       throw new Error('로그인이 필요합니다.');
     }
 
-    const targetUser = MOCK_USERS.find(u => u.nickname === nickname);
+    // URL 디코딩 처리
+    const decodedNickname = decodeURIComponent(nickname);
+    const targetUser = MOCK_USERS.find(u => u.nickname === decodedNickname);
     if (!targetUser) {
       throw new Error('사용자를 찾을 수 없습니다.');
     }
@@ -569,7 +766,9 @@ const MockAPI = {
 
     let userId;
     if (nickname) {
-      const user = MOCK_USERS.find(u => u.nickname === nickname);
+      // URL 디코딩 처리
+      const decodedNickname = decodeURIComponent(nickname);
+      const user = MOCK_USERS.find(u => u.nickname === decodedNickname);
       if (!user) {
         throw new Error('사용자를 찾을 수 없습니다.');
       }

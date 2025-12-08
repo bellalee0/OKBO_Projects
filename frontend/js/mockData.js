@@ -316,13 +316,54 @@ function createTimestamp() {
   return new Date().toISOString();
 }
 
-// 데모 모드에서 로그인 상태 복원
+// yyyyMMdd 형식의 문자열을 Date 객체로 변환
+function parseDateString(dateStr) {
+  if (!dateStr || dateStr.length !== 8) {
+    return null;
+  }
+  const year = parseInt(dateStr.substring(0, 4));
+  const month = parseInt(dateStr.substring(4, 6)) - 1; // 월은 0부터 시작
+  const day = parseInt(dateStr.substring(6, 8));
+  return new Date(year, month, day);
+}
+
+// 데모 모드에서 로그인 상태 및 회원가입 데이터 복원
 if (IS_DEMO_MODE) {
+  // 회원가입한 사용자 목록 복원
+  const savedUsers = localStorage.getItem('mock_registered_users');
+  if (savedUsers) {
+    try {
+      const registeredUsers = JSON.parse(savedUsers);
+      // 기존 MOCK_USERS에 없는 사용자만 추가
+      registeredUsers.forEach(user => {
+        if (!MOCK_USERS.find(u => u.email === user.email)) {
+          MOCK_USERS.push(user);
+          // nextUserId 업데이트 (ID 중복 방지)
+          if (user.id >= nextUserId) {
+            nextUserId = user.id + 1;
+          }
+        }
+      });
+      console.log('✅ Restored registered users:', registeredUsers.length);
+    } catch (e) {
+      console.error('Failed to restore registered users:', e);
+      localStorage.removeItem('mock_registered_users');
+    }
+  }
+
+  // 로그인 상태 복원
   const savedUser = localStorage.getItem('mock_user');
   if (savedUser) {
     try {
-      CURRENT_USER = JSON.parse(savedUser);
-      console.log('✅ Restored login state:', CURRENT_USER.nickname);
+      const user = JSON.parse(savedUser);
+      // MOCK_USERS에서 해당 사용자 찾기 (이메일로 검색)
+      const foundUser = MOCK_USERS.find(u => u.email === user.email);
+      if (foundUser) {
+        CURRENT_USER = foundUser;
+        console.log('✅ Restored login state:', CURRENT_USER.nickname);
+      } else {
+        localStorage.removeItem('mock_user');
+      }
     } catch (e) {
       console.error('Failed to restore user:', e);
       localStorage.removeItem('mock_user');
