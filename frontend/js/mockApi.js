@@ -429,7 +429,7 @@ const MockAPI = {
   },
 
   // 게시글 상세 조회
-  async getBoard(boardId) {
+  async getBoard(boardId, params = {}) {
     await createMockResponse(null, 300);
 
     const board = MOCK_BOARDS.find(b => b.id === parseInt(boardId) && !b.isDeleted);
@@ -440,9 +440,27 @@ const MockAPI = {
     const isLiked = CURRENT_USER ?
         MOCK_LIKES.boards.some(l => l.userId === CURRENT_USER.id && l.boardId === board.id) : false;
 
+    // 댓글 목록 조회 (페이지네이션 포함)
+    let comments = MOCK_COMMENTS.filter(c =>
+        c.boardId === parseInt(boardId) && !c.isDeleted
+    );
+
+    comments.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+    // 댓글에 좋아요 상태 추가
+    comments = comments.map(c => ({
+      ...c,
+      isLiked: CURRENT_USER ?
+          MOCK_LIKES.comments.some(l => l.userId === CURRENT_USER.id && l.commentId === c.id) : false
+    }));
+
+    // 댓글 페이지네이션
+    const commentList = paginate(comments, params.page || 0, params.size || 10);
+
     return {
       ...board,
-      isLiked: isLiked
+      isLiked: isLiked,
+      commentList: commentList
     };
   },
 

@@ -114,10 +114,10 @@ async function apiCallMock(endpoint, options = {}) {
     }
     // 게시글 상세 조회: /boards/board/{boardId}
     if (pathParts[0] === 'boards' && pathParts[1] === 'board' && !isNaN(pathParts[2]) && pathParts.length === 3 && method === 'GET') {
-      return await MockAPI.getBoard(pathParts[2]);
+      return await MockAPI.getBoard(pathParts[2], params);
     }
     if (pathParts[0] === 'boards' && !isNaN(pathParts[1]) && pathParts.length === 2 && method === 'GET') {
-      return await MockAPI.getBoard(pathParts[1]);
+      return await MockAPI.getBoard(pathParts[1], params);
     }
     if (path === '/boards' && method === 'POST') {
       return await MockAPI.createBoard(body);
