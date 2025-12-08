@@ -776,6 +776,11 @@ const MockAPI = {
       fromUserId: CURRENT_USER.id,
       toUserId: targetUser.id
     });
+
+    // localStorage에 팔로우 데이터 저장 (데모 모드)
+    if (IS_DEMO_MODE) {
+      localStorage.setItem('mock_follows', JSON.stringify(MOCK_FOLLOWS));
+    }
   },
 
   // 언팔로우
@@ -802,6 +807,11 @@ const MockAPI = {
     }
 
     MOCK_FOLLOWS.splice(followIndex, 1);
+
+    // localStorage에 팔로우 데이터 저장 (데모 모드)
+    if (IS_DEMO_MODE) {
+      localStorage.setItem('mock_follows', JSON.stringify(MOCK_FOLLOWS));
+    }
   },
 
   // 팔로우 수 조회

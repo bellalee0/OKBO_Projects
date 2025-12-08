@@ -369,6 +369,18 @@ if (IS_DEMO_MODE) {
       localStorage.removeItem('mock_user');
     }
   }
+
+  // 팔로우 데이터 복원
+  const savedFollows = localStorage.getItem('mock_follows');
+  if (savedFollows) {
+    try {
+      MOCK_FOLLOWS = JSON.parse(savedFollows);
+      console.log('✅ Restored follow data:', MOCK_FOLLOWS.length, 'follows');
+    } catch (e) {
+      console.error('Failed to restore follow data:', e);
+      localStorage.removeItem('mock_follows');
+    }
+  }
 }
 
 console.log('🎭 Mock Data Module Loaded');
