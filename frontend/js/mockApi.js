@@ -837,12 +837,24 @@ const MockAPI = {
   async getFollowingList(params = {}) {
     await createMockResponse(null, 300);
 
-    if (!CURRENT_USER) {
-      throw new Error('로그인이 필요합니다.');
+    // userNickname이 있으면 해당 유저의 팔로잉, 없으면 현재 로그인 유저의 팔로잉
+    let targetUserId;
+    if (params.userNickname) {
+      const decodedNickname = decodeURIComponent(params.userNickname);
+      const targetUser = MOCK_USERS.find(u => u.nickname === decodedNickname);
+      if (!targetUser) {
+        throw new Error('사용자를 찾을 수 없습니다.');
+      }
+      targetUserId = targetUser.id;
+    } else {
+      if (!CURRENT_USER) {
+        throw new Error('로그인이 필요합니다.');
+      }
+      targetUserId = CURRENT_USER.id;
     }
 
     const followingIds = MOCK_FOLLOWS
-    .filter(f => f.fromUserId === CURRENT_USER.id)
+    .filter(f => f.fromUserId === targetUserId)
     .map(f => f.toUserId);
 
     const followingUsers = MOCK_USERS
@@ -859,12 +871,24 @@ const MockAPI = {
   async getFollowerList(params = {}) {
     await createMockResponse(null, 300);
 
-    if (!CURRENT_USER) {
-      throw new Error('로그인이 필요합니다.');
+    // userNickname이 있으면 해당 유저의 팔로워, 없으면 현재 로그인 유저의 팔로워
+    let targetUserId;
+    if (params.userNickname) {
+      const decodedNickname = decodeURIComponent(params.userNickname);
+      const targetUser = MOCK_USERS.find(u => u.nickname === decodedNickname);
+      if (!targetUser) {
+        throw new Error('사용자를 찾을 수 없습니다.');
+      }
+      targetUserId = targetUser.id;
+    } else {
+      if (!CURRENT_USER) {
+        throw new Error('로그인이 필요합니다.');
+      }
+      targetUserId = CURRENT_USER.id;
     }
 
     const followerIds = MOCK_FOLLOWS
-    .filter(f => f.toUserId === CURRENT_USER.id)
+    .filter(f => f.toUserId === targetUserId)
     .map(f => f.fromUserId);
 
     const followers = MOCK_USERS
@@ -872,9 +896,9 @@ const MockAPI = {
     .map(u => ({
       nickname: u.nickname,
       favoriteTeam: u.favoriteTeam,
-      isFollowing: MOCK_FOLLOWS.some(f =>
+      isFollowing: CURRENT_USER ? MOCK_FOLLOWS.some(f =>
           f.fromUserId === CURRENT_USER.id && f.toUserId === u.id
-      )
+      ) : false
     }));
 
     return paginate(followers, params.page || 0, params.size || 10);
