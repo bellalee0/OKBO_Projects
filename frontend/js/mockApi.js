@@ -562,6 +562,19 @@ const MockAPI = {
     }
   },
 
+  // 게시글 좋아요 여부 확인
+  async checkBoardLike(boardId) {
+    await createMockResponse(null, 200);
+
+    if (!CURRENT_USER) {
+      return false;
+    }
+
+    return MOCK_LIKES.boards.some(
+        l => l.userId === CURRENT_USER.id && l.boardId === parseInt(boardId)
+    );
+  },
+
   // ============ 댓글 관련 API ============
 
   // 댓글 조회
@@ -697,6 +710,19 @@ const MockAPI = {
       comment.likes++;
       return { liked: true };
     }
+  },
+
+  // 댓글 좋아요 여부 확인
+  async checkCommentLike(commentId) {
+    await createMockResponse(null, 200);
+
+    if (!CURRENT_USER) {
+      return false;
+    }
+
+    return MOCK_LIKES.comments.some(
+        l => l.userId === CURRENT_USER.id && l.commentId === parseInt(commentId)
+    );
   },
 
   // ============ 팔로우 관련 API ============

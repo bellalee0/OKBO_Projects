@@ -129,6 +129,9 @@ async function apiCallMock(endpoint, options = {}) {
       await MockAPI.deleteBoard(pathParts[1]);
       return '';
     }
+    if (pathParts[0] === 'likes' && pathParts[1] === 'boards' && pathParts.length === 3 && method === 'GET') {
+      return await MockAPI.checkBoardLike(pathParts[2]);
+    }
     if (pathParts[0] === 'likes' && pathParts[1] === 'boards' && pathParts.length === 3 && method === 'POST') {
       return await MockAPI.toggleBoardLike(pathParts[2]);
     }
@@ -149,6 +152,9 @@ async function apiCallMock(endpoint, options = {}) {
     if (pathParts[0] === 'comments' && pathParts.length === 2 && method === 'DELETE') {
       await MockAPI.deleteComment(pathParts[1]);
       return '';
+    }
+    if (pathParts[0] === 'likes' && pathParts[1] === 'comments' && pathParts.length === 3 && method === 'GET') {
+      return await MockAPI.checkCommentLike(pathParts[2]);
     }
     if (pathParts[0] === 'likes' && pathParts[1] === 'comments' && pathParts.length === 3 && method === 'POST') {
       return await MockAPI.toggleCommentLike(pathParts[2]);
