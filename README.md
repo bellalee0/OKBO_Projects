@@ -14,6 +14,7 @@
   
   (팀 : doosan, hanwha, kia, kt, kiwoom, lg, lotte, nc, samsung, ssg)
 
+- 프로젝트 회고 : [✍️ velog](https://velog.io/@bella0/%EB%89%B4%EC%8A%A4%ED%94%BC%EB%93%9C-%ED%8C%80-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%ED%9A%8C%EA%B3%A0)
 
 ## ⚾️ OKBO – KBO 야구 팬들을 위한 커뮤니티 플랫폼
 
